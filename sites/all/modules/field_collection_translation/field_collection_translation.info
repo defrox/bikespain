@@ -1,0 +1,4 @@
+name = Field Collection Translation
+description = Code to allow field collections to work in translatable content types
+core = 7.x
+version = "7.x-2.0-beta2"

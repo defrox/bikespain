@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function opinno_tpv_schema() {
+   // New table
+   $schema['ordenes_de_pago'] = array(
+     'description' => 'The base table for bikespain TPV.',
+     'fields' => array(
+       'uid' => array(
+         'description' => 'The primary identifier for the user.',
+         'type' => 'serial',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+         ),
+       'sid' => array(
+         'type' => 'int',
+         'not null' => FALSE,
+         'default' => 0,
+         ),
+       'token' => array(
+         'type' => 'varchar',
+         'length' => 255,
+         'not null' => FALSE,
+         'default' => '',
+         ),
+       'language' => array(
+         'type' => 'varchar',
+         'length' => 2,
+         'not null' => FALSE,
+         'default' => 'es',
+         ),
+       'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'The user name.',
+        ),
+      'last_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'The user last name.',
+        ),
+      'mail' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => "User's e-mail address.",
+      ),
+      'ref_viaje' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'fecha' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'factura_proforma' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'concepto' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'notas' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'estado' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'respuesta_tpv' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'editable' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'plantilla_email' => array(
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => FALSE,
+      ),
+      'email_enviado' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'fecha_email_enviado' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'cantidad' => array(
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'response_debug' => array(
+        'type' => 'varchar',
+        'length' => 1024,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+
+    ),
+     'primary key' => array('uid'),
+
+   );
+
+  return $schema;
+}
+
+
+/**
+ * Create new database table {ordenes_de_pago}.
+ */
+function opinno_tpv_update_7001(&$sand) {
+  $schema = module_invoke('ordenes_de_pago', 'schema');
+  db_create_table('ordenes_de_pago', $schema['ordenes_de_pago']);
+}

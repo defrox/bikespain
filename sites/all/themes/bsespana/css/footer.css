@@ -1,0 +1,78 @@
+.footer {
+  clear: left !important;
+}
+.footer .b-copyright{
+	background: 		#000000 !important;
+}
+
+#block-menu-menu-footer-menu ,
+#block-menu-menu-footer-menu-second{
+	margin: 			10px 50px 10px 0;
+	float: 				left;
+}
+
+/*#block-menu-menu-footer-menu h2 , 
+#block-block-4 h2,
+#block-menu-menu-footer-menu-second h2 {
+	color: 				#FFFFFF;
+} */
+
+#block-menu-menu-footer-menu ul li ,
+#block-menu-menu-footer-menu-second ul li {
+	display: 			block !important;
+	border-bottom: 		1px dotted #696969;
+	width: 				200px;
+	padding: 			0;
+}
+
+#block-menu-menu-footer-menu ul li a ,
+#block-menu-menu-footer-menu-second ul li a ,
+.footer .copyright{
+	line-height: 		20px;
+	color: 				#696969;
+	padding: 			0;
+	font-weight: 		bold;
+	transition: 		color 0.2s;
+	-webkit-transition: color 0.2s; /* Safari */
+	font-size:  		12px;
+}
+
+#block-menu-menu-footer-menu ul li a:hover ,
+#block-menu-menu-footer-menu-second ul li a:hover{
+	color: 				#FFFFFF;
+}
+
+.footer .copyright{
+	margin: 			30px 0;
+	clear: 				both;
+}
+
+.footer #block-menu-menu-footer-menu li.with-sub:hover:before, 
+.footer #block-menu-menu-footer-menu .menu > li:before, 
+.footer #block-menu-menu-footer-menu .menu a.active:before,
+.footer #block-menu-menu-footer-menu-second li.with-sub:hover:before,
+.footer #block-menu-menu-footer-menu-second .menu > li:before,
+.footer #block-menu-menu-footer-menu-second .menu a.active:before {
+	background: 		transparent !important;
+}
+
+#block-block-4{
+	float: 				left;
+	width: 				450px;
+	padding: 			0;
+	margin: 			10px 0px;
+}
+
+#block-block-4 p {
+	margin: 			0;
+	line-height: 		20px;
+	font-size: 			12px;
+	font-weight: 		bold;
+}
+
+/* Experiencias */
+iframe .node-type-experiencias .b-top-bar,
+iframe .node-type-experiencias .header,
+iframe .node-type-experiencias .footer{
+	display: none !important;
+}

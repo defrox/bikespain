@@ -1,0 +1,1374 @@
+<?php
+include 'apiRedsys.php';
+/**
+ * Menu links for TPV pages
+ *
+ * @return array with menu items
+ */
+
+function opinno_tpv_menu() {
+
+  $items['admin/config/system/opinno_tpv'] = array(
+    'title' => 'Opinno TPV',
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'page arguments' => array('opinno_tpv_admin'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Settings',
+    'file' => 'opinno_tpv.admin.inc',
+  );
+
+  $items['admin/config/system/opinno_tpv/ordenes_de_pago'] = array(
+    'title' => 'Ordenes de Pago',
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_access',
+    'page arguments' => array('opinno_tpv_ordenes_de_pago',5,6),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Ordenes de Pago',
+    'file' => 'opinno_tpv.admin.inc',
+  );
+
+  $items['admin/config/system/opinno_tpv/orden'] = array(
+    'title' => 'Crear orden de pago',
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_access',
+    'page arguments' => array('opinno_tpv_edit',5),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Ordenes de Pago',
+  );
+
+  $items['admin/config/system/opinno_tpv/templates'] = array(
+    'title' => 'Email templates',
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'page arguments' => array('opinno_tpv_templates'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Template Settings',
+    'file' => 'opinno_tpv.admin.inc',
+  );
+
+  $items['payment'] = array(
+    'title' => t('Payment Process'),
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access content'),
+    'page arguments' => array('opinno_tpv_user_form',1),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Proceso de Pago',
+  );
+
+  $items['confirmation_process'] = array(
+    'title' => t('Confirmation Process'),
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access content'),
+    'page arguments' => array('opinno_tpv_confirmation_form',1),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Confirmacion del Pago',
+  );
+
+  $items['payment_response'] = array(
+    'title' => t('Confirmation Process'),
+    'page callback' => 'opinno_tpv_response_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno TPV Respuesta del TPV',
+  );
+
+  return $items;
+}
+
+/**
+ * User payment form
+ *
+ * @param  [array] $form       [description]
+ * @param  [array] $form_state [description]
+ *
+ * @return [array]             [form]
+ */
+
+function opinno_tpv_user_form($form, &$form_state) {
+  $token = $form_state['build_info']['args'][0];
+  $already_payed = FALSE;
+
+  $datos = array(
+    'nombre' => '',
+    'apellido' => '',
+    'referencia' => '',
+    'cantidad' => '',
+    'concepto' => '',
+    'uid' => '',
+    'mail' => '',
+    'editable' => '',
+    'notas' => '',
+  );
+
+  if (isset($token) && ($token != '')) {
+    $data = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp', array('uid', 'name', 'last_name','mail', 'ref_viaje' ,'concepto', 'notas', 'editable', 'cantidad'))
+      ->condition('token', $token,'=')
+      ->execute()
+      ->fetchAll();
+
+    $already_payed = opinno_tpv_check_is_payed($token);
+
+    if (sizeof($data) > 0) {
+      $datos['nombre'] = $data[0]->name;
+      $datos['apellido'] = $data[0]->last_name;
+      $datos['referencia'] = $data[0]->ref_viaje;
+      $datos['mail'] = $data[0]->mail;
+      $datos['cantidad'] = $data[0]->cantidad;
+      $datos['uid'] = $data[0]->uid;
+      $datos['editable'] = $data[0]->editable;
+      $datos['concepto'] = $data[0]->concepto;
+      $datos['notas'] = $data[0]->notas;
+    }
+
+  }elseif(isset($_GET['nid'])&& isset($_GET['sid'])) {
+    module_load_include('inc','webform','includes/webform.submissions');
+    $id_webform = $_GET['nid'];
+    $id_submision = $_GET['sid'];
+
+    $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp')
+      ->condition('sid', $id_submision, '=')
+      ->execute()
+      ->fetchAll();
+
+    if (sizeof($query) > 0 ) {
+      $datos['nombre'] = $query[0]->name;
+      $datos['apellido'] = $query[0]->last_name;
+      $datos['referencia'] = $query[0]->ref_viaje;
+      $datos['mail'] = $query[0] ->mail;
+      $datos['cantidad'] = $query[0]->cantidad;
+      $datos['editable'] = $query[0]->editable;
+      $datos['concepto'] = $query[0]->concepto;
+      $datos['notas'] = $query[0]->notas;
+    } else {
+      $submission = webform_get_submission($id_webform,$id_submision);
+      $datos['nombre'] = $submission->data[4][0];
+      $datos['apellido'] = $submission->data[5][0];
+      $datos['referencia'] = $submission->data[27][0];
+      $datos['mail'] = $submission->data[48][0];
+      $datos['editable'] = 1;
+    }
+  }else{
+
+    $datos['editable'] = 1;
+
+  }
+
+  $form['nombre'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Enter your name'),
+    '#value'=> $datos['nombre'],
+    '#weight' => 1,
+  );
+
+  $form['apellido'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Enter your surname'),
+    '#value'=> $datos['apellido'],
+    '#weight' => 2,
+  );
+
+    $form['email'] = array(
+      '#type' => 'textfield',
+      '#required' => TRUE,
+      '#title' => t('Enter your email'),
+      '#value'=> $datos['mail'],
+      '#weight' => 3,
+    );
+
+  $form['referencia'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#attributes' => ($datos['editable'] == 1) ? array() : array('readonly' => 'readonly'),
+    '#title' => t('Tour name'),
+    '#value'=> $datos['referencia'],
+    '#weight' => 4,
+  );
+
+  $form['concepto'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Bank Statement reference'),
+    '#description' => t("(Please indicate date of departure, if you are paying the deposit or the final amount and the invoice number if you have it)"),
+    '#value'=> $datos['concepto'],
+    '#weight' => 5,
+  );
+
+
+  $form['notas'] = array(
+    '#type' => 'textfield',
+    '#required' => FALSE,
+    '#title' => t('Other notes'),
+    '#value'=> $datos['notas'],
+    '#weight' => 6,
+  );
+
+  $form['precio'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#attributes' => ($datos['editable'] == 1) ? array() : array('readonly' => 'readonly'),
+    '#title' => t('Total amount'),
+    '#value'=> ($datos['cantidad'] == NULL) ? 0 : $datos['cantidad'],
+    '#weight' => 7,
+  );
+
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#value'=> $datos['uid'],
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('CONTINUE with payment'),
+    '#weight' => 10,
+  );
+
+  $form['notes'] = array(
+    '#markup' => '<br><br>' . t('NOTES:') . '<ul><li>' . t('The initial booking deposit amounts to EURO 250.- per person.') . '</li><li>' . t('The remaining amount of the final tour price is due one month before the trip departure.') . '</li><li>' . t('Payment can be made with VISA or MasterCard credit cards.') . '</li></ul>',
+    '#weight' => 11,
+  );
+
+  if ($already_payed) {
+    unset($form);
+    $form['info'] = array(
+      '#markup' => t('The order has been already payed.'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * User form submit hook
+ *
+ * @param  [array] $form       [description]
+ * @param  [array] $form_state [description]
+ *
+ * @return [array]             [form]
+ */
+
+function opinno_tpv_user_form_submit($form, &$form_state) {
+  $token = $form_state['build_info']['args'][0];
+  $data = $form_state['input'];
+
+  // User come from email payment link
+  if (isset($token) && ($token != '')) {
+
+    $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp')
+      ->condition('token', $token, '=')
+      ->execute()
+      ->fetchAll();
+
+    $num = db_update('ordenes_de_pago')
+      ->fields(array(
+        'name' => $data['nombre'],
+        'last_name' => $data['apellido'],
+        'notas' => $data['notas'],
+        'concepto' => ($query[0]->editable == 1) ? $data['concepto'] : $query[0]->concepto,
+        'ref_viaje' => ($query[0]->editable == 1) ? $data['referencia'] : $query[0]->ref_viaje,
+        'notas' => $data['notas'],
+        'mail' => $data['email'],
+        'cantidad' => ($query[0]->editable == 1) ? $data['precio'] : $query[0]->cantidad,
+      ))
+      ->condition('uid', $data['uid'], '=')
+      ->execute();
+
+  }
+
+  // User come from reservation form
+  elseif (isset($_GET['nid']) && isset($_GET['sid'])) {
+
+    $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp')
+      ->condition('sid', $_GET['sid'], '=')
+      ->execute()
+      ->fetchAll();
+
+    if (sizeof($query) == 0) {
+      $token = md5(uniqid(rand(), true));
+      $result = db_insert('ordenes_de_pago')
+        ->fields(array(
+          'token'=> $token,
+          'name'=> $data['nombre'],
+          'sid'=> $_GET['sid'],
+          'last_name'=> $data['apellido'],
+          'concepto' => $data['concepto'],
+          'notas' => $data['notas'],
+          'mail' => $data['email'],
+          'editable' => 1,
+          'ref_viaje' => $data['referencia'],
+          'fecha' => time(),
+          'cantidad' => $data['precio'],
+        ))
+        ->execute();
+    } else {
+    // A payment order with that sid exists
+      $token = $query[0]->token;
+      $result = db_update('ordenes_de_pago')
+        ->fields(array(
+          'name'=> $data['nombre'],
+          'last_name'=> $data['apellido'],
+          'ref_viaje' => $data['referencia'],
+          'concepto' => $data['concepto'],
+          'notas' => $data['notas'],
+          'mail' => $data['email'],
+          'fecha' => time(),
+          'cantidad' => ($query[0]->editable == 1) ? $data['precio'] : $query[0]->cantidad,
+        ))
+        ->condition('sid', $_GET['sid'], '=')
+        ->execute();
+    }
+    //drupal_goto("http://www.google.com");
+
+  // User direct access to the form
+  } else {
+    $token = md5(uniqid(rand(), true));
+    $result = db_insert('ordenes_de_pago')
+      ->fields(array('token'=> $token,
+        'name'=> $data['nombre'],
+        'last_name'=> $data['apellido'],
+        'mail'=> $data['email'],
+        'ref_viaje' => $data['referencia'],
+        'fecha' => time(),
+        'concepto' => $data['concepto'],
+        'notas' => $data['notas'],
+        'cantidad' => $data['precio'],
+      ))
+      ->execute();
+      //drupal_goto("http://www.google.com");
+  }
+  drupal_goto("confirmation_process",array('query'=>array('token'=>$token)));
+}
+
+/**
+ * User payment confirmation form
+ *
+ * @param  [array] $form       [description]
+ * @param  [array] $form_state [description]
+ *
+ * @return [array]             [form]
+ */
+
+function opinno_tpv_confirmation_form($form, &$form_state) {
+
+ $query = db_select('ordenes_de_pago', 'odp')
+  ->fields('odp')
+  ->condition('token', $_GET['token'], '=')
+  ->execute()
+  ->fetchAll();
+
+  // Bad token or no token was provided
+  if (sizeof($query) == 0) {
+    $form['contact_information'] = array(
+      '#markup' => t('Sorry but the information provided was not correct'),
+    );
+    return $form;
+  }
+
+  // check the payment order status for that token in DB
+  if (opinno_tpv_check_is_payed($query[0]->token)) {
+    $form['info'] = array(
+      '#markup' => t('The order has been already payed.'),
+    );
+  }
+
+  $opinno_tpv_languages = array(
+    'es'=>'001',
+    'en'=>'002',
+    'ca'=>'003',
+    'fr'=>'004',
+    'de'=>'005',
+    'it'=>'007',
+    'pr'=>'009',
+    'eu'=>'013',
+    'ru'=>'014',
+  );
+
+  $opinno_tpv_url = array(
+    '0' => 'https://sis-t.redsys.es:25443/sis/realizarPago',
+    '1' => 'https://sis.sermepa.es/sis/realizarPago',
+  );
+
+  $tpv_data = array(
+    'Ds_Merchant_Amount' => ($query[0]->cantidad) * 100,
+    'Ds_Merchant_Currency' => 978,
+    'Ds_Merchant_Order' => str_pad($query[0]->uid, 4, "0", STR_PAD_LEFT) . substr(time(), 2),
+    'Ds_Merchant_ProductDescription' => $query[0]->ref_viaje,
+    'Ds_Merchant_Titular' => variable_get('opinno_tpv_titular', ''),
+    'Ds_Merchant_MerchantCode' => variable_get('opinno_tpv_fuc_number', ''),
+    'Ds_Merchant_MerchantURL' => variable_get('opinno_tpv_url', ''),
+    'Ds_Merchant_MerchantName' => variable_get('opinno_tpv_titular', ''),
+    'Ds_Merchant_ConsumerLanguage' => $opinno_tpv_languages[$query[0]->language],
+    'Ds_Merchant_Terminal' => variable_get('opinno_tpv_term_number', ''),
+    'Ds_Merchant_TransactionType' => 0,
+    'Ds_Merchant_MerchantSignature' => '',
+    'Private_key' => variable_get('opinno_tpv_clave', ''),
+    'url' => $opinno_tpv_url[variable_get('opinno_tpv_mode', '0')],
+  );
+
+ /* $tpv_data['Ds_Merchant_MerchantSignature'] = strtoupper(sha1(
+    $tpv_data['Ds_Merchant_Amount'] .
+    $tpv_data['Ds_Merchant_Order'] .
+    $tpv_data['Ds_Merchant_MerchantCode'] .
+    $tpv_data['Ds_Merchant_Currency'] .
+    $tpv_data['Ds_Merchant_TransactionType'] .
+    $tpv_data['Ds_Merchant_MerchantURL'] .
+    $tpv_data['Private_key']
+  ));*/
+
+  $tpv_data['Ds_Merchant_MerchantSignature'] = strtoupper(hash("sha256", 
+    $tpv_data['Ds_Merchant_Amount'] .
+    $tpv_data['Ds_Merchant_Order'] .
+    $tpv_data['Ds_Merchant_MerchantCode'] .
+    $tpv_data['Ds_Merchant_Currency'] .
+    $tpv_data['Ds_Merchant_TransactionType'] .
+    $tpv_data['Ds_Merchant_MerchantURL'] .
+    $tpv_data['Private_key']
+  ));
+
+  	$miObj = new RedsysAPI;
+  	// Se Rellenan los campos
+	$miObj->setParameter("DS_MERCHANT_AMOUNT", $tpv_data['Ds_Merchant_Amount']);
+	$miObj->setParameter("DS_MERCHANT_ORDER", strval($tpv_data['Ds_Merchant_Order']));
+	$miObj->setParameter("DS_MERCHANT_MERCHANTCODE", $tpv_data['Ds_Merchant_MerchantCode']);
+	$miObj->setParameter("DS_MERCHANT_CURRENCY", $tpv_data['Ds_Merchant_Currency']);
+	$miObj->setParameter("DS_MERCHANT_TRANSACTIONTYPE", $tpv_data['Ds_Merchant_TransactionType']);
+	$miObj->setParameter("DS_MERCHANT_TERMINAL", $tpv_data['Ds_Merchant_Terminal']);
+	$miObj->setParameter("DS_MERCHANT_MERCHANTURL", $tpv_data['Ds_Merchant_MerchantURL']);
+	$miObj->setParameter("DS_MERCHANT_URLOK", $tpv_data['Ds_Merchant_MerchantURL'] . '?status=ok');		
+	$miObj->setParameter("DS_MERCHANT_URLKO", $tpv_data['Ds_Merchant_MerchantURL'] . '?status=ko');
+
+	//Datos de configuración
+	$version="HMAC_SHA256_V1";
+	$kc = $tpv_data['Private_key'];//Clave recuperada de CANALES
+	// Se generan los parámetros de la petición
+	$request = "";
+	$params = $miObj->createMerchantParameters();
+	$signature = $miObj->createMerchantSignature($kc);
+
+
+  //debug($tpv_data['Ds_Merchant_MerchantSignature']);
+  $form['#action'] = $tpv_data['url'];
+  $form['#method'] = 'post';
+  $form['#attributes']['accept-charset'] = 'windows-1252';
+  /* fields show to client for confirmation*/
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#title' => t('Client first name'),
+    '#size' => 25,
+    '#default_value' => empty($query) ? '' : $query[0]->name,
+  );
+
+  $form['last_name'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#title' => t('Client last name'),
+    '#size' => 25,
+    '#default_value' => empty($query) ? '' : $query[0]->last_name,
+  );
+
+  $form['mail'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#title' => t('Client email'),
+    '#size' => 25,
+    '#default_value' => empty($query) ? '' : $query[0]->mail,
+  );
+  /*
+  $form['ref_viaje'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#title' => t('Product SKU'),
+    '#size' => 40,
+    '#default_value' => empty($query) ? '' : $query[0]->ref_viaje,
+  );
+  */
+
+  $form['Ds_Merchant_ProductDescription'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tour name'),
+    '#attributes' => array('readonly' => 'readonly'),
+    '#value'=> $tpv_data['Ds_Merchant_ProductDescription'],
+  );
+
+  $form['concepto'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#title' => t('Bank Statement reference'),
+    '#size' => 40,
+    '#default_value' => empty($query) ? '' : $query[0]->concepto,
+  );
+
+  $form['cantidad'] = array(
+    '#type' => 'textfield',
+    '#disabled' => TRUE,
+    '#size' => 8,
+    '#maxlength' => 8,
+    '#title' => t('Amount to pay'),
+    '#default_value' => (empty($query) ? 0 : $query[0]->cantidad) . ' €',
+  );
+
+  $form['Ds_Merchant_Amount'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_Amount'],
+  );
+
+  $form['Ds_Merchant_Currency'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_Currency'],
+  );
+
+  $form['Ds_Merchant_Order'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_Order'],
+  );
+
+  /*
+  $form['Ds_Merchant_Titular'] = array(
+    '#type' => 'hidden',
+    '#value'=> $merchantTitular,
+  );
+
+  $form['Ds_Merchant_MerchantName'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_MerchantName'],
+  );
+  $form['Ds_Merchant_MerchantCode'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_MerchantCode'],
+  );
+
+  $form['Ds_Merchant_MerchantURL'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_MerchantURL'],
+  );
+
+  $form['Ds_Merchant_ConsumerLanguage'] = array(
+   '#type' => 'hidden',
+   '#value'=> $tpv_data['Ds_Merchant_ConsumerLanguage'],
+  );
+
+  $form['Ds_Merchant_MerchantSignature'] = array(
+    '#type' => 'hidden',
+    '#value'=> $tpv_data['Ds_Merchant_MerchantSignature'],
+  );
+
+  $form['Ds_Merchant_Terminal'] = array(
+    '#type' => 'hidden',
+    '#value' => $tpv_data['Ds_Merchant_Terminal'],
+  );
+
+  $form['Ds_Merchant_TransactionType'] = array(
+    '#type' => 'hidden',
+    '#value' => $tpv_data['Ds_Merchant_TransactionType'],
+  );
+
+  $form['Ds_Merchant_MerchantData'] = array(
+    '#type' => 'hidden',
+    '#value' => $query[0]->token,
+  );
+  */
+
+  $form['Ds_SignatureVersion'] = array(
+    '#type' => 'hidden',
+    '#value' => $version,
+  );
+
+  $form['Ds_MerchantParameters'] = array(
+    '#type' => 'hidden',
+    '#value' => $params,
+  );
+
+  $form['Ds_Signature'] = array(
+    '#type' => 'hidden',
+    '#value' => $signature,
+  );
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Confirm and proceed to payment'),
+    '#weight' =>0,
+  );
+
+  return $form;
+}
+
+/**
+ * Pay order form create/edit
+ *
+ * @param $form
+ * @param $form_state
+ *
+ * @return page form
+ */
+
+function opinno_tpv_edit($form, $form_state) {
+  $index = $form_state["build_info"]["args"][0];
+  $languages = locale_language_list('name');
+
+  if(!empty($index) && ($index != '')){
+    $nuevo = false;
+    $query = db_select('ordenes_de_pago', 'odp')
+    ->fields('odp', array('uid','name', 'last_name', 'token', 'mail', 'ref_viaje', 'fecha', 'factura_proforma', 'notas', 'concepto', 'estado', 'respuesta_tpv', 'editable', 'plantilla_email', 'email_enviado', 'fecha_email_enviado', 'cantidad', 'language'))
+    ->condition('uid', $index,'=');
+    $results = $query->execute();
+    $data = $results->fetchAll();
+  } else {
+    $default_email = variable_get('opinno_tpv_email_es', array('value' => '', 'format' => NULL));
+    $index = 0;
+    $nuevo = true;
+    // Generar token
+    $token = md5(uniqid(rand(), true));
+  }
+
+  $email_enviado = array(t('No'),t('Yes'));
+  $estado_email = empty($data) ? $email_enviado[0] : $email_enviado[$data[0]->email_enviado];
+
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#required' => FALSE,
+    '#value' => $index,
+  );
+
+  $form['token'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Order Token'),
+    '#attributes' => array('readonly' => 'readonly'),
+    '#size' => 30,
+    '#default_value' => empty($data) ? $token : $data[0]->token,
+  );
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Client first name'),
+    '#size' => 25,
+    '#default_value' => empty($data) ? '' : $data[0]->name,
+  );
+
+  $form['last_name'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Client last name'),
+    '#size' => 25,
+    '#default_value' => empty($data) ? '' : $data[0]->last_name,
+  );
+
+  $form['mail'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Client email'),
+    '#size' => 25,
+    '#default_value' => empty($data) ? '' : $data[0]->mail,
+  );
+
+  $form['ref_viaje'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Tour name'),
+    '#size' => 40,
+    '#default_value' => empty($data) ? '' : $data[0]->ref_viaje,
+  );
+
+  $form['concepto'] = array(
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#title' => t('Concept'),
+    '#size' => 40,
+    '#default_value' => empty($data) ? '' : $data[0]->concepto,
+  );
+
+  $form['cantidad'] = array(
+    '#type' => 'textfield',
+    '#required' => FALSE,
+    '#size' => 8,
+    '#maxlength' => 8,
+    '#title' => t('Amount to pay'),
+    '#default_value' => empty($data) ? 0 : $data[0]->cantidad,
+  );
+
+  $form['editable'] = array(
+    '#type' => 'checkbox',
+    '#required' => FALSE,
+    '#title' => t('Is editable?'),
+    '#default_value' => empty($data) ? 1 : $data[0]->editable,
+  );
+
+  $form['fecha'] = array(
+    '#type' => 'date_popup',
+    '#date_format' => 'd-m-Y',
+    '#required' => FALSE,
+    '#title' => t('Payment Order date'),
+    '#default_value' => empty($data) ? date("Y-m-d H:i:s",time()) : date("Y-m-d H:i:s",$data[0]->fecha),
+  );
+
+  $form['estado'] = array(
+    '#type' => 'select',
+    '#title' => t('Payment state'),
+    '#options' => array(
+      0 => t('Pending'),
+      1 => t('Payed'),
+      2 => t('Card not valid'),
+      3 => t('Verification error'),
+    ),
+    '#default_value' => empty($data) ? 0 : $data[0]->estado,
+    '#description' => t('Actual payment status'),
+  );
+
+  if (!$nuevo) {
+    $form['respuesta_tpv'] = array(
+      '#type' => 'textfield',
+      '#required' => FALSE,
+      '#title' => t('TPV Response'),
+      '#disabled' => TRUE,
+      '#default_value' => empty($data) ? '' : $data[0]->respuesta_tpv,
+    );
+  }
+
+  $form['email_enviado'] = array(
+    '#type' => 'textfield',
+    '#required' => FALSE,
+    '#title' => t('Mail sent'),
+    '#size' => 3,
+    '#disabled' => TRUE,
+    '#default_value' => $estado_email,
+  );
+
+  $form['fecha_email_enviado'] = array(
+    '#type' => 'textfield',
+    '#required' => FALSE,
+    '#title' => t('Date mail sent'),
+    '#disabled' => TRUE,
+    '#size' => 10,
+    '#default_value' => empty($data) ? '' : date("d/m/Y",$data[0]->fecha_email_enviado),
+  );
+
+  $form['language'] = array(
+    '#type' => 'select',
+    '#title' => t('Email language'),
+    '#options' => $languages,
+    '#default_value' => empty($data) ? 'es' : $data[0]->language,
+    '#description' => t('Set this to <em>Yes</em> if you would like this category to be selected by default.'),
+   );
+
+   $form['contenedor'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="language"]' => array('value' => 'es'),
+       ),
+     ),
+   );
+
+  foreach ($languages as $lang_code => $lang_name) {
+    $field_name = 'opinno_tpv_email_' . $lang_code;
+    $cont_name = 'contenedor' . $lang_code;
+    if (empty($data)) {
+      $field_value = variable_get($field_name, array('value' => '', 'format' => 'full_html'));
+    } else {
+      $field_value = array('value' => $data[0]->plantilla_email, 'format' => 'full_html');
+    }
+   $form[$cont_name] = array(
+    '#type' => 'container',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="language"]' => array('value' => $lang_code),
+       ),
+     ),
+   );
+
+    $form[$cont_name][$field_name] = array(
+      '#type' => 'text_format',
+      '#title' => t('Plantilla de email en ' . $lang_name),
+      '#default_value' => $field_value['value'],
+      '#description' => t('Plantilla del email por defecto para idioma ' . $lang_name),
+    );
+  }
+
+  $form['factura_proforma'] = array(
+    '#type' => 'textarea',
+    '#required' => FALSE,
+    '#title' => t('Preform bill'),
+    '#default_value' => empty($data) ? '' : $data[0]->factura_proforma,
+  );
+
+  $form['notas'] = array(
+    '#type' => 'textarea',
+    '#required' => FALSE,
+    '#title' => t('Personal notes'),
+    '#default_value' => empty($data) ? '' : $data[0]->notas,
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 5,
+  );
+
+  $form['actions']['send_email'] = array(
+    '#type' => 'submit',
+    '#value' => t('Send Payment Order email'),
+    '#disabled' => $nuevo,
+    '#weight' => 10,
+  );
+
+  return $form;
+}
+
+/**
+ * Pay order form - submit hook
+ *
+ * @param $form
+ * @param $form_state
+ */
+
+function opinno_tpv_edit_submit($form, &$form_state){
+  $index = $form_state["build_info"]["args"][0];
+  $data = $form_state['input'];
+
+  $button = $form_state['clicked_button']['#id'];
+
+  switch ($button) {
+    case 'edit-submit':
+      $email_template = "opinno_tpv_email_" . $data['language'];
+      if ($data['editable'] == NULL) $data['editable'] = 0;
+      if (isset($index) && ($index != '')) {
+        // Fields not saved 'uid', 'email_enviado', 'respuesta_tpv', 'fecha_email_enviado', 'token'
+        $query = db_update('ordenes_de_pago')
+          ->fields(array(
+            'name' => $data['name'],
+            'last_name' => $data['last_name'],
+            'cantidad' => $data['cantidad'],
+            'mail' => $data['mail'],
+            'ref_viaje' => $data['ref_viaje'],
+            'fecha' => strtotime($data['fecha']['date']),
+            'language' => $data['language'],
+            'factura_proforma' => $data['factura_proforma'],
+            'notas' => $data['notas'],
+            'concepto' => $data['concepto'],
+            'estado' => $data['estado'],
+            'editable' => $data['editable'],
+            'plantilla_email' => $data[$email_template]['value']
+          ))
+          ->condition('uid', $data['uid'], '=')
+          ->execute();
+      } else {
+        $query = db_insert('ordenes_de_pago')
+          ->fields(array(
+            'token' => $data['token'],
+            'name' => $data['name'],
+            'last_name' => $data['last_name'],
+            'cantidad' => $data['cantidad'],
+            'mail' => $data['mail'],
+            'ref_viaje' => $data['ref_viaje'],
+            'fecha' => strtotime($data['fecha']['date']),
+            'language' => $data['language'],
+            'factura_proforma' => $data['factura_proforma'],
+            'notas' => $data['notas'],
+            'concepto' => $data['concepto'],
+            'estado' => $data['estado'],
+            'editable' => $data['editable'],
+            'plantilla_email' => $data[$email_template]['value'],
+          ))
+          ->execute();
+      }
+      drupal_set_message(t('Pay order was updated successfully'),'status');
+      break;
+
+    case 'edit-send-email':
+      opinno_tpv_send_payment_email($data['token']);
+      //drupal_set_message(t('Email was successfuly send'),'status');
+      break;
+  }
+
+  drupal_goto('admin/config/system/opinno_tpv/ordenes_de_pago');
+
+}
+
+/**
+ * Webform Hook, to intercecpt when the user makes a new webform submision
+ *
+ * @param $node
+ * @param $submission
+ */
+
+function opinno_tpv_webform_submission_insert($node, $submission) {
+  // Insert a record into a 3rd-party module table when a submission is added.
+
+  $field_ids = array(
+    '38' => 66, // Reservation Form ES
+    //'270' => 39, // Formulario reserva de bicicleta
+    //'347' => 38, // Formulario reserva de bicicleta
+    //'349' => 38, // Reservation Form of bike
+    '350' => 66, // Formulario Reserva de Viaje
+    '1648' => 69, // Reservation Form One Day tours
+    '1649' => 66, // Reservation Form
+  );
+
+  if(array_key_exists($node->nid, $field_ids)){
+    $field_id = $field_ids[$node->nid];
+
+    if ($submission->data[$field_id][0] == "Credit_card") {
+
+      opinno_tpv_send_webform_email($submission->nid,$submission->sid);
+      drupal_goto('payment',array('query'=>array("nid"=>$submission->nid,"sid"=>$submission->sid)));
+    }
+  }
+
+}
+
+/**
+ * Send an email with payment information to the client
+ *
+ * @param $data Data of the payment order
+ */
+
+function opinno_tpv_send_payment_email($data){
+  global $base_url;
+
+  $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp')
+      ->condition('token', $data, '=')
+      ->execute()
+      ->fetchAll();
+
+  $keys=array();
+  $values=array();
+
+  foreach($query[0] as $key=>$value){
+    $keys[]='@'.$key;
+    $values[$key]=$value;
+  }
+
+  $keys[] = '@url';
+  $values['url'] = $base_url . '/' . $query[0]->language . '/payment/' . $query[0]->token;
+
+  $mail = $values['plantilla_email'];
+  $new_mail = str_replace($keys, $values, $mail);
+  $emailbikespain = variable_get('opinno_tpv_email_from','');
+
+  $enviar_mail = drupal_mail(
+    'opinno_tpv',
+    'orden_de_pago',
+    $query[0]->mail,
+    $query[0]->language,
+    $params = array(
+      'mail' => $query[0]->mail,
+      'new_mail'=> $new_mail,
+      'from'=>$emailbikespain,
+    ),
+    $emailbikespain
+  );
+
+    //$enviar_mail=mail($values['mail'],'ORDEN DE PAGO',$new_mail,"FROM: ".$emailbikespain);
+
+  if($enviar_mail){
+    $query =  db_update('ordenes_de_pago')
+      ->fields(array('email_enviado' => '1', 'fecha_email_enviado'=> time()))
+      ->condition('token', $data, '=')
+      ->execute();
+    drupal_set_message(t('Email was successfuly send'),'status');
+  } else {
+    drupal_set_message(t('The email could not be send'),'error');
+  }
+}
+
+/**
+ * Send an email with payment confirmation to the client
+ *
+ * @param $data Token of the payment order
+ */
+
+function opinno_tpv_payment_confirmation_email($data){
+
+   $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp')
+      ->condition('token', $data, '=')
+      ->execute()
+      ->fetchAll();
+
+    $keys=array();
+    $values=array();
+
+    foreach($query[0] as $key=>$value){
+      $keys[]='@'.$key;
+      $values[$key]=$value;
+    }
+
+    $mail_template = 'opinno_tpv_email_success_' . $query[0]->language;
+    $mail = variable_get($mail_template);
+    $mail = $mail['value'];
+    $new_mail = str_replace($keys, $values, $mail);
+    $emailbikespain = variable_get('opinno_tpv_email_from','');
+
+    $enviar_mail = drupal_mail(
+      'opinno_tpv',
+      'pay_success',
+      $query[0]->mail,
+      $query[0]->language,
+      $params = array(
+        'mail' => $query[0]->mail,
+        'new_mail'=> $new_mail,
+        'from'=>$emailbikespain,
+      ),
+      $emailbikespain
+    );
+}
+
+function opinno_tpv_mail ($key, &$message, $params) {
+
+
+  switch ($key) {
+    case 'orden_de_pago':
+      // Set headers etc
+      $message['to'] = $params['mail'];
+      $message['id'] = 'opinno_tpv_orden_de_pago';
+      $message['subject'] = variable_get('site_name') .' - ' . t('Payment Order');
+      $message['body'][] = $params['new_mail'];
+      $message['from']=$params['from'];
+      break;
+    case 'pay_success':
+      $message['to'] = $params['mail'];
+      $message['id'] = 'opinno_tpv_orden_pagada';
+      $message['subject'] = variable_get('site_name') .' - ' . t('Your payment has been sucessfully received');
+      $message['body'][] = $params['new_mail'];
+      $message['from']=$params['from'];
+      break;
+    case 'webform_submit':
+      $message['to'] = $params['from'];
+      $message['id'] = 'webform_enviado';
+      $message['subject'] = "Envío de formulario: Formulario de Reserva - Pago TPV";
+      $message['body'][] = $params['new_mail'];
+      $message['from']=$params['from'];
+      break;
+  }
+}
+
+/**
+ * Page where the TPV posts the payment process result data
+ *
+ * @return page form
+ */
+
+function opinno_tpv_response_page(){
+  $tpv_response = array(
+    'status' => $_REQUEST['status'],
+    'token' => $_REQUEST['Ds_MerchantData'],
+    'cantidad' => $_REQUEST['Ds_Amount'] / 100,
+    'fecha' => $_REQUEST['Ds_Date'],
+    'hora' => $_REQUEST['Ds_Hour'],
+    'digest' => $_REQUEST['Ds_Signature'],
+    'response' => $_REQUEST['Ds_Response'],
+    'secure' => $_REQUEST['Ds_SecurePayment'],
+    'order' => $_REQUEST['Ds_Order'],
+    'version' => $_REQUEST['Ds_SignatureVersion'],
+    'params' => $_REQUEST['Ds_MerchantParameters']
+  );
+
+  if (isset($tpv_response['params'])) {
+	$miObj = new RedsysAPI;
+    $query = $miObj->decodeMerchantParameters($tpv_response['params']);
+
+    //$security_check = TRUE;
+    $security_check = opinno_tpv_check_signature( $tpv_response['version'], $tpv_response['params'], $tpv_response['digest']);
+
+    if (sizeof($query) > 0) {
+      $amount_check = ($tpv_response['cantidad'] == $query[0]->cantidad);
+      opinno_tpv_save_debug_data($tpv_response['token'], json_encode($_REQUEST));
+    } else {
+      $amount_check = FALSE;
+    }
+
+    // Check if the signature, and order amount is ok, also if order with that token exists
+    if ($security_check && sizeof($query > 0) && $amount_check) {
+      switch ($tpv_response['status']) {
+        case 'ok':
+          // Everything is Ok
+          if ((intval($tpv_response['response']) <= '99') && (intval($tpv_response['response']) >= '0')) {
+            $message = t('Se ha registrado correctamente el pago.');
+            $new_status = 1; // Payed
+            $pay_link = FALSE;
+            //opinno_tpv_payment_confirmation_email($tpv_response['token']);
+          } else {
+            $message = t('El pago no se pudo validar.');
+            $new_status = 2; // Error en el pago
+            $pay_link = TRUE;
+          }
+          break;
+        case 'ko':
+          // Card its not valid
+          $message = t('El pago no se pudo validar. Error: ') . $tpv_response['response'];
+          $new_status = 2; // Error en el pago
+          $pay_link = TRUE;
+          break;
+      }
+      opinno_tpv_update_response($tpv_response['token'], $tpv_response['response'], $tpv_response['hora'], $tpv_response['fecha']);
+    } else {
+      // Signature, amount or token are not valid
+      $message = t('Se ha producido un error en la verificación del pago.');
+      $new_status = 3; // Verification error
+      $pay_link = TRUE;
+    }
+    opinno_tpv_actualizar_estado($tpv_response['token'],$new_status);
+  } else {
+    // There was no token in the response
+    $message = t('Se ha producido un error de comunicación con el TPV o accedio a está página de forma incorrecta.');
+    $pay_link = FALSE;
+  }
+
+  $form['mensaje'] = array(
+    '#markup' => $message . '</br>',
+  );
+
+  if ($pay_link) {
+    $form['link_pago'] = array(
+      '#type' => 'link',
+      '#title' => t('Realizar de nuevo el pago'),
+      '#href' => 'payment_process/' . $tpv_response['token'],
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Updates the payment order status for a given token
+ *
+ * @param $token        payment order token
+ * @param $estado       new status
+ */
+
+function opinno_tpv_actualizar_estado($token, $estado){
+  db_update('ordenes_de_pago')
+  ->fields(array(
+    'estado' => $estado
+  ))
+  ->condition('token', $token, '=')
+  ->execute();
+}
+
+/**
+ * Saves the TPV response json encoded for future debug
+ *
+ * @param $token        payment order token
+ * @param $estado       new status
+ */
+
+function opinno_tpv_save_debug_data($token, $json){
+  db_update('ordenes_de_pago')
+  ->fields(array(
+    'response_debug' => $json
+  ))
+  ->condition('token', $token, '=')
+  ->execute();
+}
+
+/**
+ * Updates the tpv response code status for a given token
+ *
+ * @param $token        payment order token
+ * @param $response     new status
+ */
+function opinno_tpv_update_response($token, $response, $hora, $fecha){
+  switch ($response) {
+    case '0900':
+      $message = 'Transacción autorizada para devoluciones y confirmaciones';
+      break;
+    case '101':
+      $message = 'Tarjeta caducada';
+      break;
+    case '102':
+      $message = 'Tarjeta en excepción transitoria o bajo sospecha de fraude';
+      break;
+    case '104':
+      $message = 'Operación no permitida para esa tarjeta o terminal';
+      break;
+    case '9104':
+      $message = 'Operación no permitida para esa tarjeta o terminal';
+      break;
+    case '116':
+      $message = 'Disponible insuficiente';
+      break;
+    case '118':
+      $message = 'Tarjeta no registrada';
+      break;
+    case '129':
+      $message = 'Código de seguridad (CVV2/CVC2) incorrecto';
+      break;
+    case '180':
+      $message = 'Tarjeta ajena al servicio';
+      break;
+    case '184':
+      $message = 'Error en la autenticación del titular';
+      break;
+    case '190':
+      $message = 'Denegación sin especificar Motivo';
+      break;
+    case '191':
+      $message = 'Fecha de caducidad errónea';
+      break;
+    case '202':
+      $message = 'Tarjeta en excepción transitoria o bajo sospecha de fraude con retirada de tarjeta';
+      break;
+    case '912':
+      $message = 'Emisor no disponible';
+      break;
+    case '9912':
+      $message = 'Emisor no disponible';
+      break;
+    default:
+      if ((intval($response) <= '99') && (intval($response) >= '0')) {
+        $message = 'Transacción autorizada para pagos y preautorizaciones';
+      } else {
+        $message = 'Transacción denegada';
+      }
+      break;
+  }
+  db_update('ordenes_de_pago')
+  ->fields(array(
+    'respuesta_tpv' => '[' . $fecha . ' ' . $hora . '] (' . $response . ')' . $message,
+  ))
+  ->condition('token', $token, '=')
+  ->execute();
+}
+
+/**
+ * Checks if the TPV returned signature is correct
+ *
+ * @param $token      payment order token
+ * @param $digest     returned signature from the TPV
+ *
+ * @return TURE / FALSE
+ */
+
+function opinno_tpv_check_signature( $version, $datos, $signatureRecibida ) {
+	$miObj = new RedsysAPI;	
+	$decodec = $miObj->decodeMerchantParameters($datos);	
+	$kc = variable_get('opinno_tpv_clave', ''); //Clave recuperada de CANALES
+	$firma = $miObj->createMerchantSignatureNotif($kc,$datos);	
+	return ($firma === $signatureRecibida);
+}
+
+/**
+ * Checks if the TPV returned signature is correct
+ *
+ * @param $token      payment order token
+ * @param $digest     returned signature from the TPV
+ *
+ * @return TURE / FALSE
+ */
+
+function opinno_tpv_check_digest($token, $digest, $order, $response, $secure) {
+ $query = db_select('ordenes_de_pago', 'odp')
+ ->fields('odp')
+ ->condition('token', $token, '=')
+ ->execute()
+ ->fetchAll();
+
+ $status = FALSE;
+
+ if (sizeof($query) > 0) {
+
+  $order_id = intval(substr($order, 0, 4));
+  // Check if the order uid is correct
+  if ($order_id == $query[0]->uid) {
+    $order_data = array(
+       'Ds_Merchant_Amount' => ($query[0]->cantidad) * 100,
+       'Ds_Merchant_Order' => $order, //str_pad($query[0]->uid, 12, "0", STR_PAD_LEFT),
+       'Ds_Merchant_MerchantCode' => variable_get('opinno_tpv_fuc_number', ''),
+       'Ds_Merchant_Currency' => 978,
+       'Ds_Response' => $response,
+       'Ds_Merchant_TransactionType' => 0,
+       'Ds_SecurePayment' => $secure,
+       'Ds_Merchant_MerchantURL' => variable_get('opinno_tpv_url', ''),
+       'Ds_Merchant_MerchantSignature' => '',
+       'Private_key' => variable_get('opinno_tpv_clave', ''),
+     );
+
+     /*$order_data['Ds_Merchant_MerchantSignature'] = strtoupper(sha1(
+       $order_data['Ds_Merchant_Amount'] .
+       $order_data['Ds_Merchant_Order'] .
+       $order_data['Ds_Merchant_MerchantCode'] .
+       $order_data['Ds_Merchant_Currency'] .
+       $order_data['Ds_Response'] .
+       $order_data['Private_key']
+     ));*/
+
+    $order_data['Ds_Merchant_MerchantSignature'] = strtoupper(hash("sha256",
+       $order_data['Ds_Merchant_Amount'] .
+       $order_data['Ds_Merchant_Order'] .
+       $order_data['Ds_Merchant_MerchantCode'] .
+       $order_data['Ds_Merchant_Currency'] .
+       $order_data['Ds_Response'] .
+       $order_data['Private_key']
+     ));
+
+     if ($order_data['Ds_Merchant_MerchantSignature'] == $digest) $status = TRUE;
+   }
+ }
+
+ return $status;
+}
+
+/**
+ * Checks if an order with the given token is payed
+ *
+ * @param $token      payment order token
+ *
+ * @return TURE / FALSE
+ */
+
+function opinno_tpv_check_is_payed($token){
+  $query = db_select('ordenes_de_pago', 'odp')
+      ->fields('odp', array('token', 'estado'))
+      ->condition('token', $token, '=')
+      ->condition('estado', 1, '=')
+      ->execute()
+      ->fetchAll();
+
+  $result = (sizeof($query) == 0) ? FALSE : TRUE;
+  return $result;
+}
+
+/**
+ * Send an email with webform link
+ *
+ * @param $sid
+ * @param $nid
+ */
+
+function opinno_tpv_send_webform_email($nid, $sid){
+  global $base_url;
+
+  $link = $base_url . '/node/' . $nid  . '/submission/' . $sid;
+
+  $body = "Envío de formulario recibido, pulse el link para ver el envio: " . $link;
+  $to = variable_get('opinno_tpv_email_from','');
+
+  $enviar_mail = drupal_mail(
+    'opinno_tpv',
+    'webform_submit',
+    $to,
+    'es',
+    $params = array(
+      'mail' => $to,
+      'new_mail'=> $body,
+      'from'=>$to,
+    ),
+    $to
+  );
+}

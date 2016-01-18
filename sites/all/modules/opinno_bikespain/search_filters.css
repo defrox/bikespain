@@ -1,0 +1,148 @@
+.resultados_titulo_general {
+	margin: 0 0 24px 0;
+}
+.search_filters_results_group {
+	display: block;
+	clear: both;
+	padding: 30px 0 0 0;
+}
+#search_filters_results {
+	margin-left: 0;
+	margin-top: 0;
+}
+#opinno-bikespain-form, #opinno-bikespain-form-espana, #opinno-bikespain-form-europa {
+	margin: auto auto auto auto;
+	width: 795px;
+	height: 30px;
+}
+#opinno-bikespain-form .form-type-select, #opinno-bikespain-form-espana .form-type-select, #opinno-bikespain-form-europa .form-type-select {
+	position: relative;
+	float: left;
+	width: 235px;
+	box-shadow: .1em .1em .2em rgba(0, 0, 0, .4);
+	border-radius: .3em;
+	border: .4em solid rgba(255, 255, 255, .3);
+}
+.form-item-trip {
+	margin-left: 30px;
+	margin-right: 30px;
+}
+#opinno-bikespain-form .form-type-select label, #opinno-bikespain-form-espana .form-type-select label, #opinno-bikespain-form-europa .form-type-select label {
+	display: none;
+}
+#opinno-bikespain-form .form-type-select select, #opinno-bikespain-form-espana .form-type-select select, #opinno-bikespain-form-europa .form-type-select select {
+	width: 235px;
+	height: 30px;
+	float: left;
+	font-size: 14px;
+	border: 0;
+	padding: 5px;
+	background-color: #ffffff;
+}
+.resultados_producto {
+	width: 320px;
+	float: left;
+	/**/
+	margin: 0 10px;
+}
+.resultados_producto: first-child {
+	margin-left: 0;
+}
+.resultados_producto: last-child {
+	margin-right: 0;
+}
+.resultados_producto_primer_resultado {
+	margin-left: 0;
+}
+.resultados_imagen {
+	position: relative;
+	display: block;
+	width: 320px;
+	height: 300px;
+	/*border: 4px solid #a6a2a3;*/
+	overflow: hidden;
+	text-decoration: none;
+}
+.resultados_imagen:hover .link-overlay {
+	background: none repeat scroll 0 0 rgba(20, 22, 23, 0.6);
+}
+.resultados_imagen:hover .link-overlay:before {
+	opacity: 1;
+	transform: scale(1);
+}
+.link-overlay:before {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border-radius: 50%;
+	color: #2C2C2C;
+	display: block;
+	font: 14px/46px 'FontAwesome';
+	height: 46px;
+	left: 50%;
+	margin: -22px 0 0 -25px;
+	opacity: 0;
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	transform: scale(0.8);
+	transition: transform 0.3s ease 0s, opacity 0.3s ease 0s;
+	width: 46px;
+}
+.link-overlay {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: background-color 0.3s ease 0s;
+}
+.resultados_imagen:hover img {
+	transform: scale(1.1);
+}
+.resultados_imagen img {
+	border: 0;
+	max-width: none;
+	width: 320px;
+	height: 300px;
+	transition: all 0.2s ease 0s;
+}
+.resultados_titulo {
+	/*position: absolute;
+		bottom: 10px;
+		left: 15px;
+		right: 15px;
+		text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+		color: #fff;
+		font-size: 22px;
+		line-height: 26px;
+		*/
+	display: block;
+	text-align: center;
+	color: #313538;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 15px 0 6px;
+}
+.resultados_tipo_contenido {
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	font-variant: italic;
+}
+.resultados_tipo_contenido span {
+	color: #C9C9C9;
+}
+.resultados_ver_mas {
+	text-align: right;
+	font-weight: bold;
+}
+.resultados_ver_mas a, .resultados_ver_mas a:active, .resultados_ver_mas a:visited {
+	color: #000;
+}
+.resultados_ver_mas a:hover {
+	color: #e34735;
+}
+.ajax-progress {
+	background-color: rgba(255, 255, 255, .8);
+	width: 235px;
+}

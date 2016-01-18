@@ -1,0 +1,806 @@
+<?php
+require_once('opinno_bikespain.inc');
+$contexto_p = '35';
+/* Some usefull functions into a class for this module. It's into a class to avoid name collisions */
+class OpinnoBikespainHelper{
+
+	public static function getCurrentLang(){ global $language; return $language->language; }
+
+	public static function fechaDisponible($fecha, $mes){
+		// Evalua si un mes dado se encuentra en las fechas de disponibilidad
+		$milis = strtotime($fecha['value']);
+		$milis2 = strtotime($fecha['value2']);
+
+		if($fecha['value'] == $fecha['value2'])
+			return (date('n', $milis) == intval($mes))? true : false; // Un día
+		else
+			if(date('Y', $milis) == date('Y', $milis2))
+				return (date('n', $milis) <= intval($mes) && date('n', $milis2) >= intval($mes))? true : false; // Periodo de tiempo en mismo año
+			else
+				return (date('n', $milis) > intval($mes) && date('n', $milis2) < intval($mes))? false : true; //Periodo de tiempo en el que se cambia de año
+	}
+
+	public static function getContentFromBBDD($cities, $trip, $month, $limit_ini, $limit_fin, $context='spain', $tipo=0){
+		@$context = ($GLOBALS['contexto_p'] == '38') ? variable_get('europe_context','europa') : variable_get('spain_context','spain');
+		$trips = 'field_tipo_de_producto';
+		$campoLugar = 'field_lugar';
+		$query = new EntityFieldQuery();
+		$dfx_lang = OpinnoBikespainHelper::getCurrentLang() == 'es' ? 'en' : 'es';
+		$language = OpinnoBikespainHelper::getCurrentLang();
+		$query->entityCondition('entity_type', 'node')
+			->entityCondition('bundle', 'productos')
+			->propertyCondition('status', 1)
+			//->propertyCondition('language', OpinnoBikespainHelper::getCurrentLang())
+			->propertyCondition('language', $dfx_lang, '<>')
+			->fieldCondition('field_contexto', 'value', $context)
+			->fieldOrderBy('field_prioritarios', 'value', 'DESC')
+			->range($limit_ini, $limit_fin)
+			->addTag('efq_debug');
+		if($cities>0)
+			$query->fieldCondition($campoLugar, 'tid', array($cities));
+		if($trip>0)
+			$query->fieldCondition($trips, 'tid', array($trip));
+		if($tipo==1)
+			$query->fieldCondition('field_special_offer', 'value', '1', '=');
+		if($tipo==2)
+			$query->fieldCondition('field_suggestions', 'value', '1', '=');
+
+		$result = $query->execute();
+		$res = array();
+		if (isset($result['node'])) {
+			$news_items_nids = array_keys($result['node']);
+			$news_items = entity_load('node', $news_items_nids);
+			if($month>0){
+				foreach($news_items as $producto){
+					$field_dates = OpinnoBikespainHelper::GetListByLangOrUnd($producto, $language, 'field_dates');
+					foreach($field_dates as $value){
+						if(OpinnoBikespainHelper::fechaDisponible($value, $month)){/* Filtro de month */
+							$res[] = $producto;
+							break;
+						}
+					}
+				}
+			} else {
+				$res = $news_items;
+			}
+		}
+		return $res;
+	}
+
+	public static function maquetaCajaResultados (&$out, &$tiposProductos, &$prod, $context, &$i, &$titulo, $tipo=0) {
+		global $theme, $language;
+		$out .= ($i==1)? '<div class="resultados_titulo_general"><h3 class="lined">'.$titulo.'</h3></div><div class="resultados_productox resultados_producto_primer_resultadox  col-1-3 row-item">' : '<div class="resultados_productox col-1-3 row-item">';
+		$url = url('node/'. $prod->nid);
+		if ($prod->field_tipo_de_producto){
+			$url_tipo_producto = drupal_lookup_path('alias', 'taxonomy/term/'.$prod->field_tipo_de_producto['und'][0]['tid']);
+		}
+		$field_img = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_imagen', 'uri');
+		$texto_special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer_text');
+		$special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer');
+		if($special_offer == 0 || $tipo != 1)
+			$texto_special_offer = '';
+		$image = '<img src="'.file_create_url(@$field_img).'"/>'; // no usa image-styles
+		$image = theme('image_style',array('style_name' => '3-columnas', 'path' => $field_img)); // esta si usa image-styles
+		if($tipo == 1)
+			$out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="'.$url.'">' . $image . '<div class="texto_oferta_especial_sobre_imagen">'.$texto_special_offer.'</div><div class="link-overlay icon-search"></div></a>';
+		else
+			$out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="'.$url.'">' . $image . '<div class="link-overlay icon-search"></div></a>';
+		$out .= '<a class="resultados_titulo" href="'.$url.'">'.$prod->title.'</a>';
+		$field_tipo = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_tipo_de_producto', 'tid');
+		$texto_promocional = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_texto_promocional');
+		$tipo = (isset($field_tipo))? $field_tipo : 0;
+		$tipo_producto = (($tipo==0) || !array_key_exists($tipo, $tiposProductos) ? '' : $tiposProductos[$tipo]);
+		$out .= '<a class="resultados_tipo_contenido" href="'.$url_tipo_producto.'">'. str_replace('-','',$tipo_producto) .'</a>';
+		$out .= '<span class="resultados_tipo_contenido">'. $texto_promocional .'</span>';
+		$out .= '</div>';
+		//dsm($out);
+		if (!empty($productos)) $i .= ($i==count($productos))? 1 : $i+1;
+		else $i .= ($i==3)? 1 : $i+1;
+	}
+
+	public static function getResults ($cities, $trip, $month, $context='', $tipo=0, $datos=array(false)) {
+		global $theme;
+		$limit_ini = 0;
+		$limit_fin = 9;
+		$i = 1;
+		$out = '';
+		if($datos[0]){
+			$limit_ini = $datos[1];
+			$limit_fin = $datos[2];
+		}
+		$productos = OpinnoBikespainHelper::getContentFromBBDD($cities, $trip, $month, $limit_ini, $limit_fin, $context, $tipo);
+		$tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip - Any'), $context);
+		if (!empty($productos)) {
+			$out .='<div class="row" style="min-width: 100%;">';
+			$verMas = '';
+			/* 0=> Normal, 1=> Ofertas especiales, 2=> Sugerencias */
+			switch ($tipo) {
+				case 1:
+					$titulo = t('Special offers');
+				break;
+				case 2:
+					$titulo = t('Suggestions');
+				break;
+				default:
+					$titulo = t('Results');
+					$verMas = '</div><div><form method="POST">
+						<input type="hidden" name="opinno_filter_destinations" value="'.$cities.'"/>
+						<input type="hidden" name="opinno_filter_trips" value="'.$trip.'"/>
+						<input type="hidden" name="opinno_filter_month" value="'.$month.'"/>
+						<input type="hidden" name="opinno_filter_start" value="'.($limit_ini+$limit_fin).'"/>
+						<input type="hidden" name="opinno_filter_end" value="'.$limit_fin.'"/>
+						<input type="submit" class="form-submit" name="opinno_filter_submit" value="'.t('Ver más resultados').'" />
+					</form></div>';
+			}
+			foreach ($productos as $prod)
+				OpinnoBikespainHelper::maquetaCajaResultados($out, $tiposProductos, $prod, $context, $i, $titulo, $tipo);
+			$out .= $verMas;
+			if ($tipo == 0){
+				//Block Viajes sencillos
+				if (@$GLOBALS['contexto_p'] == '35'){
+					$block_viajes = views_embed_view('viajes_sencillos_destacados', 'block');}
+				if (@$GLOBALS['contexto_p'] == '38'){
+					$block_viajes = views_embed_view('viajes_sencillos_destacados_europa', 'block');}
+				if (!empty($block_viajes)) {
+					$out_sencillos .= '<div style="margin-top: 24px"><h3 class="lined">'.t('Viajes Sencillos').'</h3>' . $block_viajes . '</div>';
+					//$out .= $out_sencillos;
+				}
+			}
+		}
+		return $out;
+	}
+
+	public static function opinno_bikespain_form_wrapped ($form, &$form_state, $contexto=0 ){
+		global $theme;
+		$GLOBALS['contexto_p'] = $contexto;
+		// By destination
+		$lugares = OpinnoBikespainHelper::_taxonomy_options('cycling', t('Search by destination - Any'), $contexto);
+		$form['cities'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by cities - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $lugares,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_trip', 'search_filters_selects'),
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
+
+		);
+		// By product type
+		$tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip type - Any'), $contexto);
+		$form['trip'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by trip - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $tiposProductos,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_trip', 'search_filters_selects'),
+				'onfocus' 			=> "if(this.value == 'Search by trip - Any'){ this.value = ''; }",
+				'onblur' 			=> "if(this.value == ''){ this.value = 'Search by trip - Any'; }"
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
+		);
+		// By date/month
+		$meses = array(t('Search by month - Any'), t('January'), t('February'), t('March'), t('April'), t('May'), t('June'), t('July'), t('August'), t('September'), t('October'), t('November'), t('December'));
+		$form['month'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by month - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $meses,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_month', 'search_filters_selects'),
+				'onfocus' 			=> "if(this.value == 'Search by month - Any'){ this.value = ''; }",
+				'onblur' 			=> "if(this.value == ''){ this.value = 'Search by month - Any'; }"
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
+		);
+		$final = OpinnoBikespainHelper::getResults(0,0,0,$contexto, 1) . OpinnoBikespainHelper::getResults(0,0,0,$contexto, 2);
+		if(!empty($_POST['opinno_filter_submit'])){
+			$datos = array(true);
+			$datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_start');
+			$datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_end');
+			if(OpinnoBikespainHelper::getPostData('opinno_filter_end')>0){
+				$final = OpinnoBikespainHelper::getResults(OpinnoBikespainHelper::getPostData('opinno_filter_destinations'),OpinnoBikespainHelper::getPostData('opinno_filter_trips'),OpinnoBikespainHelper::getPostData('opinno_filter_month'),$contexto, 0, $datos);
+				if(empty($final)){
+					$final = 'No hay más resultados';
+				}
+			}
+
+		}
+		$final = preg_replace("/\'/",'\\\'',$final);
+		$form["javascript"] = array(
+								"#markup" => '<script type="text/javascript"><!--//--><![CDATA[//><!--
+	(function($) {
+		  $(document).ready(function() {
+			  $("#search_filters_results").html(\'' . preg_replace("/\r\n|\r|\n/",'<br/>',$final) . '\');
+			  $("a[rel^=\'prettyPhoto\']").prettyPhoto({changepicturecallback: onPictureChanged,});
+		  });
+		})(jQuery);
+	//--><!]]></script>',
+								);
+		return $form;
+	}
+
+	public static function getPostData($vari){
+		if(array_key_exists($vari, $_POST) && is_numeric($_POST[$vari]))
+			return intval($_POST[$vari]);
+		else
+			return 0;
+	}
+
+	/**
+	 * Returns an array for use with #options in a form field
+	 **/
+	public static function _taxonomy_options($machine_name, $default='', $contexto=0){
+		$vocabulary = taxonomy_vocabulary_machine_name_load($machine_name);
+		if($contexto>0){
+			if($machine_name == 'trip'){
+				if($contexto==35) $contexto=152;
+				if($contexto==38) $contexto=153;
+			}
+			$tree = taxonomy_get_tree($vocabulary->vid, $contexto);
+		}else{
+			$tree = taxonomy_get_tree($vocabulary->vid);
+		}
+		$tree = i18n_taxonomy_localize_terms($tree);
+		if(!empty($default))
+			$options[0] = $default;
+		else
+			$options = array();
+		foreach($tree as $item){
+			$options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
+		}
+		return $options;
+	}
+
+	public static function getIdMDSliderCiudad($ciudad){
+		switch($ciudad){
+			case 54:
+			case 26:
+				$id = 12; /* Holanda */
+			break;
+			case 55:
+			case 27:
+				$id = 13; /* Francia */
+			break;
+			case 50:
+			case 28:
+				$id = 14; /* Bélgica */
+			break;
+			case 42:
+			case 29:
+				$id = 15; /* Italia */
+			break;
+			case 52:
+			case 30:
+				$id = 16; /* Austria */
+			break;
+			case 51:
+			case 31:
+				$id = 17; /* Croacia */
+			break;
+			case 53:
+			case 32:
+				$id = 18; /* Alemania */
+			break;
+			case 40:
+			case 33:
+				$id = 19; /* Portugal */
+			break;
+			case 41:
+			case 34:
+				$id = 21; /* Marruecos */
+			break;
+			case 44:
+			case 15:
+				$id = 5; /* Camino Santiago */
+			break;
+			case 56:
+			case 6:
+				$id = 6; /* Madrid */
+			break;
+			case 46:
+			case 16:
+				$id = 7; /* Andalusia */
+			break;
+			case 47:
+			case 17:
+				$id = 8; /* Wine Route */
+			break;
+			case 48:
+			case 18:
+				$id = 9; /* Catalonia */
+			break;
+			case 45:
+			case 19:
+				$id = 10; /* Green Spain */
+			break;
+			case 49:
+			case 20:
+				$id = 11; /* Islands */
+			break;
+			default:
+				$id = 0;
+		}
+		return $id;
+	}
+
+	//Devuelve los dias que tiene un mes
+	public static function diasMes($i, $anyo){
+		switch($i){ case 4: case 6: case 9: case 11: $diasMes = 30; break; case 2: $diasMes = (checkdate(02,29,$anyo))? 29 : 28; break; default: $diasMes = 31; } return $diasMes;
+	}
+	public static function GetValueByLangOrUnd($node, $language, $var, $value='value'){
+		$valor = '';
+		if(property_exists($node, $var)){
+			$a = $node->$var;
+			if(!empty($a)){
+				if(array_key_exists($language->language, $a) && array_key_exists($value, $a[$language->language][0]))
+					$valor = $a[$language->language][0][$value];
+				if(empty($valor) && array_key_exists('und', $a) && array_key_exists($value, $a['und'][0])){
+					$valor = $a['und'][0][$value];
+				}
+				if(empty($valor))
+					$valor = @$a[0][$value];
+			}
+		}
+		return $valor;
+	}
+	public static function GetListByLangOrUnd($node, $language, $var){
+		$valor = '';
+		if(is_object($node) && property_exists($node, $var)){
+			$a = $node->$var;
+			if(!empty($a)){
+				if(array_key_exists($language->language, $a))
+					$valor = $a[$language->language];
+				if(empty($valor) && array_key_exists('und', $a)){
+					$valor = $a['und'];
+				}
+				if(empty($valor))
+					$valor = $a;
+			}
+		}
+		return $valor;
+	}
+
+	/*
+	// Esta funcion deberia devolver si un contexto está activo, pero context_active_contexts() esta vacio
+	function isContextActive($context){
+		$contexts = context_active_contexts();
+		return (array_key_exists($context, $contexts))? true : false;
+	}*/
+}
+
+
+
+/* Module */
+
+
+/**
+ * Implements hook_menu().
+ */
+function opinno_bikespain_menu() {
+  $items = array();
+
+  $items['admin/config/system/opinno'] = array(
+    'title' => 'Opinno ',
+    'page callback' => 'drupal_get_form',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'page arguments' => array('opinno_admin_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno Settings',
+    'file' => 'opinno_bikespain.admin.inc',
+  );
+/*
+  $items['admin/config/system/opinno/alimentador'] = array(
+    'title' => 'Opinno Alimentador',
+    'page callback' => 'alimentador_access',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    //'page arguments' => array('opinno_admin_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Opinno Settings',
+    'file' => 'opinno_bikespain.admin.inc',
+  );
+*/
+  return $items;
+}
+
+function opinno_bikespain_menu_alter(&$items) {
+	//var_dump($items);
+	/* if ( $variables['element']['#href'] == 'node/287' || $variables['element']['#href'] == 'experiences' || $variables['element']['#href'] == 'experiencias' )
+		return '<li' . drupal_attributes($variables['element']['#attributes']) . '>' . l($variables['element']['#title'], t('espana') . '/' . drupal_get_path_alias( $variables['element']['#href'])) . "</li>\n";
+	else
+		return '<li' . drupal_attributes($variables['element']['#attributes']) . '>' . l($variables['element']['#title'], drupal_get_path_alias( $variables['element']['#href'])) . "</li>\n";	*/
+	return $items;
+}
+
+
+function opinno_bikespain_block_info(){
+
+	$blocks['footer'] = array(
+		'info' => t('The Footer block'),
+		'cache' => DRUPAL_NO_CACHE,
+	);
+
+	$blocks['search_filter'] = array(
+		'info' => t('Search filters hover slideshow'),
+		'cache' => DRUPAL_NO_CACHE
+	);
+
+	$blocks['search_filter_espana'] = array(
+		'info' => t('Search filters hover slideshow España'),
+		'cache' => DRUPAL_NO_CACHE
+	);
+
+	$blocks['search_filter_europa'] = array(
+		'info' => t('Search filters hover slideshow Europa'),
+		'cache' => DRUPAL_NO_CACHE
+	);
+
+	return $blocks;
+}
+
+
+function opinno_bikespain_block_view($delta = '') {
+	$block = array();
+
+	// The $delta parameter tells us which block is being requested.
+	switch ($delta) {
+    	case 'footer':
+			$block['subject'] = t("The Footer Block");
+			$block['content'] = " ";
+		break;
+
+    	case 'search_filter':
+			$block['subject'] = '';
+			if (!(strripos($_SERVER['REQUEST_URI'], '/es/espana') === false) || !(strripos($_SERVER['REQUEST_URI'], '/en/espana') === false) || !(strripos($_SERVER['REQUEST_URI'], '/es/spain') === false) || !(strripos($_SERVER['REQUEST_URI'], '/en/spain') === false)){
+				$form = 'opinno_bikespain_form_espana';
+				$results = OpinnoBikespainHelper::getResults(0, 0, 0, variable_get('spain_context','spain'));
+			} else {
+				$form = 'opinno_bikespain_form';
+				$results = OpinnoBikespainHelper::getResults(0, 0, 0);
+			}
+			$form = drupal_render(drupal_get_form($form));
+			$block['content'] = '<div class="search_filters_form">'.$form.'</div><div class="clearfix"></div>';
+		break;
+    	case 'search_filter_espana':
+			$block['subject'] = '';
+			$form = drupal_render(drupal_get_form('opinno_bikespain_form_espana'));
+			$block['content'] = '<div class="search_filters_form">'.$form.'</div><div class="clearfix"></div>';
+		break;
+    	case 'search_filter_europa':
+			$block['subject'] = '';
+			$form = drupal_render(drupal_get_form('opinno_bikespain_form_europa'));
+			$block['content'] = '<div class="search_filters_form">'.$form.'</div><div class="clearfix"></div>';
+		break;
+	}
+	return $block;
+}
+
+/**
+ * Implements hook_form().
+ */
+function opinno_bikespain_form($form, &$form_state){
+	return OpinnoBikespainHelper::opinno_bikespain_form_wrapped($form, $form_state);
+}
+function opinno_bikespain_form_espana($form, &$form_state){
+	return OpinnoBikespainHelper::opinno_bikespain_form_wrapped($form, $form_state, 35);
+}
+function opinno_bikespain_form_europa($form, &$form_state){
+	return OpinnoBikespainHelper::opinno_bikespain_form_wrapped($form, $form_state, 38);
+}
+
+
+function opinno_bikespain_getSlider($ciudad){
+	$block = module_invoke('md_slider', 'block_view', $ciudad);
+	//$block =block_load('block',2);
+	return $block['content'];
+}
+
+
+function opinno_bikespain_choice_js($form, $form_state){
+	global $theme;
+	$context = ($theme=='bseurope')? variable_get('europe_context','europa') : variable_get('spain_context','spain');
+
+	$idSlideShowPorDefecto = ($theme=='bseurope')? 3 : (OpinnoBikespainHelper::getCurrentLang()=='es')? 4: 2;
+
+	$cities = (empty($form_state["values"]['cities']) || $form_state["values"]['cities']==0)? 0 : $form_state["values"]['cities'];
+	$trip = (empty($form_state["values"]['trip']) || $form_state["values"]['trip']==0)? 0 : $form_state["values"]['trip'];
+	$month = (empty($form_state["values"]['month']) || $form_state["values"]['month']==0)? 0 : $form_state["values"]['month'];
+
+	$out = OpinnoBikespainHelper::getResults($cities, $trip, $month, $context);
+	$idciudad = OpinnoBikespainHelper::getIdMDSliderCiudad($cities);
+	if($idciudad==0) $idciudad = $idSlideShowPorDefecto;
+	$slider = opinno_bikespain_getSlider($idciudad);
+
+	$cadena = eregi_replace("[\n|\r|\n\r]", " ", addslashes($slider));
+	//$a = stripos($slider, '<div class=\"md-slide-item ');
+	//print_r($cadena);
+	//$a = substr ($cadena, 108);
+	//if(strlen($a) != strlen($cadena)) $a = substr ($a, 0, -6);
+	$out .= '<script type="text/javascript">(function($){
+				$("#block-md-slider-'.$idSlideShowPorDefecto.'").html("'.$cadena.'");
+
+				effectsIn = Drupal.settings.inEffects;
+				effectsOut = Drupal.settings.outEffects;
+				var options = Drupal.settings.md_slider_options_2;
+				$("#md-slider-'.$idciudad.'").mdSlider(options);
+			})(jQuery);
+	(function($) {
+		  $(document).ready(function() {
+			  //alert("dfx");
+			  $("a[rel^=\'prettyPhoto\']").prettyPhoto({changepicturecallback: onPictureChanged,});
+		  });
+	})(jQuery);
+			</script>';
+	return $out;
+}
+
+function opinno_bikespain_submit_handler($form, &$form_state){
+    drupal_set_message(t('Ok!'));
+}
+
+
+function opinno_bikespain_views_pre_render(&$view){
+	if($view->name == 'sidebar_detalles_productos' || $view->name == 'sidebar_detalles_productos_premium' || $view->name == 'sidebar_detalles_productos_europa'){
+	$field_dates = (array_key_exists('und', $view->result[0]->_field_data['nid']['entity']->field_dates))? $view->result[0]->_field_data['nid']['entity']->field_dates['und'] : '';
+		if(empty($field_dates))
+			$field_dates = $view->result[0]->_field_data['nid']['entity']->field_dates;
+		if(!empty($field_dates)){
+			$res = array();
+			foreach($field_dates as $id=>$value){
+				$fecha = explode(' ', $value['value']);
+				if($value['value'] == $value['value2']){
+					$res[] = $fecha[0];
+				}else{
+					$fecha2 = explode(' ', $value['value2']);
+					$res[] = $fecha[0].' to '.$fecha2[0];
+					//$fecha = explode('-', $fecha[0]);
+					//$fecha2 = explode('-', $fecha2[0]);
+				}
+			}
+			sort($res, SORT_STRING);
+
+			if(OpinnoBikespainHelper::getCurrentLang() == 'es'){
+				$meses = array('01'=>'Ene', '02'=>'Feb', '03'=>'Mar', '04'=>'Abr', '05'=>'May', '06'=>'Jun', '07'=>'Jul', '08'=>'Ago', '09'=>'Sep', '10'=>'Oct', '11'=>'Nov', '12'=>'Dic');
+				$al = ' al ';
+				$str_fecha = "Fechas2";
+			}else{
+				$meses = array('01'=>'Jan', '02'=>'Feb', '03'=>'Mar', '04'=>'Apr', '05'=>'May', '06'=>'Jun', '07'=>'Jul', '08'=>'Aug', '09'=>'Sept', '10'=>'Oct', '11'=>'Nov', '12'=>'Dec');
+				$al = ' to ';
+				$str_fecha = "Dates2";
+			}
+
+			$salida='';
+			$hoy = time();
+			$ultimo_anno = intval(date('Y'));
+			$n_viajes = 0;
+
+			foreach($res as $dates){
+				$fechas = explode(' to ', $dates);
+				$fecha1 = explode('-', $fechas[0]);
+
+				$n=count($fechas); // Numero de fechas
+
+				$fecha_inicial = mktime(0, 0, 0, $fecha1[1], $fecha1[2], $fecha1[0]); // Fecha comienzo
+
+				if ($n > 1) {
+					$fecha_final = mktime(0, 0, 0, $fechas[1], $fechas[2], $fechas[0]); // Fecha final
+				}
+			// Si la fecha inical es anterior al dia actual y no hay fecha de fin O la fecha final es anterior a hoy y si tiene fecha de fin
+				if ((($hoy < $fecha_inicial) && ($n <= 1)) || (($hoy < $fecha_final) && ($n > 1)) )  {
+
+					if(intval($fecha1[0]) > $ultimo_anno) {
+						$ultimo_anno = intval($fecha1[0]);
+						// No hay viajes disponibles en este año
+						if ($n_viajes == 0) $salida .= '<!--#fechas_vacias -->';
+						$salida .= '</li> </ul></div></div><span class="views-label views-label-field-dates">' . $str_fecha . '(' . $ultimo_anno . ')' . '</span><div class="field-content"><div class="item-list"><ul><li class="first">';
+						$n_viajes = 0;
+					}
+					$n_viajes++;
+					$salida .= intval($fecha1[2]).' '.$meses[$fecha1[1]];
+
+					if($n>1){
+						$fecha2 = explode('-', $fechas[1]);
+						$salida .= $al.intval($fecha2[2]).' '.$meses[$fecha2[1]];
+					}
+
+				$salida .= '<br />';
+				}
+			}
+			$salida .= '<br />';
+
+			$final[]['rendered']['#markup'] = $salida;
+			$final[]['rendered']['#access'] = 1;
+			$view->result[0]->field_field_dates = $final;
+
+		}
+	}
+}
+
+function opinno_bikespain_views_post_render(&$view, &$output, &$cache){
+	global $base_url;
+	/* Año titulo disponibilidad */
+	if($view->name == 'sidebar_detalles_productos' || $view->name == 'sidebar_detalles_productos_premium' || $view->name == 'sidebar_detalles_productos_europa'){
+
+		/* Delete empty field block */
+		$output = str_replace('<span class="views-label views-label-field-dates">Dates</span>    <div class="field-content"><div class="item-list"><ul><li class="first"><!--#fechas_vacias --></li> </ul></div></div>', '', $output);
+
+		$output = str_replace('<span class="views-label views-label-field-dates">Fechas</span>    <div class="field-content"><div class="item-list"><ul><li class="first"><!--#fechas_vacias --></li> </ul></div></div>', '', $output);
+
+		/* Add the actual year if dates available */
+		$output = str_replace('<span class="views-label views-label-field-dates">Fechas</span>', '<span class="views-label views-label-field-dates">Fechas ('.date('Y').')</span>', $output);
+
+		$output = str_replace('<span class="views-label views-label-field-dates">Dates</span>', '<span class="views-label views-label-field-dates">Dates ('.date('Y').')</span>', $output);
+
+		/* Add next year to date */
+		$output = str_replace('<span class="views-label views-label-field-dates">Fechas2', '<span class="views-label views-label-field-dates">Fechas ', $output);
+		$output = str_replace('<span class="views-label views-label-field-dates">Dates2', '<span class="views-label views-label-field-dates">Dates ', $output);
+
+		/* Poner iconos correspondientes */
+		$output = str_replace(' view-sidebar-detalles-productos_img_sol">', ' view-sidebar-detalles-productos_img_sol"><i class="icon-sun"></i>', $output);
+		$output = str_replace(' view-sidebar-detalles-productos_img_luna">', ' view-sidebar-detalles-productos_img_luna"><i class="icon-moon"></i>', $output);
+		$output = str_replace(' views-label-field-dates">', ' views-label-field-dates"><i class="icon-calendar"></i>', $output);
+
+		/* Estrellas de nivel */
+		$nivel = (OpinnoBikespainHelper::getCurrentLang() == 'es')? array('Fácil', 'Medio', 'Medio-Avanzado', 'Avanzado', 'Difícil') : array('Easy', 'Medium', 'Medium-Advanced', 'Advanced', 'Hard') ;
+		/*$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">1', '<div class="fivestar-widget-static-text">'.$nivel[0].'</div><div class="star star-1 star-odd star-first"><span class="on">1', $output);
+		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">2', '<div class="fivestar-widget-static-text">'.$nivel[1].'</div><div class="star star-1 star-odd star-first"><span class="on">2', $output);
+		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">3', '<div class="fivestar-widget-static-text">'.$nivel[2].'</div><div class="star star-1 star-odd star-first"><span class="on">3', $output);
+		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">4', '<div class="fivestar-widget-static-text">'.$nivel[3].'</div><div class="star star-1 star-odd star-first"><span class="on">4', $output);
+		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">5', '<div class="fivestar-widget-static-text">'.$nivel[4].'</div><div class="star star-1 star-odd star-first"><span class="on">5', $output);*/
+	}
+	/*$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">1', '<div class="star" style="background: url(/sites/all/modules/fivestar/widgets/bikespain/bikespain.gif) no-repeat 0 -52px; width: 21px; height:30px; float:left"></div>', $output);*/
+	$level_string = 0;
+	if (isset($cache->view->result[0]->_field_data['nid']['entity']->field_level['und'][0]['average'])) $level_string = $cache->view->result[0]->_field_data['nid']['entity']->field_level['und'][0]['average'];
+	$level_final = intval($level_string)/20;
+	$aux = '';
+
+	for ($i=1; $i <= 5; $i++) {
+		if ($level_final != 0 && $i <= $level_final)
+		{
+			$aux .= '<div class="star" style="background: url(/sites/all/modules/fivestar/widgets/bikespain/bikespain.gif) no-repeat 0 -52px; width: 21px; height:30px; float:left"></div>';
+		}else{
+			$aux .= '<div class="star" style="background: url(/sites/all/modules/fivestar/widgets/bikespain/bikespain.gif) no-repeat 0 0; width: 21px; height:30px; float:left"></div>';
+		}
+	}
+
+	$output = str_replace('<div class="fivestar-widget-static fivestar-widget-static-vote fivestar-widget-static-5 clearfix"><div class="star star-1 star-odd star-first"><span class="off">0</span></div><div class="star star-2 star-even"><span class="off"></span></div><div class="star star-3 star-odd"><span class="off"></span></div><div class="star star-4 star-even"><span class="off"></span></div><div class="star star-5 star-odd star-last"><span class="off"></span></div></div>', '<div class="five-rate" style="width: 100%; height: 30px;">'.$aux.'</div>', $output);
+
+	if($view->name == 'sidebar_detalles_productos' || $view->name == 'sidebar_detalles_productos_premium' || $view->name == 'sidebar_detalles_productos_europa'){
+		$active_contexts = context_active_contexts();
+		$lang = OpinnoBikespainHelper::getCurrentLang();
+		$name = 'presupuesto';
+		$dfx_node = variable_get('spain_webform_es','38');
+		if($lang == 'en'){
+			$name = 'formulario-presupuesto-espana';
+			$dfx_node = variable_get('spain_webform_en','1649');
+		}
+
+		if($view->result[0]->_field_data ['nid']['entity']->field_contexto['und'][0]['value'] == 'europa' ||
+		$view->result[0]->_field_data ['nid']['entity']->field_contexto['und'][0]['value'] == 'europe' ||
+		$view->result[0]->_field_data ['nid']['entity']->field_contexto['und'][0]['value'] == variable_get('europe_context','europa')){
+			$dfx_node = variable_get('europe_webform_es','350');
+		}
+		$url = $base_url.'/'.$lang.'/node/'.$dfx_node;
+		$output .= '<form action="'.$url.'" method="GET">
+		<input type="hidden" name="tour" value="'.'('.$cache->view->result[0]->nid.')'.$cache->view->result[0]->_field_data['nid']['entity']->title.'">
+		<input type="submit" name="reserva_ya" class="form-submit" value="'.t('BOOK NOW').'"/></form>';
+	}
+}
+
+function opinno_bikespain_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'page_build') {
+    // Move my_module_rdf_mapping() to the end of the list. module_implements()
+    // iterates through $implementations with a foreach loop which PHP iterates
+    // in the order that the items were added, so to move an item to the end of
+    // the array, we remove it and then add it.
+    $group = $implementations['md_slider'];
+    unset($implementations['md_slider']);
+    $implementations['md_slider'] = $group;
+  }
+}
+
+/**
+ * Preprocesses the wrapping HTML.
+ *
+ * @param array &$variables
+ *   Template variables.
+ */
+function opinno_bikespain_preprocess_html(&$vars) {
+  // Setup Google+ meta tag
+  $meta_google_plus = array(
+    '#type' => 'html_tag',
+    '#tag' => 'link',
+    '#attributes' => array(
+      'href' =>  'https://plus.google.com/+BikeSpainToursMadrid',
+      'rel' => 'publisher',
+    )
+  );
+
+  $script_adwords = '
+<!-- Google Code para etiquetas de remarketing -->
+<!--------------------------------------------------
+Es posible que las etiquetas de remarketing todavía no estén asociadas a la información de identificación personal o que estén en páginas relacionadas con las categorías delicadas. Para obtener más información e instrucciones sobre cómo configurar la etiqueta, consulte http://google.com/ads/remarketingsetup.
+--------------------------------------------------->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 975106400;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/975106400/?value=0&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+<style type="text/css">
+iframe[name=google_conversion_frame] { display: none; }
+</style>
+';
+
+	$head_adwords = array(
+      '#type' => 'markup',
+      '#markup' => $script_adwords,
+    );
+
+  // Add header meta tag for Google+ to head
+  drupal_add_html_head($meta_google_plus, 'meta_google_plus');
+  // Add Adwords Remarketing Script to head
+  drupal_add_html_head($head_adwords, 'head_adwords');
+}
+
+/*
+function opinno_bikespain_form_alter(&$form, &$form_state, $form_id){
+  if($form_id == 'i18n_string_translate_page_form'){
+    foreach($form['strings'] as $name => $field){
+          if(preg_match('/blocks:block:[0-9]+:body/i',$name)){
+              // Change textarea to text_format
+              $form['strings'][$name]['#type'] = 'text_format';
+              $form['strings'][$name]['#description'] = '<br/>';
+          }
+      }
+      $form['#submit'] = array_merge(array('mymodule_string_translate_page_form_submit'), $form['#submit']);
+  }
+}
+function opinno_bikespain_string_translate_page_form_submit($form, &$form_state) {
+  //Remove wysiwyg format because i18n cant handle it
+  foreach($form_state['values']['strings'] AS $name => $field) {
+    if(preg_match('/blocks:block:[0-9]+:body/i',$name)){
+      unset($form_state['values']['strings'][$name]['format']);
+    }
+  }
+}
+*/
+
+function object_to_array($obj)
+{
+       	$arrObj = is_object($obj) ? get_object_vars($obj) : $obj;
+        foreach ($arrObj as $key => $val) {
+                $val = (is_array($val) || is_object($val)) ? $this->object_to_array($val) : $val;
+                $arr[$key] = $val;
+        }
+        return $arr;
+}

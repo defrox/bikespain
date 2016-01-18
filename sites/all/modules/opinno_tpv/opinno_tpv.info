@@ -1,0 +1,14 @@
+name = Opinno TPV Bike Spain
+description = Módulo con soporte para TPV
+core = 7.x
+
+files[] = opinno_tpv.module
+files[] = opinno_tpv.admin.inc
+
+package = Opinno BikeSpain
+
+; Information added by drupal.org packaging script on 2012-11-07
+version = "7.x-1.0"
+core = "7.x"
+project = "opinno_tpv"
+
