@@ -55,6 +55,11 @@ function webform_localization_i18n_string_info() {
  */
 function webform_localization_i18n_string_refresh($group) {
   if ($group == 'webform') {
+    global $language;
+    $languages = language_list();
+    $source_language = $languages[i18n_string_source_language()];
+    // Refresh the strings using source language.
+    $language = $source_language;
     module_load_include('inc', 'webform_localization', 'includes/webform_localization.i18n');
 
     // In case updating before UUID support.
@@ -376,6 +381,10 @@ function webform_localization_webform_component_render_alter(&$element, $compone
   if ($wl_options['expose_strings']) {
     module_load_include('inc', 'webform_localization', 'includes/webform_localization.i18n');
     _webform_localization_translate_component($element, $component);
+    if (!empty($element['#title'])) {
+      $name = webform_localization_i18n_string_name($component['nid'], $component['cid'], '#title');
+      $element['#attributes']['placeholder'] = i18n_string($name, $element['#title']);
+    }
   }
 }
 
@@ -797,6 +806,113 @@ function webform_localization_field_attach_prepare_translation_alter(&$entity, $
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function webform_localization_form_alter(&$form, &$form_state, $form_id) {
+  // n.b. We are not using hook_form_BASE_FORM_ID_alter(), as we need
+  // to interact closely with other hook_form_alter() implementations.
+  // @see webform_localization_module_implements_alter()
+  if (strpos($form_id, 'webform_client_form_') !== 0) {
+    return;
+  }
+
+  // Enhance webform's mollom support, to handle our 'single_webform' option.
+  if (module_exists('mollom')) {
+    _webform_localization_mollom_form_alter($form, $form_state, $form_id);
+  }
+}
+
+/**
+ * Interaction with mollom_form_alter() for 'single_webform' localization.
+ * @see webform_localization_module_implements_alter()
+ *
+ * If the translation source node's webform is protected by mollom, and
+ * uses our 'single_webform' setting, then we must also protect the other
+ * nodes in the translation set.
+ *
+ * This is because each node in the translation set will still have a
+ * unique client form_id (based on the nid, not the tnid), but mollom will
+ * only know about one of those form_ids.
+ */
+function _webform_localization_mollom_form_alter(&$form, &$form_state, $form_id) {
+  // Establish that the current node has a (different) translation source.
+  // (If this is the translation source, mollom will already know about it).
+  $node = $form['#node'];
+  if (empty($node->tnid) || $node->tnid == $node->nid) {
+    return;
+  }
+
+  // Prime the static mollom form cache (for manipulation).
+  mollom_form_cache();
+  $mollom_cache = &drupal_static('mollom_form_cache');
+  $protected = &$mollom_cache['protected'];
+
+  // If the source node's webform is not protected by mollom, we can bail
+  // out immediately.
+  $source_form_id = 'webform_client_form_' . $node->tnid;
+  if (!array_key_exists($source_form_id, $protected)) {
+    return;
+  }
+
+  // Check that the 'single_webform' option is configured for the source.
+  $source_wl_options = webform_localization_get_config($node->tnid);
+  if (empty($source_wl_options['single_webform'])) {
+    return;
+  }
+
+  // Protect this form using the settings for the single webform.
+  // Firstly we take care of the mollom_form_cache() static cache.
+  $protected[$form_id] = $protected[$source_form_id];
+
+  // Then, if necessary, we update the mollom_form_load() cache.
+  $mollom_form = mollom_form_load($form_id);
+  if (!$mollom_form) {
+    $source_mollom_form = mollom_form_load($source_form_id);
+    $mollom_form = $source_mollom_form;
+    $mollom_form['form_id'] = $form_id;
+    $cid = 'mollom:form:' . $form_id;
+    cache_set($cid, $mollom_form);
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * We need our hook_form_alter() to run before mollom's, so that we can
+ * prime and modify its cache before mollom uses it.
+ *
+ * @see webform_localization_form_alter()
+ * @see mollom_form_alter()
+ */
+function webform_localization_module_implements_alter(&$implementations, $hook) {
+  if ($hook != 'form_alter') {
+    return;
+  }
+
+  // If mollom isn't enabled, do nothing.
+  if (!module_exists('mollom')) {
+    return;
+  }
+
+  // If our code will run before mollom's, do nothing.
+  $pos = array_flip(array_keys($implementations));
+  if ($pos['webform_localization'] < $pos['mollom']) {
+    return;
+  }
+
+  // Make it so our hook implementation runs before mollom's.
+  $webform_localization = array(
+    'webform_localization' => $implementations['webform_localization'],
+  );
+  $implementations = array_diff_key($implementations, $webform_localization);
+  $implementations = array_merge(
+    array_slice($implementations, 0, $pos['mollom'], TRUE),
+    $webform_localization,
+    array_slice($implementations, $pos['mollom'], NULL, TRUE)
+  );
+}
+
+/**
  * Gets webform localization options that match a node ID.
  *
  * @staticvar array $webform_localization_options
@@ -958,6 +1074,20 @@ function webform_localization_form_i18n_string_locale_translate_edit_form_alter(
       $form['#submit'][] = 'webform_localization_i18n_string_locale_translate_edit_form_submit';
       $rel_key = 'webform:' . $id . ':' . $cid . '%';
       $related = db_query('SELECT lid, source, context, textgroup, location FROM {locales_source} WHERE location LIKE :key', array(':key' => $rel_key));
+
+      $langs_installed = language_list();
+
+      $langs_enabled = language_list('enabled');
+      $langs_enabled = $langs_enabled[1];
+
+      if(isset($form['translations'])){
+        foreach($form['translations'] as $key => $value){
+          if(array_key_exists($key, $langs_installed) && !array_key_exists($key, $langs_enabled)){
+            unset($form['translations'][$key]);
+          }
+        }
+      }
+
       $form['items'] = array(
         '#type' => 'fieldset',
         '#title' => t('Related strings'),
@@ -990,7 +1120,7 @@ function webform_localization_form_i18n_string_locale_translate_edit_form_alter(
             '#value' => $source->location
           );
 
-          $languages = language_list();
+          $languages = $langs_enabled;
           // We don't need the default language value, that value is in $source.
           $omit = $source->textgroup == 'default' ? 'en' : i18n_string_source_language();
           unset($languages[($omit)]);
@@ -1057,6 +1187,10 @@ function webform_localization_i18n_string_locale_translate_edit_form_submit($for
  * Adds a translate link to each webform component.
  */
 function webform_localization_preprocess_webform_components_form(&$variables) {
+  if (!isset($form['#node']->webform['nid'])) {
+    return;
+  }
+
   $header = $variables['header'];
   $form = $variables['form'];
   $rows = $variables['rows'];
@@ -1117,6 +1251,25 @@ function webform_localization_js_alter(&$javascript) {
             unset($setting['webform']['conditionals']['webform-client-form-' . $node->tnid]);
           }
         }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entitycache_node_load().
+ */
+function webform_localization_entitycache_node_load($nodes) {
+  $webform_types = webform_variable_get('webform_node_types');
+  foreach ($nodes as $nid => &$node) {
+    if (in_array($node->type, $webform_types)) {
+      // Gets webform localization options that match this node ID.
+      $wl_options = webform_localization_get_config($nid);
+      if ($wl_options['expose_strings']) {
+        module_load_include('inc', 'webform_localization', 'includes/webform_localization.i18n');
+        // Translate custom strings.
+        webform_localization_translate_strings($node);
+        webform_localization_email_translate_strings($node);
       }
     }
   }

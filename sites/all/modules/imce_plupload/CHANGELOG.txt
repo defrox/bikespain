@@ -1,3 +1,12 @@
+IMCE plupload 7.x-2.0, 2015-12-26
+---------------------------------
+Issue #2076099 by ram4nd: IMCE extensions set to '*'
+
+Breaking Change: 
+When updating from 1.3 to 2.0 ensure that if you relied on IMCE's file type filter set to '*' to invoke plupload's 
+default filtering of 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp' you'll have to set this filter manually. 
+From 2.0 onwards, setting the file type filter to '*' will correctly allow all file-types to be uploaded.
+
 IMCE plupload 7.x-1.3, 2014-04-02
 ---------------------------------
 Issue #2180403 by tomas.sedlak@centrum.sk: Functionality conflict with Node Gallery module
