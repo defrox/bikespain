@@ -1,6 +1,7 @@
 <?php
 include 'apiRedsys.php';
 
+
 /**
  * Implements hook_permission().
  */
