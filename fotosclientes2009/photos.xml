@@ -1,0 +1,441 @@
+<gallery
+base = ""
+background = "#FFFFFF"
+banner = "#FA597F"
+text = "#000000"
+link = "#0000FF"
+alink = "#FF0000"
+vlink = "#800080"
+date = "">
+	<sitename>Concurso Fotografia 2009</sitename>
+	<photographer></photographer>
+	<contactinfo></contactinfo>
+	<email>info@bikespain.info</email>
+	<security><![CDATA[]]> </security>
+
+<banner font = "Arial" fontsize = "3" color =  "#FA597F"> </banner>
+<thumbnail base ="thumbnails/" font = "Arial" fontsize = "4" color = "#FA597F" border = "0" rows = "3" col = "5"> </thumbnail> 
+<large base ="images/" font = "Arial" fontsize = "3" color = "#FA597F" border = "0"> </large>
+<images id = "images">
+
+<image
+path = "AVillasuso1_Heusden.jpg"
+width = "600"
+height = "450"
+thumbpath = "AVillasuso1_Heusden.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "AVillasuso2_Kinderdijk.jpg"
+width = "450"
+height = "600"
+thumbpath = "AVillasuso2_Kinderdijk.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "AVillasuso3_Kinderdijk.jpg"
+width = "450"
+height = "600"
+thumbpath = "AVillasuso3_Kinderdijk.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "AVillasuso5_Kinderdijk.jpg"
+width = "600"
+height = "450"
+thumbpath = "AVillasuso5_Kinderdijk.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Amboise, Loira.jpg"
+width = "600"
+height = "449"
+thumbpath = "Amboise, Loira.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Amboise, Valle del Loira.jpg"
+width = "600"
+height = "449"
+thumbpath = "Amboise, Valle del Loira.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 01.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 01.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 02.jpg"
+width = "450"
+height = "600"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 02.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 03.jpg"
+width = "451"
+height = "600"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 03.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 04.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 04.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 05.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Antonio Moreno Martin 05.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 02.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 02.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 03.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 03.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 04.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 04.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 05.jpg"
+width = "600"
+height = "450"
+thumbpath = "Bike Spain Taste Of Burgundy 2009 Maria Cristina Arriero Montero 05.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bloise, Loira.jpg"
+width = "600"
+height = "449"
+thumbpath = "Bloise, Loira.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Castagnoli.jpg"
+width = "450"
+height = "600"
+thumbpath = "Castagnoli.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "CastilloBrolio.jpg"
+width = "600"
+height = "183"
+thumbpath = "CastilloBrolio.jpg"
+thumbwidth = "150"
+thumbheight = "45">
+</image>
+
+
+<image
+path = "Chateau de Chambord.jpg"
+width = "600"
+height = "449"
+thumbpath = "Chateau de Chambord.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCF6379.jpg"
+width = "600"
+height = "450"
+thumbpath = "DSCF6379.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC_0273.jpg"
+width = "600"
+height = "402"
+thumbpath = "DSC_0273.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0357.jpg"
+width = "600"
+height = "402"
+thumbpath = "DSC_0357.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0466.jpg"
+width = "600"
+height = "402"
+thumbpath = "DSC_0466.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0507.jpg"
+width = "402"
+height = "600"
+thumbpath = "DSC_0507.jpg"
+thumbwidth = "100"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC_0541.jpg"
+width = "600"
+height = "402"
+thumbpath = "DSC_0541.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "Fôret de Brouard, Valle del Loira.jpg"
+width = "600"
+height = "449"
+thumbpath = "Fôret de Brouard, Valle del Loira.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Loira 085.jpg"
+width = "600"
+height = "450"
+thumbpath = "Loira 085.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Loira 139.jpg"
+width = "600"
+height = "450"
+thumbpath = "Loira 139.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Loira 191.jpg"
+width = "600"
+height = "450"
+thumbpath = "Loira 191.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Loira 805.jpg"
+width = "600"
+height = "450"
+thumbpath = "Loira 805.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Loira 846.jpg"
+width = "600"
+height = "450"
+thumbpath = "Loira 846.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Montefioralle.jpg"
+width = "450"
+height = "600"
+thumbpath = "Montefioralle.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "P7100200.jpg"
+width = "600"
+height = "450"
+thumbpath = "P7100200.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P7100203.jpg"
+width = "600"
+height = "450"
+thumbpath = "P7100203.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P7100206.jpg"
+width = "600"
+height = "450"
+thumbpath = "P7100206.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "PuebloProhibidoFrichante.jpg"
+width = "600"
+height = "166"
+thumbpath = "PuebloProhibidoFrichante.jpg"
+thumbwidth = "150"
+thumbheight = "41">
+</image>
+
+
+<image
+path = "Saint Aignan, Valle del Cher.jpg"
+width = "600"
+height = "449"
+thumbpath = "Saint Aignan, Valle del Cher.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "foto  (118).jpg"
+width = "600"
+height = "449"
+thumbpath = "foto  (118).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "foto (115).jpg"
+width = "600"
+height = "449"
+thumbpath = "foto (115).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "foto (17).jpg"
+width = "600"
+height = "449"
+thumbpath = "foto (17).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "foto (2).jpg"
+width = "600"
+height = "449"
+thumbpath = "foto (2).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "foto (2bis).jpg"
+width = "600"
+height = "449"
+thumbpath = "foto (2bis).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+</images>
+</gallery>

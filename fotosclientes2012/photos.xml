@@ -1,0 +1,421 @@
+<gallery
+base = ""
+background = "#FFFFFF"
+banner = "#F0F0F0"
+text = "#000000"
+link = "#0000FF"
+alink = "#FF0000"
+vlink = "#800080"
+date = "29/10/2012">
+	<sitename>Concurso Fotos 2012</sitename>
+	<photographer></photographer>
+	<contactinfo></contactinfo>
+	<email>info@bikespain.info</email>
+	<security><![CDATA[]]> </security>
+
+<banner font = "Arial" fontsize = "3" color =  "#F0F0F0"> </banner>
+<thumbnail base ="thumbnails/" font = "Arial" fontsize = "4" color = "#F0F0F0" border = "1" rows = "3" col = "5"> </thumbnail> 
+<large base ="images/" font = "Arial" fontsize = "3" color = "#F0F0F0" border = "1"> </large>
+<images id = "images">
+
+<image
+path = "2012_08_Canal_Du_Midi 097.jpg"
+width = "550"
+height = "412"
+thumbpath = "2012_08_Canal_Du_Midi 097.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "2012_08_Canal_Du_Midi 100.jpg"
+width = "550"
+height = "412"
+thumbpath = "2012_08_Canal_Du_Midi 100.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "26062012-DSC_0030.jpg"
+width = "550"
+height = "365"
+thumbpath = "26062012-DSC_0030.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "26062012-P1100198.jpg"
+width = "550"
+height = "412"
+thumbpath = "26062012-P1100198.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "26062012-P1100212.jpg"
+width = "550"
+height = "412"
+thumbpath = "26062012-P1100212.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "27062012-P1100230.jpg"
+width = "550"
+height = "412"
+thumbpath = "27062012-P1100230.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "28062012-P1100464.jpg"
+width = "550"
+height = "412"
+thumbpath = "28062012-P1100464.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Amaia (130).jpg"
+width = "550"
+height = "412"
+thumbpath = "Amaia (130).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "CROACIA 1.jpg"
+width = "550"
+height = "147"
+thumbpath = "CROACIA 1.jpg"
+thumbwidth = "150"
+thumbheight = "40">
+</image>
+
+
+<image
+path = "DSCN0034.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0034.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0083.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0083.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0168.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0168.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0206.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0206.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0294.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0294.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0311.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0311.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN0319.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN0319.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN2319.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN2319.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN2333.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN2333.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN4013.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN4013.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN6037.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSCN6037.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN6053.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSCN6053.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN6125.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN6125.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN9814.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN9814.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN9968.jpg"
+width = "550"
+height = "411"
+thumbpath = "DSCN9968.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC_0043.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0043.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0051.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0051.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0112.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0112.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0154.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0154.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0191.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0191.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0250.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0250.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0327.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0327.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0386.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0386.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0389.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0389.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "Foto0167.jpg"
+width = "550"
+height = "412"
+thumbpath = "Foto0167.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "IMG_0646.jpg"
+width = "550"
+height = "412"
+thumbpath = "IMG_0646.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Pan de Zuchero impresiona.jpg"
+width = "412"
+height = "550"
+thumbpath = "Pan de Zuchero impresiona.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "al fondo el mar, hace un rato.jpg"
+width = "412"
+height = "550"
+thumbpath = "al fondo el mar, hace un rato.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "atravesando rio rojo.jpg"
+width = "412"
+height = "550"
+thumbpath = "atravesando rio rojo.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "las bicis buscan sombra.jpg"
+width = "412"
+height = "550"
+thumbpath = "las bicis buscan sombra.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "poderosas torres en toda la costa.jpg"
+width = "412"
+height = "550"
+thumbpath = "poderosas torres en toda la costa.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+</images>
+</gallery>

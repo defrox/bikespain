@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/backup" />
+      <excludeFolder url="file://$MODULE_DIR$/cgi-bin" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2008" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2009" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2010" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2011" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2012" />
+      <excludeFolder url="file://$MODULE_DIR$/fotosclientes2013" />
+      <excludeFolder url="file://$MODULE_DIR$/img" />
+      <excludeFolder url="file://$MODULE_DIR$/mytrip" />
+      <excludeFolder url="file://$MODULE_DIR$/sites/default/files" />
+      <excludeFolder url="file://$MODULE_DIR$/test" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

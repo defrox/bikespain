@@ -1,0 +1,1291 @@
+<gallery
+base = ""
+background = "#FFFFFF"
+banner = "#F0F0F0"
+text = "#000000"
+link = "#0000FF"
+alink = "#FF0000"
+vlink = "#800080"
+date = "">
+	<sitename>Concurso Fotos 2011</sitename>
+	<photographer></photographer>
+	<contactinfo></contactinfo>
+	<email>info@bikespain.info</email>
+	<security><![CDATA[]]> </security>
+
+<banner font = "Arial" fontsize = "3" color =  "#F0F0F0"> </banner>
+<thumbnail base ="thumbnails/" font = "Arial" fontsize = "4" color = "#F0F0F0" border = "1" rows = "3" col = "5"> </thumbnail> 
+<large base ="images/" font = "Arial" fontsize = "3" color = "#F0F0F0" border = "1"> </large>
+<images id = "images">
+
+<image
+path = "09082011071.jpg"
+width = "550"
+height = "412"
+thumbpath = "09082011071.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "1105.-Kinderdijk.jpg"
+width = "550"
+height = "412"
+thumbpath = "1105.-Kinderdijk.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "2011-08-01 La Chioggia.jpg"
+width = "550"
+height = "412"
+thumbpath = "2011-08-01 La Chioggia.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "2011-08-01 Laguna Venecia.jpg"
+width = "550"
+height = "412"
+thumbpath = "2011-08-01 Laguna Venecia.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "2011-08-05 en ruta.jpg"
+width = "550"
+height = "412"
+thumbpath = "2011-08-05 en ruta.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "2051.- Gante. Lonja de la Carne a la izquierda y canal.jpg"
+width = "550"
+height = "412"
+thumbpath = "2051.- Gante. Lonja de la Carne a la izquierda y canal.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "765.-Westeinde.jpg"
+width = "412"
+height = "550"
+thumbpath = "765.-Westeinde.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "829.-Ruta entre Oude Wetering y Gouda.jpg"
+width = "550"
+height = "412"
+thumbpath = "829.-Ruta entre Oude Wetering y Gouda.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "914.-Gouda. Ayuntamiento.jpg"
+width = "412"
+height = "550"
+thumbpath = "914.-Gouda. Ayuntamiento.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "A.Blanco-Bicicletas-navegan.jpg"
+width = "550"
+height = "412"
+thumbpath = "A.Blanco-Bicicletas-navegan.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "A.Blanco-En-marcha.jpg"
+width = "550"
+height = "412"
+thumbpath = "A.Blanco-En-marcha.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "A.Blanco-Los-Quijotes-cicli.jpg"
+width = "550"
+height = "412"
+thumbpath = "A.Blanco-Los-Quijotes-cicli.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "A.Blanco-Tráfico-denso-en-e.jpg"
+width = "412"
+height = "550"
+thumbpath = "A.Blanco-Tráfico-denso-en-e.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "A.Blanco-Viaje-para-todos-l.jpg"
+width = "550"
+height = "412"
+thumbpath = "A.Blanco-Viaje-para-todos-l.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "AmsterdamBarco.jpg"
+width = "550"
+height = "412"
+thumbpath = "AmsterdamBarco.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Ave María.jpg"
+width = "550"
+height = "412"
+thumbpath = "Ave María.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Bad Tölz.jpg"
+width = "550"
+height = "412"
+thumbpath = "Bad Tölz.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "BanoDesdeBarco.jpg"
+width = "412"
+height = "550"
+thumbpath = "BanoDesdeBarco.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DE LINZ A GREIN.jpg"
+width = "550"
+height = "365"
+thumbpath = "DE LINZ A GREIN.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "DE MARIA TAFERL A KREMS.jpg"
+width = "550"
+height = "365"
+thumbpath = "DE MARIA TAFERL A KREMS.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "DE PASSAU A SCHLÖGEN.jpg"
+width = "550"
+height = "365"
+thumbpath = "DE PASSAU A SCHLÖGEN.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "DE SCHLÖGEN A LINZ.jpg"
+width = "550"
+height = "365"
+thumbpath = "DE SCHLÖGEN A LINZ.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "DESDE MARIA TAFERL.jpg"
+width = "365"
+height = "550"
+thumbpath = "DESDE MARIA TAFERL.jpg"
+thumbwidth = "99"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC01130.jpg"
+width = "550"
+height = "309"
+thumbpath = "DSC01130.jpg"
+thumbwidth = "150"
+thumbheight = "84">
+</image>
+
+
+<image
+path = "DSC01321.jpg"
+width = "550"
+height = "309"
+thumbpath = "DSC01321.jpg"
+thumbwidth = "150"
+thumbheight = "84">
+</image>
+
+
+<image
+path = "DSC01801.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01801.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01806.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01806.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01807.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSC01807.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC01841.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01841.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01848.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01848.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01849.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01849.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01850.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01850.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01864.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSC01864.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC01893.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01893.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01910.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01910.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC01944.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC01944.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02005.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02005.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02009.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02009.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02117.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02117.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02133.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSC02133.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC02159.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02159.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02160.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02160.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02168.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02168.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02205.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02205.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02219.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02219.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02247.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02247.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02247 (1).jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02247 (1).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC02252.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSC02252.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC02257.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSC02257.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCF0323.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCF0323.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCF0334.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCF0334.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCF0342.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCF0342.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCF0449.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCF0449.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN4980.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSCN4980.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN4984.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN4984.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN6041.jpg"
+width = "412"
+height = "550"
+thumbpath = "DSCN6041.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN6047.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN6047.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN6071.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN6071.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN6088.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN6088.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSCN6161.jpg"
+width = "550"
+height = "412"
+thumbpath = "DSCN6161.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "DSC_0025.jpg"
+width = "550"
+height = "365"
+thumbpath = "DSC_0025.jpg"
+thumbwidth = "150"
+thumbheight = "99">
+</image>
+
+
+<image
+path = "DSC_0061.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0061.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0066.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_0066.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_0156.jpg"
+width = "368"
+height = "550"
+thumbpath = "DSC_0156.jpg"
+thumbwidth = "100"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC_1108.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_1108.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "DSC_1140.jpg"
+width = "550"
+height = "368"
+thumbpath = "DSC_1140.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "Faro.jpg"
+width = "550"
+height = "412"
+thumbpath = "Faro.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "HPIM1355 2.jpg"
+width = "550"
+height = "417"
+thumbpath = "HPIM1355 2.jpg"
+thumbwidth = "150"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "HPIM1370 2.jpg"
+width = "550"
+height = "417"
+thumbpath = "HPIM1370 2.jpg"
+thumbwidth = "150"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "HPIM1379.jpg"
+width = "550"
+height = "417"
+thumbpath = "HPIM1379.jpg"
+thumbwidth = "150"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "HPIM1381.jpg"
+width = "418"
+height = "550"
+thumbpath = "HPIM1381.jpg"
+thumbwidth = "114"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "HPIM1396.jpg"
+width = "417"
+height = "550"
+thumbpath = "HPIM1396.jpg"
+thumbwidth = "113"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "Horn.jpg"
+width = "550"
+height = "405"
+thumbpath = "Horn.jpg"
+thumbwidth = "150"
+thumbheight = "110">
+</image>
+
+
+<image
+path = "IJSSEL 23-7-11 ROBERTO-MARÍA 2.jpg"
+width = "412"
+height = "550"
+thumbpath = "IJSSEL 23-7-11 ROBERTO-MARÍA 2.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "IJSSEL 23-7-11 ROBERTO-MARÍA 3.jpg"
+width = "550"
+height = "412"
+thumbpath = "IJSSEL 23-7-11 ROBERTO-MARÍA 3.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "IJSSEL 23-7-11 ROBERTO-MARÍA 4.jpg"
+width = "550"
+height = "412"
+thumbpath = "IJSSEL 23-7-11 ROBERTO-MARÍA 4.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "IJSSEL 23-7-11 ROBERTO-MARÍA 5.jpg"
+width = "412"
+height = "550"
+thumbpath = "IJSSEL 23-7-11 ROBERTO-MARÍA 5.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "IJSSEL 23-7-11 ROBERTO-MARÍA 6.jpg"
+width = "550"
+height = "412"
+thumbpath = "IJSSEL 23-7-11 ROBERTO-MARÍA 6.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Imagen 160.jpg"
+width = "550"
+height = "412"
+thumbpath = "Imagen 160.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Imagen 327.jpg"
+width = "550"
+height = "412"
+thumbpath = "Imagen 327.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Imagen 343.jpg"
+width = "550"
+height = "412"
+thumbpath = "Imagen 343.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Imagen 401.jpg"
+width = "550"
+height = "309"
+thumbpath = "Imagen 401.jpg"
+thumbwidth = "150"
+thumbheight = "84">
+</image>
+
+
+<image
+path = "Imagen 748.jpg"
+width = "550"
+height = "412"
+thumbpath = "Imagen 748.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Isla_Arbarella (Copiar).jpg"
+width = "550"
+height = "412"
+thumbpath = "Isla_Arbarella (Copiar).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Lago Starnberg.jpg"
+width = "550"
+height = "382"
+thumbpath = "Lago Starnberg.jpg"
+thumbwidth = "150"
+thumbheight = "104">
+</image>
+
+
+<image
+path = "Leiden.jpg"
+width = "550"
+height = "366"
+thumbpath = "Leiden.jpg"
+thumbwidth = "150"
+thumbheight = "100">
+</image>
+
+
+<image
+path = "Marienplatz.jpg"
+width = "550"
+height = "412"
+thumbpath = "Marienplatz.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Molino.jpg"
+width = "366"
+height = "550"
+thumbpath = "Molino.jpg"
+thumbwidth = "99"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "P1020269 (Copiar).jpg"
+width = "550"
+height = "412"
+thumbpath = "P1020269 (Copiar).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P1060619 (Copiar).jpg"
+width = "550"
+height = "412"
+thumbpath = "P1060619 (Copiar).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P5310084.jpg"
+width = "550"
+height = "412"
+thumbpath = "P5310084.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P5310097.jpg"
+width = "412"
+height = "550"
+thumbpath = "P5310097.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "P6020126.jpg"
+width = "412"
+height = "550"
+thumbpath = "P6020126.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "P7180392.jpg"
+width = "550"
+height = "412"
+thumbpath = "P7180392.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P7190447.jpg"
+width = "550"
+height = "412"
+thumbpath = "P7190447.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P7190460.jpg"
+width = "550"
+height = "412"
+thumbpath = "P7190460.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P7210611.jpg"
+width = "550"
+height = "337"
+thumbpath = "P7210611.jpg"
+thumbwidth = "150"
+thumbheight = "91">
+</image>
+
+
+<image
+path = "P7220622.jpg"
+width = "550"
+height = "310"
+thumbpath = "P7220622.jpg"
+thumbwidth = "150"
+thumbheight = "84">
+</image>
+
+
+<image
+path = "P8010322 - copia.jpg"
+width = "550"
+height = "412"
+thumbpath = "P8010322 - copia.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P8040678.jpg"
+width = "412"
+height = "550"
+thumbpath = "P8040678.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "P8040790.jpg"
+width = "550"
+height = "481"
+thumbpath = "P8040790.jpg"
+thumbwidth = "150"
+thumbheight = "131">
+</image>
+
+
+<image
+path = "P8050968.jpg"
+width = "550"
+height = "412"
+thumbpath = "P8050968.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "P8051003.jpg"
+width = "550"
+height = "412"
+thumbpath = "P8051003.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Prados de Garmisch.jpg"
+width = "550"
+height = "412"
+thumbpath = "Prados de Garmisch.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Summer2011 047.jpg"
+width = "550"
+height = "410"
+thumbpath = "Summer2011 047.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Summer2011 056.jpg"
+width = "550"
+height = "410"
+thumbpath = "Summer2011 056.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Summer2011 079.jpg"
+width = "550"
+height = "410"
+thumbpath = "Summer2011 079.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Summer2011 114.jpg"
+width = "410"
+height = "550"
+thumbpath = "Summer2011 114.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "Tegernsee.jpg"
+width = "550"
+height = "412"
+thumbpath = "Tegernsee.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Venecia.jpg"
+width = "550"
+height = "412"
+thumbpath = "Venecia.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Venecia2-1 (Copiar).jpg"
+width = "550"
+height = "412"
+thumbpath = "Venecia2-1 (Copiar).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Zelo (Copiar).jpg"
+width = "550"
+height = "412"
+thumbpath = "Zelo (Copiar).jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "Zuecos.jpg"
+width = "550"
+height = "412"
+thumbpath = "Zuecos.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-001-mail.jpg"
+width = "412"
+height = "550"
+thumbpath = "canal-del-Midi-agosto-2011-001-mail.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-004-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-004-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-072-concurso.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-072-concurso.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-222-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-222-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-236-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-236-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-330-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-330-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-479-a-b.mail.jpg"
+width = "550"
+height = "416"
+thumbpath = "canal-del-Midi-agosto-2011-479-a-b.mail.jpg"
+thumbwidth = "150"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-497-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-497-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-519-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-519-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "canal-del-Midi-agosto-2011-524-a.mail.jpg"
+width = "550"
+height = "412"
+thumbpath = "canal-del-Midi-agosto-2011-524-a.mail.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "paseando al perro.jpg"
+width = "550"
+height = "412"
+thumbpath = "paseando al perro.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+
+<image
+path = "puente-recortdo-2.mail.jpg"
+width = "366"
+height = "550"
+thumbpath = "puente-recortdo-2.mail.jpg"
+thumbwidth = "99"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "subasta quesos.jpg"
+width = "412"
+height = "550"
+thumbpath = "subasta quesos.jpg"
+thumbwidth = "112"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "tacitas.jpg"
+width = "550"
+height = "412"
+thumbpath = "tacitas.jpg"
+thumbwidth = "150"
+thumbheight = "112">
+</image>
+
+</images>
+</gallery>

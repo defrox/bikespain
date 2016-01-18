@@ -1,0 +1,20 @@
+name = "Sites"
+description = "Sites integrates PURL and Context directly."
+package = "Sites"
+dependencies[] = purl
+core = 7.x
+
+files[] = plugins/context_condition_site.inc
+files[] = views/plugins/sites_access_plugin.inc
+files[] = views/handlers/sites_handler_filter_site.inc
+files[] = views/handlers/sites_handler_filter_site_current.inc
+files[] = SiteResourcesController.inc
+files[] = SiteHelper.inc
+files[] = SiteController.inc
+
+; Information added by Drupal.org packaging script on 2013-12-07
+version = "7.x-2.0-beta1"
+core = "7.x"
+project = "sites"
+datestamp = "1386428912"
+

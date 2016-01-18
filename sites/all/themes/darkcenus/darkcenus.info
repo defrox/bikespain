@@ -1,0 +1,37 @@
+name = Dark Cenus
+description = Dark Cenus.
+package = Core
+version = VERSION
+core = 7.x
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/override.css
+stylesheets[all][] = css/prettyPhoto.css
+stylesheets[all][] = css/system.base.css
+stylesheets[all][] = css/system.messages.css
+stylesheets[all][] = css/system.menus.css
+
+scripts[] = js/jquery-1.5.1.min.js
+scripts[] = js/easing.js
+scripts[] = js/ddsmoothmenu.js
+scripts[] = js/jquery.ui.totop.js
+scripts[] = js/jquery.ui.totop.setting.js
+scripts[] = js/cufon-yui.js
+scripts[] = js/jquery.prettyPhoto.js
+scripts[] = js/jquery.prettyPhoto.setting.js 
+scripts[] = js/designesia.js
+scripts[] = js/contact.js
+
+regions[left] = Left sidebar
+regions[right] = Right sidebar
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+regions[topcontent] = Top Content
+regions[socialicons] = Social Icons
+
+settings[darkcenus_width] = fluid
+
+version = "7.10"
+project = "designesia"
+datestamp = "1319660730"
+

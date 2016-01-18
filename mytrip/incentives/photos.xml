@@ -1,0 +1,201 @@
+<gallery
+base = ""
+background = "#FFFFFF"
+banner = "#F0F0F0"
+text = "#000000"
+link = "#0000FF"
+alink = "#FF0000"
+vlink = "#800080"
+date = "">
+	<sitename>Incentivos en Madrid</sitename>
+	<photographer></photographer>
+	<contactinfo>info@bikespain.com</contactinfo>
+	<email></email>
+	<security><![CDATA[]]> </security>
+
+<banner font = "Arial" fontsize = "3" color =  "#F0F0F0"> </banner>
+<thumbnail base ="thumbnails/" font = "Arial" fontsize = "4" color = "#F0F0F0" border = "0" rows = "3" col = "5"> </thumbnail> 
+<large base ="images/" font = "Arial" fontsize = "3" color = "#F0F0F0" border = "0"> </large>
+<images id = "images">
+
+<image
+path = "DSC00407.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSC00407.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSC05663.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSC05663.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCF1685.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSCF1685.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCF3095.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSCF3095.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCF5796.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSCF5796.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN0037.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSCN0037.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "DSCN0046.jpg"
+width = "800"
+height = "600"
+thumbpath = "DSCN0046.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "IMG_9351.jpg"
+width = "800"
+height = "600"
+thumbpath = "IMG_9351.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "Madrid City (1).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (1).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (2).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (2).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (3).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (3).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (4).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (4).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (5).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (5).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (6).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (6).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "Madrid City (7).jpg"
+width = "800"
+height = "452"
+thumbpath = "Madrid City (7).jpg"
+thumbwidth = "200"
+thumbheight = "113">
+</image>
+
+
+<image
+path = "cibeles.jpg"
+width = "800"
+height = "600"
+thumbpath = "cibeles.jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "image (19).jpg"
+width = "800"
+height = "600"
+thumbpath = "image (19).jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+
+<image
+path = "image (4).jpg"
+width = "800"
+height = "600"
+thumbpath = "image (4).jpg"
+thumbwidth = "200"
+thumbheight = "150">
+</image>
+
+</images>
+</gallery>
