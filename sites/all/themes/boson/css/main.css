@@ -3984,3 +3984,13 @@ margin-top: 20px;
 .views-responsive-grid .views-column {
 height: 325px;
 }
+
+.sidebar .five-rate {
+    float: left;
+}
+
+.view-sidebar-detalles-productos .views-field-php,
+.view-sidebar-detalles-productos-premium .views-field-php,
+.view-sidebar-detalles-productos-europa .views-field-php {
+    float: none;
+}
