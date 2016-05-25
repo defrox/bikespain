@@ -42,7 +42,7 @@ function opinno_tpv_menu() {
     'page callback' => 'drupal_get_form',
     'access callback' => 'user_access',
     'page arguments' => array('opinno_tpv_ordenes_de_pago',5,6),
-      'access arguments' => array('view opinno tpv payments'),
+    'access arguments' => array('view opinno tpv payments'),
     'type' => MENU_NORMAL_ITEM,
     'description' => 'Opinno TPV Ordenes de Pago',
     'file' => 'opinno_tpv.admin.inc',
@@ -206,7 +206,7 @@ function opinno_tpv_user_form($form, &$form_state) {
     '#type' => 'textfield',
     '#required' => TRUE,
     '#attributes' => ($datos['editable'] == 1) ? array() : array('readonly' => 'readonly'),
-    '#title' => t('Tour name'),
+    '#title' => t('Tour name and date'),
     '#value'=> $datos['referencia'],
     '#weight' => 4,
   );
@@ -223,7 +223,7 @@ function opinno_tpv_user_form($form, &$form_state) {
 
   $form['notas'] = array(
     '#type' => 'textfield',
-    '#required' => FALSE,
+    '#required' => TRUE,
     '#title' => t('Other notes'),
     '#value'=> $datos['notas'],
     '#weight' => 6,

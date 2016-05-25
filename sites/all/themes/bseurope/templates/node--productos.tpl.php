@@ -458,7 +458,6 @@ $path = isset($_GET['q']) ? $_GET['q'] : '<front>';
 $mPath = url($_GET['q'], array('absolute' => TRUE));
 $mTitle = drupal_get_title();
 print sharethis_get_button_HTML($data_options, $mPath, $mTitle);
-*/
 /*
 print sharethis_node_view($node, 'producto', $language->language);
 print 'prueba de salida';

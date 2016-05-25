@@ -4,175 +4,20 @@ $contexto_p = '35';
 /* Some usefull functions into a class for this module. It's into a class to avoid name collisions */
 class OpinnoBikespainHelper{
 
-    public static function opinno_bikespain_form_wrapped($form, &$form_state, $contexto = 0)
-    {
-        global $theme;
-        $GLOBALS['contexto_p'] = $contexto;
-        // By destination
-        $lugares = OpinnoBikespainHelper::_taxonomy_options('cycling', t('Search by destination - Any'), $contexto);
-        $form['cities'] = array(
-            '#type' => 'select',
-            '#title' => t('Search by cities - Any'),
-            '#title_display' => 'invisible',
-            '#options' => $lugares,
-            '#default_value' => 0,
-            '#required' => FALSE,
-            '#attributes' => array(
-                'class' => array('search_filters_trip', 'search_filters_selects'),
-            ),
-            '#ajax' => array(
-                'callback' => 'opinno_bikespain_choice_js',
-                'wrapper' => 'search_filters_results',
-                'method' => 'html'
-            )
+	public static function getCurrentLang(){ global $language; return $language->language; }
 
-        );
-        // By product type
-        $tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip type - Any'), $contexto);
-        $form['trip'] = array(
-            '#type' => 'select',
-            '#title' => t('Search by trip - Any'),
-            '#title_display' => 'invisible',
-            '#options' => $tiposProductos,
-            '#default_value' => 0,
-            '#required' => FALSE,
-            '#attributes' => array(
-                'class' => array('search_filters_trip', 'search_filters_selects'),
-                'onfocus' => "if(this.value == 'Search by trip - Any'){ this.value = ''; }",
-                'onblur' => "if(this.value == ''){ this.value = 'Search by trip - Any'; }"
-            ),
-            '#ajax' => array(
-                'callback' => 'opinno_bikespain_choice_js',
-                'wrapper' => 'search_filters_results',
-                'method' => 'html'
-            )
-        );
-        // By date/month
-        $meses = array(t('Search by month - Any'), t('January'), t('February'), t('March'), t('April'), t('May'), t('June'), t('July'), t('August'), t('September'), t('October'), t('November'), t('December'));
-        $form['month'] = array(
-            '#type' => 'select',
-            '#title' => t('Search by month - Any'),
-            '#title_display' => 'invisible',
-            '#options' => $meses,
-            '#default_value' => 0,
-            '#required' => FALSE,
-            '#attributes' => array(
-                'class' => array('search_filters_month', 'search_filters_selects'),
-                'onfocus' => "if(this.value == 'Search by month - Any'){ this.value = ''; }",
-                'onblur' => "if(this.value == ''){ this.value = 'Search by month - Any'; }"
-            ),
-            '#ajax' => array(
-                'callback' => 'opinno_bikespain_choice_js',
-                'wrapper' => 'search_filters_results',
-                'method' => 'html'
-            )
-        );
-        $final = OpinnoBikespainHelper::getResults(0, 0, 0, $contexto, 1) . OpinnoBikespainHelper::getResults(0, 0, 0, $contexto, 2);
-        if (!empty($_POST['opinno_filter_submit'])) {
-            $datos = array(true);
-            $datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_start');
-            $datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_end');
-            if (OpinnoBikespainHelper::getPostData('opinno_filter_end') > 0) {
-                $final = OpinnoBikespainHelper::getResults(OpinnoBikespainHelper::getPostData('opinno_filter_destinations'), OpinnoBikespainHelper::getPostData('opinno_filter_trips'), OpinnoBikespainHelper::getPostData('opinno_filter_month'), $contexto, 0, $datos);
-                if (empty($final)) {
-                    $final = 'No hay más resultados';
-                }
-            }
+	public static function fechaDisponible($fecha, $mes){
+		// Evalua si un mes dado se encuentra en las fechas de disponibilidad
+		$milis = strtotime($fecha['value']);
+		$milis2 = strtotime($fecha['value2']);
 
-        }
-        $final = preg_replace("/\'/", '\\\'', $final);
-        $form["javascript"] = array(
-            "#markup" => '<script type="text/javascript"><!--//--><![CDATA[//><!--
-	(function($) {
-		  $(document).ready(function() {
-			  $("#search_filters_results").html(\'' . preg_replace("/\r\n|\r|\n/", '<br/>', $final) . '\');
-			  $("a[rel^=\'prettyPhoto\']").prettyPhoto({changepicturecallback: onPictureChanged,});
-		  });
-		})(jQuery);
-	//--><!]]></script>',
-        );
-        return $form;
-    }
-
-    /**
-     * Returns an array for use with #options in a form field
-     **/
-    public static function _taxonomy_options($machine_name, $default = '', $contexto = 0)
-    {
-        $vocabulary = taxonomy_vocabulary_machine_name_load($machine_name);
-        if ($contexto > 0) {
-            if ($machine_name == 'trip') {
-                if ($contexto == 35) $contexto = 152;
-                if ($contexto == 38) $contexto = 153;
-            }
-            $tree = taxonomy_get_tree($vocabulary->vid, $contexto);
-        } else {
-            $tree = taxonomy_get_tree($vocabulary->vid);
-        }
-        $tree = i18n_taxonomy_localize_terms($tree);
-        if (!empty($default))
-            $options[0] = $default;
+		if($fecha['value'] == $fecha['value2'])
+			return (date('n', $milis) == intval($mes))? true : false; // Un día
 		else
-            $options = array();
-        foreach ($tree as $item) {
-            $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
-        }
-        return $options;
-    }
-
-    public static function getResults($cities, $trip, $month, $context = '', $tipo = 0, $datos = array(false))
-    {
-        global $theme;
-        $limit_ini = 0;
-        $limit_fin = 9;
-        $i = 1;
-        $out = '';
-        if ($datos[0]) {
-            $limit_ini = $datos[1];
-            $limit_fin = $datos[2];
-        }
-        $productos = OpinnoBikespainHelper::getContentFromBBDD($cities, $trip, $month, $limit_ini, $limit_fin, $context, $tipo);
-        $tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip - Any'), $context);
-        if (!empty($productos)) {
-            $out .= '<div class="row" style="min-width: 100%;">';
-            $verMas = '';
-            /* 0=> Normal, 1=> Ofertas especiales, 2=> Sugerencias */
-            switch ($tipo) {
-                case 1:
-                    $titulo = t('Special offers');
-                    break;
-                case 2:
-                    $titulo = t('Suggestions');
-                    break;
-                default:
-                    $titulo = t('Results');
-                    $verMas = '</div><div><form method="POST">
-						<input type="hidden" name="opinno_filter_destinations" value="' . $cities . '"/>
-						<input type="hidden" name="opinno_filter_trips" value="' . $trip . '"/>
-						<input type="hidden" name="opinno_filter_month" value="' . $month . '"/>
-						<input type="hidden" name="opinno_filter_start" value="' . ($limit_ini + $limit_fin) . '"/>
-						<input type="hidden" name="opinno_filter_end" value="' . $limit_fin . '"/>
-						<input type="submit" class="form-submit" name="opinno_filter_submit" value="' . t('Ver más resultados') . '" />
-					</form></div>';
-            }
-            foreach ($productos as $prod)
-                OpinnoBikespainHelper::maquetaCajaResultados($out, $tiposProductos, $prod, $context, $i, $titulo, $tipo);
-            $out .= $verMas;
-            if ($tipo == 0) {
-                //Block Viajes sencillos
-                if (@$GLOBALS['contexto_p'] == '35') {
-                    $block_viajes = views_embed_view('viajes_sencillos_destacados', 'block');
-                }
-                if (@$GLOBALS['contexto_p'] == '38') {
-                    $block_viajes = views_embed_view('viajes_sencillos_destacados_europa', 'block');
-                }
-                if (!empty($block_viajes)) {
-                    $out_sencillos .= '<div style="margin-top: 24px"><h3 class="lined">' . t('Viajes Sencillos') . '</h3>' . $block_viajes . '</div>';
-                    //$out .= $out_sencillos;
-                }
-            }
-        }
-        return $out;
+			if(date('Y', $milis) == date('Y', $milis2))
+				return (date('n', $milis) <= intval($mes) && date('n', $milis2) >= intval($mes))? true : false; // Periodo de tiempo en mismo año
+			else
+				return (date('n', $milis) > intval($mes) && date('n', $milis2) < intval($mes))? false : true; //Periodo de tiempo en el que se cambia de año
 	}
 
 	public static function getContentFromBBDD($cities, $trip, $month, $limit_ini, $limit_fin, $context='spain', $tipo=0){
@@ -220,197 +65,320 @@ class OpinnoBikespainHelper{
 				$res = $news_items;
 			}
 		}
-        return $res;
+		return $res;
 	}
 
-    public static function getCurrentLang()
-    {
-        global $language;
-        return $language->language;
-    }
+	public static function maquetaCajaResultados (&$out, &$tiposProductos, &$prod, $context, &$i, &$titulo, $tipo=0) {
+		global $theme, $language;
+		$out .= ($i==1)? '<div class="resultados_titulo_general"><h3 class="lined">'.$titulo.'</h3></div><div class="resultados_productox resultados_producto_primer_resultadox  col-1-3 row-item">' : '<div class="resultados_productox col-1-3 row-item">';
+		$url = url('node/'. $prod->nid);
+		if ($prod->field_tipo_de_producto){
+			$url_tipo_producto = drupal_lookup_path('alias', 'taxonomy/term/'.$prod->field_tipo_de_producto['und'][0]['tid']);
+		}
+		$field_img = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_imagen', 'uri');
+		$texto_special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer_text');
+		$special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer');
+		if($special_offer == 0 || $tipo != 1)
+			$texto_special_offer = '';
+		$image = '<img src="'.file_create_url(@$field_img).'"/>'; // no usa image-styles
+		$image = theme('image_style',array('style_name' => '3-columnas', 'path' => $field_img)); // esta si usa image-styles
+		if($tipo == 1)
+			$out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="'.$url.'">' . $image . '<div class="texto_oferta_especial_sobre_imagen">'.$texto_special_offer.'</div><div class="link-overlay icon-search"></div></a>';
+		else
+			$out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="'.$url.'">' . $image . '<div class="link-overlay icon-search"></div></a>';
+		$out .= '<a class="resultados_titulo" href="'.$url.'">'.$prod->title.'</a>';
+		$field_tipo = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_tipo_de_producto', 'tid');
+		$texto_promocional = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_texto_promocional');
+		$tipo = (isset($field_tipo))? $field_tipo : 0;
+		$tipo_producto = (($tipo==0) || !array_key_exists($tipo, $tiposProductos) ? '' : $tiposProductos[$tipo]);
+		$out .= '<a class="resultados_tipo_contenido" href="'.$url_tipo_producto.'">'. str_replace('-','',$tipo_producto) .'</a>';
+		$out .= '<span class="resultados_tipo_contenido">'. $texto_promocional .'</span>';
+		$out .= '</div>';
+		//dsm($out);
+		if (!empty($productos)) $i .= ($i==count($productos))? 1 : $i+1;
+		else $i .= ($i==3)? 1 : $i+1;
+	}
 
-    public static function GetListByLangOrUnd($node, $language, $var)
-    {
-        $valor = '';
-        if (is_object($node) && property_exists($node, $var)) {
-            $a = $node->$var;
-            if (!empty($a)) {
-                if (array_key_exists($language->language, $a))
-                    $valor = $a[$language->language];
-                if (empty($valor) && array_key_exists('und', $a)) {
-                    $valor = $a['und'];
+	public static function getResults ($cities, $trip, $month, $context='', $tipo=0, $datos=array(false)) {
+		global $theme;
+		$limit_ini = 0;
+		$limit_fin = 9;
+		$i = 1;
+		$out = '';
+		if($datos[0]){
+			$limit_ini = $datos[1];
+			$limit_fin = $datos[2];
+		}
+		$productos = OpinnoBikespainHelper::getContentFromBBDD($cities, $trip, $month, $limit_ini, $limit_fin, $context, $tipo);
+		$tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip - Any'), $context);
+		if (!empty($productos)) {
+			$out .='<div class="row" style="min-width: 100%;">';
+			$verMas = '';
+			/* 0=> Normal, 1=> Ofertas especiales, 2=> Sugerencias */
+			switch ($tipo) {
+				case 1:
+					$titulo = t('Special offers');
+				break;
+				case 2:
+					$titulo = t('Suggestions');
+				break;
+				default:
+					$titulo = t('Results');
+					$verMas = '</div><div><form method="POST">
+						<input type="hidden" name="opinno_filter_destinations" value="'.$cities.'"/>
+						<input type="hidden" name="opinno_filter_trips" value="'.$trip.'"/>
+						<input type="hidden" name="opinno_filter_month" value="'.$month.'"/>
+						<input type="hidden" name="opinno_filter_start" value="'.($limit_ini+$limit_fin).'"/>
+						<input type="hidden" name="opinno_filter_end" value="'.$limit_fin.'"/>
+						<input type="submit" class="form-submit" name="opinno_filter_submit" value="'.t('Ver más resultados').'" />
+					</form></div>';
+			}
+			foreach ($productos as $prod)
+				OpinnoBikespainHelper::maquetaCajaResultados($out, $tiposProductos, $prod, $context, $i, $titulo, $tipo);
+			$out .= $verMas;
+			if ($tipo == 0){
+				//Block Viajes sencillos
+				if (@$GLOBALS['contexto_p'] == '35'){
+					$block_viajes = views_embed_view('viajes_sencillos_destacados', 'block');}
+				if (@$GLOBALS['contexto_p'] == '38'){
+					$block_viajes = views_embed_view('viajes_sencillos_destacados_europa', 'block');}
+				if (!empty($block_viajes)) {
+					$out_sencillos .= '<div style="margin-top: 24px"><h3 class="lined">'.t('Viajes Sencillos').'</h3>' . $block_viajes . '</div>';
+					//$out .= $out_sencillos;
 				}
-                if (empty($valor))
-                    $valor = $a;
 			}
 		}
-        return $valor;
+		return $out;
 	}
 
-    public static function fechaDisponible($fecha, $mes)
-    {
-        // Evalua si un mes dado se encuentra en las fechas de disponibilidad
-        $milis = strtotime($fecha['value']);
-        $milis2 = strtotime($fecha['value2']);
+	public static function opinno_bikespain_form_wrapped ($form, &$form_state, $contexto=0 ){
+		global $theme;
+		$GLOBALS['contexto_p'] = $contexto;
+		// By destination
+		$lugares = OpinnoBikespainHelper::_taxonomy_options('cycling', t('Search by destination - Any'), $contexto);
+		$form['cities'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by cities - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $lugares,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_trip', 'search_filters_selects'),
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
 
-        if ($fecha['value'] == $fecha['value2'])
-            return (date('n', $milis) == intval($mes)) ? true : false; // Un día
-		else
-            if (date('Y', $milis) == date('Y', $milis2))
-                return (date('n', $milis) <= intval($mes) && date('n', $milis2) >= intval($mes)) ? true : false; // Periodo de tiempo en mismo año
-            else
-                return (date('n', $milis) > intval($mes) && date('n', $milis2) < intval($mes)) ? false : true; //Periodo de tiempo en el que se cambia de año
-	}
+		);
+		// By product type
+		$tiposProductos = OpinnoBikespainHelper::_taxonomy_options('trip', t('Search by trip type - Any'), $contexto);
+		$form['trip'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by trip - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $tiposProductos,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_trip', 'search_filters_selects'),
+				'onfocus' 			=> "if(this.value == 'Search by trip - Any'){ this.value = ''; }",
+				'onblur' 			=> "if(this.value == ''){ this.value = 'Search by trip - Any'; }"
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
+		);
+		// By date/month
+		$meses = array(t('Search by month - Any'), t('January'), t('February'), t('March'), t('April'), t('May'), t('June'), t('July'), t('August'), t('September'), t('October'), t('November'), t('December'));
+		$form['month'] = array(
+			'#type' 			=> 'select',
+			'#title' 			=> t('Search by month - Any'),
+			'#title_display' 	=> 'invisible',
+			'#options'			=> $meses,
+			'#default_value' 	=> 0,
+			'#required' 		=> FALSE,
+			'#attributes' 		=> array(
+				'class' 			=> array('search_filters_month', 'search_filters_selects'),
+				'onfocus' 			=> "if(this.value == 'Search by month - Any'){ this.value = ''; }",
+				'onblur' 			=> "if(this.value == ''){ this.value = 'Search by month - Any'; }"
+			),
+			'#ajax' 			=> array(
+				'callback' 			=> 'opinno_bikespain_choice_js',
+				'wrapper' 			=> 'search_filters_results',
+				'method' 			=> 'html'
+			)
+		);
+		$final = OpinnoBikespainHelper::getResults(0,0,0,$contexto, 1) . OpinnoBikespainHelper::getResults(0,0,0,$contexto, 2);
+		if(!empty($_POST['opinno_filter_submit'])){
+			$datos = array(true);
+			$datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_start');
+			$datos[] = OpinnoBikespainHelper::getPostData('opinno_filter_end');
+			if(OpinnoBikespainHelper::getPostData('opinno_filter_end')>0){
+				$final = OpinnoBikespainHelper::getResults(OpinnoBikespainHelper::getPostData('opinno_filter_destinations'),OpinnoBikespainHelper::getPostData('opinno_filter_trips'),OpinnoBikespainHelper::getPostData('opinno_filter_month'),$contexto, 0, $datos);
+				if(empty($final)){
+					$final = 'No hay más resultados';
+				}
+			}
 
-    public static function maquetaCajaResultados(&$out, &$tiposProductos, &$prod, $context, &$i, &$titulo, $tipo = 0)
-    {
-        global $theme, $language;
-        $out .= ($i == 1) ? '<div class="resultados_titulo_general"><h3 class="lined">' . $titulo . '</h3></div><div class="resultados_productox resultados_producto_primer_resultadox  col-1-3 row-item">' : '<div class="resultados_productox col-1-3 row-item">';
-        $url = url('node/' . $prod->nid);
-        if ($prod->field_tipo_de_producto) {
-            $url_tipo_producto = drupal_lookup_path('alias', 'taxonomy/term/' . $prod->field_tipo_de_producto['und'][0]['tid']);
 		}
-        $field_img = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_imagen', 'uri');
-        $texto_special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer_text');
-        $special_offer = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_special_offer');
-        if ($special_offer == 0 || $tipo != 1)
-            $texto_special_offer = '';
-        $image = '<img src="' . file_create_url(@$field_img) . '"/>'; // no usa image-styles
-        $image = theme('image_style', array('style_name' => '3-columnas', 'path' => $field_img)); // esta si usa image-styles
-        if ($tipo == 1)
-            $out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="' . $url . '">' . $image . '<div class="texto_oferta_especial_sobre_imagen">' . $texto_special_offer . '</div><div class="link-overlay icon-search"></div></a>';
-		else
-            $out .= '<a class="resultados_imagenx work-image" style="height: 180px;" href="' . $url . '">' . $image . '<div class="link-overlay icon-search"></div></a>';
-        $out .= '<a class="resultados_titulo" href="' . $url . '">' . $prod->title . '</a>';
-        $field_tipo = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_tipo_de_producto', 'tid');
-        $texto_promocional = OpinnoBikespainHelper::GetValueByLangOrUnd($prod, $language, 'field_texto_promocional');
-        $tipo = (isset($field_tipo)) ? $field_tipo : 0;
-        $tipo_producto = (($tipo == 0) || !array_key_exists($tipo, $tiposProductos) ? '' : $tiposProductos[$tipo]);
-        $out .= '<a class="resultados_tipo_contenido" href="' . $url_tipo_producto . '">' . str_replace('-', '', $tipo_producto) . '</a>';
-        $out .= '<span class="resultados_tipo_contenido">' . $texto_promocional . '</span>';
-        $out .= '</div>';
-        //dsm($out);
-        if (!empty($productos)) $i .= ($i == count($productos)) ? 1 : $i + 1;
-        else $i .= ($i == 3) ? 1 : $i + 1;
+		$final = preg_replace("/\'/",'\\\'',$final);
+		$form["javascript"] = array(
+								"#markup" => '<script type="text/javascript"><!--//--><![CDATA[//><!--
+	(function($) {
+		  $(document).ready(function() {
+			  $("#search_filters_results").html(\'' . preg_replace("/\r\n|\r|\n/",'<br/>',$final) . '\');
+			  $("a[rel^=\'prettyPhoto\']").prettyPhoto({changepicturecallback: onPictureChanged,});
+		  });
+		})(jQuery);
+	//--><!]]></script>',
+								);
+		return $form;
 	}
 
-    public static function GetValueByLangOrUnd($node, $language, $var, $value = 'value')
-    {
-        $valor = '';
-        if (property_exists($node, $var)) {
-            $a = $node->$var;
-            if (!empty($a)) {
-                if (array_key_exists($language->language, $a) && array_key_exists($value, $a[$language->language][0]))
-                    $valor = $a[$language->language][0][$value];
-                if (empty($valor) && array_key_exists('und', $a) && array_key_exists($value, $a['und'][0])) {
-                    $valor = $a['und'][0][$value];
-                }
-                if (empty($valor))
-                    $valor = @$a[0][$value];
-            }
+	public static function getPostData($vari){
+		if(array_key_exists($vari, $_POST) && is_numeric($_POST[$vari]))
+			return intval($_POST[$vari]);
+		else
+			return 0;
+	}
+
+	/**
+	 * Returns an array for use with #options in a form field
+	 **/
+	public static function _taxonomy_options($machine_name, $default='', $contexto=0){
+		$vocabulary = taxonomy_vocabulary_machine_name_load($machine_name);
+		if($contexto>0){
+			if($machine_name == 'trip'){
+				if($contexto==35) $contexto=152;
+				if($contexto==38) $contexto=153;
+			}
+			$tree = taxonomy_get_tree($vocabulary->vid, $contexto);
+		}else{
+			$tree = taxonomy_get_tree($vocabulary->vid);
 		}
-        return $valor;
+		$tree = i18n_taxonomy_localize_terms($tree);
+		if(!empty($default))
+			$options[0] = $default;
+		else
+			$options = array();
+		foreach($tree as $item){
+			$options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
+		}
+		return $options;
+	}
+
+	public static function getIdMDSliderCiudad($ciudad){
+		switch($ciudad){
+			case 54:
+			case 26:
+				$id = 12; /* Holanda */
+			break;
+			case 55:
+			case 27:
+				$id = 13; /* Francia */
+			break;
+			case 50:
+			case 28:
+				$id = 14; /* Bélgica */
+			break;
+			case 42:
+			case 29:
+				$id = 15; /* Italia */
+			break;
+			case 52:
+			case 30:
+				$id = 16; /* Austria */
+			break;
+			case 51:
+			case 31:
+				$id = 17; /* Croacia */
+			break;
+			case 53:
+			case 32:
+				$id = 18; /* Alemania */
+			break;
+			case 40:
+			case 33:
+				$id = 19; /* Portugal */
+			break;
+			case 41:
+			case 34:
+				$id = 21; /* Marruecos */
+			break;
+			case 44:
+			case 15:
+				$id = 5; /* Camino Santiago */
+			break;
+			case 56:
+			case 6:
+				$id = 6; /* Madrid */
+			break;
+			case 46:
+			case 16:
+				$id = 7; /* Andalusia */
+			break;
+			case 47:
+			case 17:
+				$id = 8; /* Wine Route */
+			break;
+			case 48:
+			case 18:
+				$id = 9; /* Catalonia */
+			break;
+			case 45:
+			case 19:
+				$id = 10; /* Green Spain */
+			break;
+			case 49:
+			case 20:
+				$id = 11; /* Islands */
+			break;
+			default:
+				$id = 0;
+		}
+		return $id;
 	}
 
 	//Devuelve los dias que tiene un mes
-
-    public static function getPostData($vari)
-    {
-        if (array_key_exists($vari, $_POST) && is_numeric($_POST[$vari]))
-            return intval($_POST[$vari]);
-        else
-            return 0;
+	public static function diasMes($i, $anyo){
+		switch($i){ case 4: case 6: case 9: case 11: $diasMes = 30; break; case 2: $diasMes = (checkdate(02,29,$anyo))? 29 : 28; break; default: $diasMes = 31; } return $diasMes;
 	}
-
-    public static function getIdMDSliderCiudad($ciudad)
-    {
-        switch ($ciudad) {
-            case 54:
-            case 26:
-                $id = 12; /* Holanda */
-                break;
-            case 55:
-            case 27:
-                $id = 13; /* Francia */
-                break;
-            case 50:
-            case 28:
-                $id = 14; /* Bélgica */
-                break;
-            case 42:
-            case 29:
-                $id = 15; /* Italia */
-                break;
-            case 52:
-            case 30:
-                $id = 16; /* Austria */
-                break;
-            case 51:
-            case 31:
-                $id = 17; /* Croacia */
-                break;
-            case 53:
-            case 32:
-                $id = 18; /* Alemania */
-                break;
-            case 40:
-            case 33:
-                $id = 19; /* Portugal */
-                break;
-            case 41:
-            case 34:
-                $id = 21; /* Marruecos */
-                break;
-            case 44:
-            case 15:
-                $id = 5; /* Camino Santiago */
-                break;
-            case 56:
-            case 6:
-                $id = 6; /* Madrid */
-                break;
-            case 46:
-            case 16:
-                $id = 7; /* Andalusia */
-                break;
-            case 47:
-            case 17:
-                $id = 8; /* Wine Route */
-                break;
-            case 48:
-            case 18:
-                $id = 9; /* Catalonia */
-                break;
-            case 45:
-            case 19:
-                $id = 10; /* Green Spain */
-                break;
-            case 49:
-            case 20:
-                $id = 11; /* Islands */
-                break;
-            default:
-                $id = 0;
+	public static function GetValueByLangOrUnd($node, $language, $var, $value='value'){
+		$valor = '';
+		if(property_exists($node, $var)){
+			$a = $node->$var;
+			if(!empty($a)){
+				if(array_key_exists($language->language, $a) && array_key_exists($value, $a[$language->language][0]))
+					$valor = $a[$language->language][0][$value];
+				if(empty($valor) && array_key_exists('und', $a) && array_key_exists($value, $a['und'][0])){
+					$valor = $a['und'][0][$value];
+				}
+				if(empty($valor))
+					$valor = @$a[0][$value];
+			}
 		}
-        return $id;
+		return $valor;
 	}
-
-    public static function diasMes($i, $anyo)
-    {
-        switch ($i) {
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                $diasMes = 30;
-                break;
-            case 2:
-                $diasMes = (checkdate(02, 29, $anyo)) ? 29 : 28;
-                break;
-            default:
-                $diasMes = 31;
-        }
-        return $diasMes;
+	public static function GetListByLangOrUnd($node, $language, $var){
+		$valor = '';
+		if(is_object($node) && property_exists($node, $var)){
+			$a = $node->$var;
+			if(!empty($a)){
+				if(array_key_exists($language->language, $a))
+					$valor = $a[$language->language];
+				if(empty($valor) && array_key_exists('und', $a)){
+					$valor = $a['und'];
+				}
+				if(empty($valor))
+					$valor = $a;
+			}
+		}
+		return $valor;
 	}
 
 	/*
@@ -695,7 +663,7 @@ function opinno_bikespain_views_post_render(&$view, &$output, &$cache){
 		$output = str_replace(' views-label-field-dates">', ' views-label-field-dates"><i class="icon-calendar"></i>', $output);
 
 		/* Estrellas de nivel */
-        $nivel = (OpinnoBikespainHelper::getCurrentLang() == 'es') ? array('Fácil', 'Medio', 'Medio-Avanzado', 'Avanzado', 'Difícil') : array('Easy', 'Medium', 'Medium-Advanced', 'Advanced', 'Hard');
+		$nivel = (OpinnoBikespainHelper::getCurrentLang() == 'es') ? array('Fácil', 'Medio', 'Medio-Avanzado', 'Avanzado', 'Difícil') : array('Easy', 'Medium', 'Medium-Advanced', 'Advanced', 'Hard') ;
 		/*$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">1', '<div class="fivestar-widget-static-text">'.$nivel[0].'</div><div class="star star-1 star-odd star-first"><span class="on">1', $output);
 		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">2', '<div class="fivestar-widget-static-text">'.$nivel[1].'</div><div class="star star-1 star-odd star-first"><span class="on">2', $output);
 		$output = str_replace('<div class="star star-1 star-odd star-first"><span class="on">3', '<div class="fivestar-widget-static-text">'.$nivel[2].'</div><div class="star star-1 star-odd star-first"><span class="on">3', $output);
@@ -718,7 +686,7 @@ function opinno_bikespain_views_post_render(&$view, &$output, &$cache){
 		}
 	}
 
-    $output = str_replace('<div class="fivestar-widget-static fivestar-widget-static-vote fivestar-widget-static-5 clearfix">', '<div class="five-rate" style="width: 100%; height: 30px;">' . $aux . '</div><div class="fivestar-widget-static fivestar-widget-static-vote fivestar-widget-static-5 clearfix" style="display:none !important;">', $output);
+	$output = str_replace('<div class="fivestar-widget-static fivestar-widget-static-vote fivestar-widget-static-5 clearfix">', '<div class="five-rate" style="width: 100%; height: 30px;">'.$aux.'</div><div class="fivestar-widget-static fivestar-widget-static-vote fivestar-widget-static-5 clearfix" style="display:none !important;">', $output);
 
 	if($view->name == 'sidebar_detalles_productos' || $view->name == 'sidebar_detalles_productos_premium' || $view->name == 'sidebar_detalles_productos_europa'){
 		$active_contexts = context_active_contexts();

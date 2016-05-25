@@ -283,7 +283,7 @@ $drupal_hash_salt = '';
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-$base_url = 'http://localhost/bikespain';  // NO trailing slash!
+$base_url = 'http://bikespain.local';  // NO trailing slash!
 
 /**
  * PHP settings:
@@ -340,7 +340,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * between your various domains. Make sure to always start the $cookie_domain
  * with a leading dot, as per RFC 2109.
  */
-$cookie_domain = 'localhost';
+$cookie_domain = 'bikespain.local';
 
 /**
  * Variable overrides:
