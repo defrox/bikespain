@@ -183,6 +183,11 @@ class CSV2mySQL
 
         foreach ($this->csv as $row) {
 
+            //Clean up some special characters
+            foreach ($row as $key => $value) {
+                $row[$key] = preg_replace("/'/", "\\'", $value);
+            }
+
             // Map some vars
             $row_profile = $this->map_taxonomy($row['field_type'], $this->taxonomy);
             $row_country = $this->map_country($row['country']);
