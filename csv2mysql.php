@@ -20,9 +20,10 @@ class CSV2mySQL
     protected $file = '';
     protected $outfile = '';
     protected $csv = array();
-    protected $bundle = '';
+    protected $role = '';
     protected $sql = '';
     protected $entity = 0;
+    protected $entity_ui = 4000;
     protected $taxonomy = "profile_type";
     protected $dbhost = "localhost";
     protected $dbuser = "root";
@@ -37,16 +38,16 @@ class CSV2mySQL
     /**
      * @param $file
      * @param string $outfile
-     * @param string $bundle
+     * @param string $role
      * @param int $entity
      * @return string
      * @throws \Exception exception
      */
-    public function process($file, $outfile = 'output.sql', $bundle = 'proveedor', $entity = 0)
+    public function process($file, $outfile = 'output.sql', $role = 'proveedor', $entity = 0)
     {
         $this->file = $file;
         $this->outfile = $outfile;
-        $this->bundle = $bundle;
+        $this->role = $role;
         $this->entity = $entity;
 
         try {
@@ -178,8 +179,11 @@ class CSV2mySQL
         $sql_string = '';
         $tbl_customer_address = $tbl_customer_profile = $tbl_customer_profile_revision = $tbl_razon_social = $tbl_cif_nif = $tbl_type = $tbl_telefono = $tbl_telefono2 = $tbl_email_ = $tbl_notas = $tbl_contact = array();
         $entity = $this->entity;
-        $bundle = $this->bundle;
+        $entity_uid = $this->entity_uid;
+        $role = $this->role;
         $now = time();
+        $pass = "$S$DAn5wWLWqPBHYi4N1jDq5MBUB62ju6mDBIrFXFTYozUefUYlMv";
+        $roles = array( 'cliente' => 5, 'proveedor' => 6, 'contacto' => 7 );
 
         foreach ($this->csv as $row) {
 
@@ -193,11 +197,40 @@ class CSV2mySQL
             $row_country = $this->map_country($row['country']);
             $row_administrative_area = $this->map_administrative_area($row['administrative_area']);
 
-            if (($bundle == 'cliente' || $bundle == 'contacto') && (strtolower($row['field_bundle']) == 'cliente' || strtolower($row['field_bundle']) == 'contacto')) $row_bundle = strtolower($row['field_bundle']);
-            else $row_bundle = $bundle;
+            if (($role == 'cliente' || $role == 'contacto') && (strtolower($row['field_bundle']) == 'cliente' || strtolower($row['field_bundle']) == 'contacto')) $row_rid= strtolower($row['field_bundle']);
+            else $row_rid = $role;
+            $user_role = $roles[$row_rid];
+
+            $row_bundle = "billing";
+            $entity_uid += $entity;
 
             if ( (!array_key_exists('field_first_name', $row) || $row['field_first_name'] == '') && $row['field_organisation'] != '') $row['field_name_line'] = $row['field_organisation'];
             else $row['field_name_line'] = $row['field_first_name'] . " " . $row['field_last_name'];
+            $uemail = preg_split('/; ?| \/ /', $row['field_email']);
+
+            // users
+            $row_users = "($entity_uid, ";                                // uid
+            $row_users .= "'" . $row['field_name_line'] . "', ";          // name
+            $row_users .= "'$pass', ";                                    // pass
+            $row_users .= "'" . $uemail[0] . "', ";                       // mail
+            $row_users .= "'', ";                                         // theme
+            $row_users .= "'', ";                                         // signature
+            $row_users .= "'filtered_html', ";                            // signature_format
+            $row_users .= "$now, ";                                       // created
+            $row_users .= "$now, ";                                       // access
+            $row_users .= "$now, ";                                       // login
+            $row_users .= "0, ";                                          // status
+            $row_users .= "'Europe/Madrid', ";                            // timezone
+            $row_users .= "'es', ";                                       // language
+            $row_users .= "0, ";                                          // picture
+            $row_users .= "'system@bikespain.com', ";                     // init
+            $row_users .= "NULL)";                                        // data
+            $tbl_users[] = $row_users;
+
+            // users_role
+            $row_users_roles = "($entity_uid, ";                                // uid
+            $row_users_roles .= "$user_role)";                                  // rid
+            $tbl_users_roles[] = $row_users_roles;
 
             // commerce_customer_address
             $row_customer_address = "('commerce_customer_profile', ";           // entity_type
@@ -218,8 +251,8 @@ class CSV2mySQL
             $row_customer_address .= "NULL, ";                                  // commerce_customer_address_sub_premise
             $row_customer_address .= "'" . $row['field_organisation'] . "', ";  // commerce_customer_address_organisation_name
             $row_customer_address .= "'" . $row['field_name_line'] . "', ";     // commerce_customer_address_name_line
-            $row_customer_address .= "'" . (array_key_exists('field_first_name', $row) ? $row['field_first_name'] : "") . "', ";    // commerce_customer_address_first_name
-            $row_customer_address .= "'" . (array_key_exists('field_last_name', $row) ? $row['field_last_name'] : "") . "', ";     // commerce_customer_address_last_name
+            $row_customer_address .= "'" . (array_key_exists('field_first_name', $row) ? $row['field_first_name'] : $row['field_name_line']) . "', ";    // commerce_customer_address_first_name
+            $row_customer_address .= "'" . (array_key_exists('field_last_name', $row) ? $row['field_last_name'] : $row['field_name_line']) . "', ";     // commerce_customer_address_last_name
             $row_customer_address .= "NULL)";                                   // commerce_customer_address_data
             $tbl_customer_address[] = $row_customer_address;
 
@@ -227,7 +260,7 @@ class CSV2mySQL
             $row_customer_profile = "($entity, ";                                    // profile_id
             $row_customer_profile .= "$entity, ";                                    // revision_id
             $row_customer_profile .= "'$row_bundle', ";                              // type
-            $row_customer_profile .= "0, ";                                          // uid
+            $row_customer_profile .= "$entity_uid, ";                                // uid
             $row_customer_profile .= "1, ";                                          // status
             $row_customer_profile .= "$now, ";                                       // created
             $row_customer_profile .= "$now, ";                                       // changed
@@ -344,6 +377,14 @@ class CSV2mySQL
 
             $entity++;
         }
+
+        // users TABLES
+        $sql_users = "INSERT INTO users (uid, name, pass, mail, theme, signature, signature_format, created, access, login, status, timezone, language, picture, init, data) VALUES ";
+        $sql_string .= $sql_users . implode(', ' . "\n", $tbl_users) . ";" . "\n";
+
+        // users_roles TABLES
+        $sql_users_roles = "INSERT INTO users_roles (uid, rid) VALUES ";
+        $sql_string .= $sql_users_roles . implode(', ' . "\n", $tbl_users_roles) . ";" . "\n";
 
         // commerce_customer_address TABLES
         $sql_commerce_customer_address_data = "INSERT INTO field_data_commerce_customer_address (entity_type, bundle, deleted, entity_id, revision_id, language, delta, commerce_customer_address_country, commerce_customer_address_administrative_area, commerce_customer_address_sub_administrative_area, commerce_customer_address_locality, commerce_customer_address_dependent_locality, commerce_customer_address_postal_code, commerce_customer_address_thoroughfare, commerce_customer_address_premise, commerce_customer_address_sub_premise, commerce_customer_address_organisation_name, commerce_customer_address_name_line, commerce_customer_address_first_name, commerce_customer_address_last_name, commerce_customer_address_data) VALUES ";

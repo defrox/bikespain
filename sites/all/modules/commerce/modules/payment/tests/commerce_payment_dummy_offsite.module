@@ -12,9 +12,9 @@ function commerce_payment_dummy_offsite_commerce_payment_method_info() {
   $payment_methods = array();
 
   $payment_methods['commerce_payment_dummy_offsite'] = array(
-    'title' => t('Pago con tarjeta'),
-    'short_title' => t('Tarjeta'),
-    'description' => t('Pago con tarjeta'),
+    'title' => t('Dummy Payment Method Offsite'),
+    'short_title' => t('Dummy'),
+    'description' => t('Dummy Payment Method with offsite enabled'),
     'terminal' => FALSE,
     'offsite' => TRUE,
   	'active' => TRUE,

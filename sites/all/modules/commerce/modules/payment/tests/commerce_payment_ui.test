@@ -95,7 +95,7 @@ class CommercePaymentUITest extends CommerceBaseTestCase {
   public function testCommercePaymentCheckout() {
     $this->createOrderAndGoToPayment();
 
-    $this->assertText('Pago con tarjeta', t('Pago con tarjeta method pane is present'));
+    $this->assertText('Example payment', t('Example payment method pane is present'));
 
     // Finish checkout process.
     $this->drupalPost(NULL, array(), t('Continue to next step'));
@@ -186,10 +186,10 @@ class CommercePaymentUITest extends CommerceBaseTestCase {
     $this->drupalGet('admin/commerce/config/payment-methods');
 
     $this->assertTitle(t('Payment methods') . ' | Drupal', t('We are now in the payment methods page'));
-    $this->assertText(t('Pago con tarjeta'), t('Pago con tarjeta rule is present'));
+    $this->assertText(t('Example payment'), t('Example payment rule is present'));
 
-    // Go to edit Pago con tarjeta rule.
-    $this->clickLink(t('Pago con tarjeta'));
+    // Go to edit example payment rule.
+    $this->clickLink(t('Example payment'));
 
     // Adding a new condition.
     $this->clickLink(t('Add condition'));
@@ -212,13 +212,13 @@ class CommercePaymentUITest extends CommerceBaseTestCase {
     $product = $this->createDummyProduct($this->randomName(), $this->randomName(), 2, 'USD', $this->store_admin->uid);
     $this->createOrderAndGoToPayment($this->store_customer, array($product->product_id => 20));
     // Check that the payment method example is *not* there.
-    $this->assertNoText('Pago con tarjeta', t('Pago con tarjeta method panel is not present'));
+    $this->assertNoText('Example payment', t('Example payment method panel is not present'));
 
     // Create a more than $50 order (40 products $2 each).
     $product = $this->createDummyProduct($this->randomName(), $this->randomName(), 2, 'USD', $this->store_admin->uid);
     $this->createOrderAndGoToPayment($this->store_customer, array($product->product_id => 40));
     // Check that the payment method example is there.
-    $this->assertText('Pago con tarjeta', t('Pago con tarjeta method panel is present'));
+    $this->assertText('Example payment', t('Example payment method panel is present'));
   }
 
   /**
@@ -307,7 +307,7 @@ class CommercePaymentOffsiteTest extends CommerceBaseTestCase {
     $this->drupalGet('admin/commerce/config/payment-methods');
 
     // Check if the payment method exists and it's listed.
-    $this->assertText(t('Pago con tarjeta'), t('Offsite Pago con tarjeta method is listed in the payment methods administration page'));
+    $this->assertText(t('Dummy Payment Method Offsite'), t('Offsite example payment method is listed in the payment methods administration page'));
 
     // Login with store customer and access to checkout.
     $this->drupalLogin($this->store_customer);
@@ -315,7 +315,7 @@ class CommercePaymentOffsiteTest extends CommerceBaseTestCase {
 
     // Process the order and check if the offsite payment is working.
     $this->drupalPost(NULL, array(), t('Continue to next step'));
-    $this->assertText(t('Pago con tarjeta'), t('Offsite Pago con tarjeta method is listed in the checkout process form'));
+    $this->assertText(t('Dummy Payment Method Offsite'), t('Offsite example payment method is listed in the checkout process form'));
     $this->drupalPostAJAX(NULL, array('commerce_payment[payment_method]' => 'commerce_payment_dummy_offsite|commerce_payment_commerce_payment_dummy_offsite'), 'commerce_payment[payment_method]');
     $this->drupalPost(NULL, array(), t('Continue to next step'));
 
