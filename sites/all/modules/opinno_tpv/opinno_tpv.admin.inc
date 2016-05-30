@@ -197,14 +197,14 @@ function opinno_tpv_ordenes_de_pago($form, $form_state){
   //$index = $form_state["build_info"]["args"][1];
 
   $query = db_select('ordenes_de_pago', 'odp')
-    ->fields('odp', array('uid','name', 'last_name', 'mail', 'ref_viaje', 'fecha', 'factura_proforma', 'estado', 'respuesta_tpv', 'editable', 'plantilla_email', 'email_enviado', 'fecha_email_enviado', 'cantidad', 'notas'))
+    ->fields('odp', array('uid','name', 'last_name', 'mail', 'ref_viaje', 'fecha', 'factura_proforma', 'estado', 'respuesta_tpv', 'editable', 'plantilla_email', 'email_enviado', 'fecha_email_enviado', 'cantidad', 'concepto'/*, 'notas'*/))
     ->orderBy('uid', 'DESC');
-  $query = $query->extend('PagerDefault')->limit(10);
+  $query = $query->extend('PagerDefault')->limit(50);
   $results = $query->execute();
   $data = $results->fetchAll();
 
   //$header = array('Name', 'Last Name', 'Email', 'Ref Viaje', 'Fecha', 'Factura Proforma', 'Estado', 'Respuesta TPV', 'Editable', 'Plantilla Email', 'Email Enviado', 'Fecha Email Enviado', 'Cantidad', 'Operaciones');
-  $header = array('Name', 'Last Name', 'Email', 'Ref Viaje', 'Fecha', 'Factura Proforma', 'Estado', 'Respuesta TPV', 'Email Enviado', 'Fecha Email Enviado', 'Cantidad', 'Notas', 'Operaciones');
+  $header = array('Name', 'Last Name', 'Email', 'Ref Viaje', 'Fecha', 'Factura Proforma', 'Estado', 'Respuesta TPV', 'Email Enviado', 'Fecha Email Enviado', 'Cantidad', 'Concepto', /*'Notas',*/ 'Operaciones');
 
   $pay_status = array(
     0 => t('Pending'),
@@ -233,7 +233,8 @@ function opinno_tpv_ordenes_de_pago($form, $form_state){
       $email_status[$row->email_enviado],
       $fecha_email,
       $row->cantidad,
-      $row->notas,
+      $row->concepto,
+//      $row->notas,
       (l(t('edit'), "admin/config/system/opinno_tpv/orden/$row->uid") . ' | ' .  l(t('delete'), "admin/config/system/opinno_tpv/ordenes_de_pago/delete/$row->uid")),
     );
   }

@@ -23,7 +23,7 @@ class CSV2mySQL
     protected $role = '';
     protected $sql = '';
     protected $entity = 0;
-    protected $entity_ui = 4000;
+    protected $entity_uid = 4000;
     protected $taxonomy = "profile_type";
     protected $dbhost = "localhost";
     protected $dbuser = "root";
@@ -182,7 +182,7 @@ class CSV2mySQL
         $entity_uid = $this->entity_uid;
         $role = $this->role;
         $now = time();
-        $pass = "$S$DAn5wWLWqPBHYi4N1jDq5MBUB62ju6mDBIrFXFTYozUefUYlMv";
+        $pass = '$S$DAn5wWLWqPBHYi4N1jDq5MBUB62ju6mDBIrFXFTYozUefUYlMv';
         $roles = array( 'cliente' => 5, 'proveedor' => 6, 'contacto' => 7 );
 
         foreach ($this->csv as $row) {
@@ -376,6 +376,7 @@ class CSV2mySQL
             $tbl_contact[] = $row_contact;
 
             $entity++;
+            if ($entity > 15) break;
         }
 
         // users TABLES
