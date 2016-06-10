@@ -119,12 +119,12 @@ function opinno_tpv_templates()
 
     foreach ($languages as $lang_code => $lang_name) {
         $field_name = 'opinno_tpv_email_' . $lang_code;
-        $field_value = variable_get($field_name, array('value' => '', 'format' => NULL));
+        $field_search = variable_get($field_name, array('value' => '', 'format' => NULL));
 
         $form[$field_name] = array(
             '#type' => 'text_format',
             '#title' => t('Plantilla de email en ' . $lang_name),
-            '#default_value' => $field_value['value'],
+            '#default_value' => $field_search['value'],
             '#description' => t('Plantilla del email por defecto para idioma ' . $lang_name),
         );
     }
@@ -137,12 +137,12 @@ function opinno_tpv_templates()
 
     foreach ($languages as $lang_code => $lang_name) {
         $field_name = 'opinno_tpv_email_success_' . $lang_code;
-        $field_value = variable_get($field_name, array('value' => '', 'format' => NULL));
+        $field_search = variable_get($field_name, array('value' => '', 'format' => NULL));
 
         $form[$field_name] = array(
             '#type' => 'text_format',
             '#title' => t('Plantilla de email en ' . $lang_name),
-            '#default_value' => $field_value['value'],
+            '#default_value' => $field_search['value'],
             '#description' => t('Plantilla del email por defecto para idioma ' . $lang_name),
         );
     }
@@ -155,12 +155,12 @@ function opinno_tpv_templates()
 
     foreach ($languages as $lang_code => $lang_name) {
       $field_name = 'opinno_tpv_email_error_' . $lang_code;
-      $field_value = variable_get($field_name, array('value' => '', 'format' => NULL));
+      $field_search = variable_get($field_name, array('value' => '', 'format' => NULL));
 
       $form[$field_name] = array(
         '#type' => 'text_format',
         '#title' => t('Plantilla de email en ' . $lang_name),
-        '#default_value' => $field_value['value'],
+        '#default_value' => $field_search['value'],
         '#description' => t('Plantilla del email por defecto para idioma ' . $lang_name),
       );
 
@@ -177,14 +177,15 @@ function opinno_tpv_templates()
 
 function opinno_tpv_eliminar_orden_de_pago($index)
 {
+    var_dump($index);
     $querydelete = db_delete('ordenes_de_pago')->condition('uid', $index);
     $resultdelete = $querydelete->execute();
-
     if ($resultdelete) {
         drupal_set_message(t('Se ha eliminado el registro correctamente'), 'status');
     } else {
         drupal_set_message(t('No se ha podido eliminar el registro'), 'error');
     }
+    return $resultdelete;
 }
 
 /**
@@ -196,9 +197,37 @@ function opinno_tpv_eliminar_orden_de_pago($index)
 
 function opinno_tpv_ordenes_de_pago($form, $form_state)
 {
-    $command = $form_state["build_info"]["args"][0];
-    $field = $form_state["input"]["field"] != "" ? $form_state["input"]["field"] : false;
-    $value = $form_state["input"]["value"] != "" ? $form_state["input"]["value"] : false;
+    $command = $form_state['build_info']['args'][0];
+
+    if ($form_state['input']['field_search'] != '' && $form_state['input']['op'] == 'Aplicar') {
+        $field_search = $form_state['input']['field_search'];
+    } elseif ($_GET && array_key_exists('field_search', $_GET) && $form_state['input']['op'] === null)  {
+        $field_search = $_GET['field_search'] != '' ? $_GET['field_search'] : false;
+    } else {
+        $field_search = false;
+    }
+
+    if ($form_state['input']['value_string'] != '' && $form_state['input']['op'] == 'Aplicar') {
+        $value_string = $form_state['input']['value_string'];
+    } elseif ($_GET && array_key_exists('value_string', $_GET) && $form_state['input']['op'] === null)  {
+        $value_string = $_GET['value_string'] != '' ? $_GET['value_string'] : false;
+    } else {
+        $value_string = false;
+    }
+
+    if ($form_state['input']['rows_per_page'] != '' && $form_state['input']['op'] == 'Aplicar') {
+        $rows_per_page = $form_state['input']['rows_per_page'];
+    } elseif ($_GET && array_key_exists('rows_per_page', $_GET) && $form_state['input']['op'] === null)  {
+        $rows_per_page = $_GET['rows_per_page'] != '' ? $_GET['rows_per_page'] : 10;
+    } else {
+        $rows_per_page = 10;
+    }
+
+    $page = $_GET['page'] != '' ? $_GET['page'] != '' : 0;
+
+    $parameters = array('field_search' => $field_search, 'value_string' => $value_string, 'rows_per_page' => $rows_per_page);
+    $query_string = "?page=$page&field_search=$field_search&value_string=$value_string&rows_per_page=$rows_per_page";
+
     $header = array(
         array('data' => t('Nombre'), 'field' => 'name'),
         array('data' => t('Apellidos'), 'field' => 'last_name'),
@@ -225,9 +254,17 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
         'estado' => 'Estado',
         'respuesta_tpv' => 'Respuesta TPV',
         'email_enviado' => 'Email Enviado',
-        'Fecha Email Enviado' => 'Fecha Email Enviado',
+        'fecha_email_enviado' => 'Fecha Email Enviado',
         'cantidad' => 'Cantidad',
         'concepto' => 'Concepto'
+    );
+
+    $rows_per_page_values = array (
+        10 => 10,
+        25 => 25,
+        50 => 50,
+        100 => 100,
+        99999 => 'Todos'
     );
 
     // Check if there is sorting request
@@ -286,11 +323,11 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
     $query = db_select('ordenes_de_pago', 'odp')
         ->fields('odp', array('uid', 'name', 'last_name', 'mail', 'ref_viaje', 'fecha', 'factura_proforma', 'estado', 'respuesta_tpv', 'editable', 'plantilla_email', 'email_enviado', 'fecha_email_enviado', 'cantidad', 'concepto'))
         ->orderBy($order, $sort);
-    if ($field && $value) {
-        $query = $query->condition('odp.'.$field, '%' . db_like($value) . '%', 'LIKE');
+    if ($field_search && $value_string) {
+        $query = $query->condition('odp.'.$field_search, '%' . db_like($value_string) . '%', 'LIKE');
     }
     $query = $query->extend('TableSort');
-    $query = $query->extend('PagerDefault')->limit(50);
+    $query = $query->extend('PagerDefault')->limit($rows_per_page);
     $results = $query->execute();
     $data = $results->fetchAll();
     $pay_status = array(
@@ -321,7 +358,7 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
             $fecha_email,
             $row->cantidad,
             $row->concepto,
-            (l(t('edit'), "admin/config/system/opinno_tpv/orden/$row->uid") . ' | ' . l(t('delete'), "admin/config/system/opinno_tpv/ordenes_de_pago/delete/$row->uid")),
+            (l(t('edit'), "admin/config/system/opinno_tpv/orden/$row->uid/$query_string") . ' | ' . l(t('delete'), "admin/config/system/opinno_tpv/ordenes_de_pago/delete/$row->uid/$query_string")),
         );
     }
 
@@ -330,23 +367,32 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
         '#suffix' => '</li></ul></div>',
         '#type' => 'link',
         '#title' => t('Agregar nueva Orden de Pago'),
-        '#href' => 'admin/config/system/opinno_tpv/orden',
+        '#href' => 'admin/config/system/opinno_tpv/orden'.$query_string,
     );
 
-    $form['filters']['field'] = array(
+    $form['filters']['rows_per_page'] = array(
         '#type' => 'select',
-        '#title' => t('Filtrar por '),
-        '#default' => $field,
-        '#options' => $fields,
-        '#prefix' => '<div style="float:left;">',
+        '#title' => t('Resultados por página '),
+        '#default_value' => $rows_per_page,
+        '#options' => $rows_per_page_values,
+        '#prefix' => '<div style="float:left; margin-right: 20px;">',
         '#suffix' => '</div>',
     );
 
-    $form['filters']['value'] = array(
+    $form['filters']['field_search'] = array(
+        '#type' => 'select',
+        '#title' => t('Filtrar por '),
+        '#default_value' => $field_search,
+        '#options' => $fields,
+        '#prefix' => '<div style="float:left; margin-right: 20px;">',
+        '#suffix' => '</div>',
+    );
+
+    $form['filters']['value_string'] = array(
         '#type' => 'textfield',
         '#title' => t(' que contenga '),
-        '#default' => $value,
-        '#prefix' => '<div style="float:left; padding: 0 20px;">',
+        '#default_value' => $value_string,
+        '#prefix' => '<div style="float:left; margin-right: 20px;">',
         '#suffix' => '</div>',
     );
 
@@ -369,13 +415,13 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
         '#empty' => t('No hay ordenes de pago'),
     );
 
-    $form['pager'] = array('#markup' => theme('pager'));
+    $form['pager'] = array('#markup' => theme('pager', array('parameters' => $parameters)));
 
     if ($command == 'delete') {
         $form2 = array();
         return confirm_form($form2,
             t('Seguro que quieres eliminar esta orden de pago?'),
-            "admin/config/system/opinno_tpv/ordenes_de_pago",
+            "admin/config/system/opinno_tpv/ordenes_de_pago$query_string",
             t('This action cannot be undone.'),
             t('Delete'),
             t('Cancel'));
@@ -393,13 +439,18 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
 
 function opinno_tpv_ordenes_de_pago_submit($form, &$form_state)
 {
+    global $base_url;
+
     $command = $form_state["build_info"]["args"][0];
     $index = $form_state["build_info"]["args"][1];
+    $url = parse_url($base_url . $_GET['q'], PHP_URL_QUERY);
+    parse_str($url, $url);
+
     switch ($command) {
         case 'delete':
             opinno_tpv_eliminar_orden_de_pago($index);
             break;
     }
-    drupal_goto("admin/config/system/opinno_tpv/ordenes_de_pago");
+    drupal_goto("admin/config/system/opinno_tpv/ordenes_de_pago", array('query' => $url));
 }
 
