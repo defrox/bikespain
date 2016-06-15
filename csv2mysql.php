@@ -201,7 +201,8 @@ class CSV2mySQL
             else $row_rid = $role;
             $user_role = $roles[$row_rid];
 
-            $row_bundle = "billing";
+            //$row_bundle = "billing";
+            $row_bundle = $row_rid;
             $entity_uid += $entity;
 
             if ( (!array_key_exists('field_first_name', $row) || $row['field_first_name'] == '') && $row['field_organisation'] != '') $row['field_name_line'] = $row['field_organisation'];

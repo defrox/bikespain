@@ -959,8 +959,13 @@ function commerce_customer_options_list($field) {
   // Loop through all customer matches.
   foreach (commerce_customer_match_customer_profiles($field, array(), $limit) as $profile_id => $data) {
     // Add them to the options list in optgroups by customer profile type.
-    $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
-    $options[$name][$profile_id] = t('@profile: User @user', array('@profile' => $profile_id, '@user' => $data['uid']));
+    if ($data['type'] == $field['settings']['profile_type']) {
+      $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
+      $profile = commerce_customer_profile_load($profile_id);
+      //var_dump($profile);
+      $name = $profile->commerce_customer_address['und'][0]['name_line'];
+      $options[$name][$profile_id] = t('@profile: @user', array('@profile' => $profile_id, '@user' => $name));
+    }
   }
 
   // Simplify the options list if only one optgroup exists.
