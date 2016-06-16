@@ -963,8 +963,8 @@ function commerce_customer_options_list($field) {
       $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
       $profile = commerce_customer_profile_load($profile_id);
       //var_dump($profile);
-      $name = $profile->commerce_customer_address['und'][0]['name_line'];
-      $options[$name][$profile_id] = t('@profile: @user', array('@profile' => $profile_id, '@user' => $name));
+      $nameline = $profile->commerce_customer_address['und'][0]['name_line'];
+      $options[$name][$profile_id] = t('@profile: @user', array('@profile' => $profile_id, '@user' => $nameline));
     }
   }
 

@@ -1,0 +1,449 @@
+<?php
+
+/**
+ * Implements hook_field_info().
+ */
+function opinno_tpv_customer_field_info() {
+    return array(
+        'opinno_tpv_customer_profile_reference' => array(
+            'label' => t('Customer profile reference DFX'),
+            'description' => t('This field stores the ID of a related customer profile as an integer value.'),
+            'settings' => array('profile_type' => 'billing', 'options_list_limit' => 50),
+            'instance_settings' => array(),
+            'default_widget' => 'options_select',
+            'default_formatter' => 'commerce_customer_profile_reference_display',
+            'property_type' => 'commerce_customer_profile',
+            'property_callbacks' => array('commerce_customer_profile_property_info_callback'),
+        ),
+    );
+}
+
+/**
+ * Implements hook_field_settings_form().
+ */
+function opinno_tpv_customer_field_settings_form($field, $instance, $has_data) {
+    $settings = $field['settings'];
+    $form = array();
+
+    if ($field['type'] == 'opinno_tpv_customer_profile_reference') {
+        $options = array();
+
+        // Build an options array of the customer profile types.
+        foreach (commerce_customer_profile_type_get_name() as $type => $name) {
+            $options[$type] = check_plain($name);
+        }
+
+        $form['profile_type'] = array(
+            '#type' => 'radios',
+            '#title' => t('Customer profile type that can be referenced'),
+            '#options' => $options,
+            '#default_value' => !empty($settings['profile_type']) ? $settings['profile_type'] : 'billing',
+            '#disabled' => $has_data,
+        );
+
+        $form['options_list_limit'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Options list limit'),
+            '#description' => t('Limits the number of customer profiles available in field widgets with options lists; leave blank for no limit.'),
+            '#default_value' => !empty($settings['options_list_limit']) ? $settings['options_list_limit'] : 50,
+            '#element_validate' => array('commerce_options_list_limit_validate'),
+        );
+    }
+
+    return $form;
+}
+
+/**
+ * Implements hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'invalid_profile_id': profile_id is not valid for the field (not a valid
+ *   line item ID).
+ *
+ * @param $entity_type
+ * @param $entity
+ * @param $field
+ * @param $instance
+ * @param $langcode
+ * @param $items
+ * @param $errors
+ */
+function opinno_tpv_customer_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+    $translated_instance = commerce_i18n_object('field_instance', $instance);
+
+    if ($field['type'] == 'opinno_tpv_customer_profile_reference') {
+        // Extract profile_ids to check.
+        $profile_ids = array();
+
+        // First check non-numeric profile_id's to avoid losing time with them.
+        foreach ($items as $delta => $item) {
+            if (is_array($item) && !empty($item['profile_id'])) {
+                if (is_numeric($item['profile_id'])) {
+                    $profile_ids[] = $item['profile_id'];
+                }
+                else {
+                    $errors[$field['field_name']][$langcode][$delta][] = array(
+                        'error' => 'invalid_profile_id',
+                        'message' => t('%name: you have specified an invalid customer profile for this reference field.', array('%name' => $translated_instance['label'])),
+                    );
+                }
+            }
+        }
+
+        // Prevent performance hog if there are no ids to check.
+        if ($profile_ids) {
+            $profiles = commerce_customer_profile_load_multiple($profile_ids, array('type' => $field['settings']['profile_type']));
+
+            foreach ($items as $delta => $item) {
+                if (is_array($item)) {
+                    // Check that the item specifies a profile_id and that a profile of
+                    // the proper type exists with that ID.
+                    if (!empty($item['profile_id']) && !isset($profiles[$item['profile_id']])) {
+                        $errors[$field['field_name']][$langcode][$delta][] = array(
+                            'error' => 'invalid_profile_id',
+                            'message' => t('%name: you have specified an invalid customer profile for this reference field.', array('%name' => $translated_instance['label'])),
+                        );
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function opinno_tpv_customer_field_is_empty($item, $field) {
+    if ($field['type'] == 'opinno_tpv_customer_profile_reference') {
+        // profile_id = 0 is empty too, which is exactly what we want.
+        return empty($item['profile_id']);
+    }
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function opinno_tpv_customer_field_formatter_info() {
+    return array(
+        'opinno_tpv_customer_profile_reference_display' => array(
+            'label' => t('Customer profile display'),
+            'description' => t('Display the customer profile.'),
+            'field types' => array('opinno_tpv_customer_profile_reference'),
+        ),
+    );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function opinno_tpv_customer_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+    $result = array();
+
+    switch ($display['type']) {
+        case 'opinno_tpv_customer_profile_reference_display':
+            foreach ($items as $delta => $item) {
+                $profile = commerce_customer_profile_load($item['profile_id']);
+
+                if ($profile) {
+                    $content = entity_view('commerce_customer_profile', array($profile->profile_id => $profile), 'customer', $langcode);
+
+                    $result[$delta] = array(
+                        '#markup' => drupal_render($content),
+                    );
+                }
+            }
+
+            break;
+    }
+    return $result;
+}
+/**
+ * Implements hook_field_widget_info().
+ *
+ * Defines widgets available for use with field types as specified in each
+ * widget's $info['field types'] array.
+ */
+function opinno_tpv_customer_field_widget_info() {
+    $widgets = array();
+
+    // Define the creation / reference widget for line items.
+    $widgets['opinno_tpv_customer_profile_manager'] = array(
+        'label' => t('Customer profile manager'),
+        'description' => t('Use a complex widget to edit the profile referenced by this object.'),
+        'field types' => array('opinno_tpv_customer_profile_reference'),
+        'settings' => array(),
+        'behaviors' => array(
+            'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+            'default value' => FIELD_BEHAVIOR_NONE,
+        ),
+    );
+
+    return $widgets;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function opinno_tpv_customer_form_field_ui_field_edit_form_alter(&$form, &$form_state) {
+    // Alter the field edit form so it's obvious that customer profile manager
+    // widgets do not support multiple values.
+    if (empty($form['locked']) &&
+        !empty($form['instance']) &&
+        $form['instance']['widget']['type']['#value'] == 'opinno_tpv_customer_profile_manager') {
+        $form['field']['cardinality']['#options'] = array('1' => '1');
+        $form['field']['cardinality']['#description'] = t('The customer profile manager widget only supports single value editing and entry via its form.');
+    }
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ */
+function opinno_tpv_customer_field_widget_info_alter(&$info) {
+    if (!empty($info['options_select'])) {
+        $info['options_select']['field types'][] = 'opinno_tpv_customer_profile_reference';
+    }
+}
+
+/**
+ * Implements hook_options_list().
+ */
+function opinno_tpv_customer_options_list($field) {
+    $options = array();
+
+    // Look for an options list limit in the field settings.
+    if (!empty($field['settings']['options_list_limit'])) {
+        $limit = (int) $field['settings']['options_list_limit'];
+    }
+    else {
+        $limit = NULL;
+    }
+
+    // Loop through all customer matches.
+    foreach (commerce_customer_match_customer_profiles($field, array(), $limit) as $profile_id => $data) {
+        // Add them to the options list in optgroups by customer profile type.
+        if ($data['type'] == $field['settings']['profile_type']) {
+            $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
+            $profile = commerce_customer_profile_load($profile_id);
+            $nameline = $profile->commerce_customer_address['und'][0]['name_line'];
+            $options[$name][$profile_id] = t('@profile: @user', array('@profile' => $profile_id, '@user' => $nameline));
+        }
+    }
+
+    // Simplify the options list if only one optgroup exists.
+    if (count($options) == 1) {
+        $options = reset($options);
+    }
+
+    return $options;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ *
+ * Used to define the form element for custom widgets.
+ */
+function opinno_tpv_customer_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+    // Define the complex customer profile reference field widget.
+    if ($instance['widget']['type'] == 'opinno_tpv_customer_profile_manager') {
+        $profile_type = commerce_customer_profile_type_load($field['settings']['profile_type']);
+
+        // Do not attempt to render the widget for a non-existent profile type.
+        if (empty($profile_type)) {
+            drupal_set_message(t('Field %field_name attempted to use the non-existing customer profile type %type.', array('%field_name' => $field['field_name'], '%type' => $field['settings']['profile_type'])), 'error');
+            return array();
+        }
+
+        // Build an array of customer profile IDs from this field's values.
+        $profile_ids = array();
+
+        foreach ($items as $item) {
+            $profile_ids[] = $item['profile_id'];
+        }
+
+        // Load the profiles for temporary storage in the form array.
+        $profiles = commerce_customer_profile_load_multiple($profile_ids);
+
+        if (empty($profiles)) {
+            $profiles[0] = commerce_customer_profile_new($profile_type['type']);
+        }
+
+        // Update the base form element array to use the proper theme and validate
+        // functions and to include header information for the line item table.
+        $element += array(
+            '#element_validate' => array('opinno_tpv_customer_profile_manager_validate'),
+            'profiles' => array('#tree' => TRUE),
+        );
+
+        // Add a set of elements to the form for each referenced profile.
+        $key = 0;
+
+        foreach ($profiles as $profile) {
+            $element['profiles'][$key] = array(
+                '#type' => 'fieldset',
+                '#title' => check_plain($profile_type['name']),
+                '#parents' => array_merge($element['#field_parents'], array($element['#field_name'], $langcode, 'profiles', $key)),
+            );
+
+            // Store the original customer profile for later comparison.
+            $element['profiles'][$key]['profile'] = array(
+                '#type' => 'value',
+                '#value' => $profile,
+            );
+
+            field_attach_form('commerce_customer_profile', $profile, $element['profiles'][$key], $form_state);
+
+            // Tweak the form to remove the fieldset from the address field if there
+            // is only one on this profile.
+            $addressfields = array();
+
+            foreach (commerce_info_fields('addressfield', 'commerce_customer_profile') as $field_name => $field) {
+                // First make sure this addressfield is part of the current profile.
+                if (!empty($element['profiles'][$key][$field_name]['#language'])) {
+                    $langcode = $element['profiles'][$key][$field_name]['#language'];
+
+                    // Only consider this addressfield if it's represented on the form.
+                    if (!empty($element['profiles'][$key][$field_name][$langcode])) {
+                        $addressfields[] = array($field_name, $langcode);
+                    }
+                }
+            }
+
+            // Check to ensure only one addressfield was found on the form.
+            if (count($addressfields) == 1) {
+                list($field_name, $langcode) = array_shift($addressfields);
+
+                foreach (element_children($element['profiles'][$key][$field_name][$langcode]) as $delta) {
+                    if ($element['profiles'][$key][$field_name][$langcode][$delta]['#type'] != 'submit') {
+                        $element['profiles'][$key][$field_name][$langcode][$delta]['#type'] = 'container';
+                    }
+                }
+
+                // Remove the default #parents array so the normal tree can do its thing.
+                unset($element['profiles'][$key]['#parents']);
+            }
+
+            // This checkbox will be overridden with a clickable delete image.
+            // TODO: Make this an #ajaxy submit button.
+            if ($profile->profile_id) {
+                // Create a title for this box based on whether or not the currently
+                // referenced customer profile can be deleted.
+                if (commerce_customer_profile_can_delete($profile)) {
+                    $title = t('Delete this profile');
+                }
+                else {
+                    $title = t('Clear this profile');
+                }
+
+                $element['profiles'][$key]['remove'] = array(
+                    '#type' => 'checkbox',
+                    '#title' => $title,
+                    '#default_value' => FALSE,
+                    '#access' => commerce_customer_profile_access('delete', $profile),
+                    '#weight' => 100,
+                );
+            }
+
+            $key += 1;
+        }
+
+        // If the reference field is not required, unrequire any elements in the
+        // profile edit form.
+        if (!$delta == 0 || !$instance['required']) {
+            commerce_unrequire_form_elements($element);
+        }
+
+        return $element;
+    }
+}
+
+/**
+ * Validation callback for a commerce_customer_profile_manager element.
+ *
+ * When the form is submitted, the profile reference field stores the profile
+ * IDs as derived from the $element['profiles'] array and updates any
+ * referenced profiles based on the extra form elements.
+ */
+function opinno_tpv_customer_profile_manager_validate($element, &$form_state, $form) {
+    $value = array();
+
+    // If the triggering element wants to limit validation errors and the form is
+    // not going to be submitted...
+    if (isset($form_state['triggering_element']['#limit_validation_errors']) && ($form_state['triggering_element']['#limit_validation_errors'] !== FALSE) && !($form_state['submitted'] && !isset($form_state['triggering_element']['#submit']))) {
+        // Ensure this element wasn't specifically marked for validation in the
+        // #limit_validation_errors sections array.
+        $section_match = FALSE;
+
+        foreach ($form_state['triggering_element']['#limit_validation_errors'] as $section) {
+            // Because #limit_validation_errors sections force validation for any
+            // element that matches the section or is a child of it, we can consider
+            // it a match if the section completely matches the beginning of this
+            // element's #parents array even if #parents contains additional elements.
+            if (array_intersect_assoc($section, $element['#parents']) === $section) {
+                $section_match = TRUE;
+            }
+        }
+
+        // Exit this validate function, because the form is going to be rebuilt and
+        // the data submitted may very well be incomplete.
+        if (!$section_match) {
+            form_set_value($element, array(), $form_state);
+            return;
+        }
+    }
+
+    // Loop through the profiles in the manager table.
+    foreach (element_children($element['profiles']) as $key) {
+        // Update the profile based on the values in the additional elements.
+        $profile = clone($element['profiles'][$key]['profile']['#value']);
+
+        // If the profile has been marked for deletion...
+        if ($profile->profile_id && $element['profiles'][$key]['remove']['#value']) {
+            // Delete the profile now if we can and don't include it in the $value array.
+            if (commerce_customer_profile_can_delete($profile)) {
+                // If another module altered in an entity context, be sure to pass it to
+                // the delete function.
+                if (!empty($profile->entity_context)) {
+                    commerce_customer_profile_delete($profile->profile_id, $profile->entity_context);
+                }
+                else {
+                    commerce_customer_profile_delete($profile->profile_id);
+                }
+            }
+        }
+        else {
+            // Notify field widgets to validate their data.
+            field_attach_form_validate('commerce_customer_profile', $profile, $element['profiles'][$key], $form_state);
+
+            // TODO: Trap it on error, rebuild the form with error messages.
+            // Notify field widgets to save the field data.
+            field_attach_submit('commerce_customer_profile', $profile, $element['profiles'][$key], $form_state);
+
+            // Only save if values were actually changed.
+            if ($profile != $element['profiles'][$key]['profile']['#value']) {
+                commerce_customer_profile_save($profile);
+            }
+
+            // Add the profile ID to the current value of the reference field.
+            $value[] = array('profile_id' => $profile->profile_id);
+        }
+    }
+
+    form_set_value($element, $value, $form_state);
+}
+
+/**
+ * Implements hook_field_widget_error().
+ */
+function opinno_tpv_customer_field_widget_error($element, $error) {
+    form_error($element, $error['message']);
+}
+
+/**
+ * Callback to alter the property info of the reference field.
+ *
+ * @see commerce_customer_field_info().
+ */
+function opinno_tpv_customer_profile_property_info_callback(&$info, $entity_type, $field, $instance, $field_type) {
+    $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+    $property['options list'] = 'entity_metadata_field_options_list';
+}

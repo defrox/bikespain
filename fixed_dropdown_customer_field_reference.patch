@@ -1,0 +1,23 @@
+Index: sites/all/modules/commerce/modules/customer/commerce_customer.module
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- sites/all/modules/commerce/modules/customer/commerce_customer.module	(revision )
++++ sites/all/modules/commerce/modules/customer/commerce_customer.module	(date 1466028168000)
+@@ -959,8 +959,13 @@
+   // Loop through all customer matches.
+   foreach (commerce_customer_match_customer_profiles($field, array(), $limit) as $profile_id => $data) {
+     // Add them to the options list in optgroups by customer profile type.
++    if ($data['type'] == $field['settings']['profile_type']) {
+-    $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
++      $name = check_plain(commerce_customer_profile_type_get_name($data['type']));
+-    $options[$name][$profile_id] = t('@profile: User @user', array('@profile' => $profile_id, '@user' => $data['uid']));
++      $profile = commerce_customer_profile_load($profile_id);
++      //var_dump($profile);
++      $nameline = $profile->commerce_customer_address['und'][0]['name_line'];
++      $options[$name][$profile_id] = t('@profile: @user', array('@profile' => $profile_id, '@user' => $nameline));
++    }
+   }
+ 
+   // Simplify the options list if only one optgroup exists.
