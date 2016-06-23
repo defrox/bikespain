@@ -34,6 +34,7 @@ if ($_POST) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 <form method="post">
@@ -44,7 +45,7 @@ if ($_POST) {
                 <label for="infile">Origin Filename</label>
             </td>
             <td>
-                <input type="text" name="infile" id="infile" value="<?= $infile; ?>"/>
+                <input type="text" name="infile" id="infile" value="<?php echo $infile; ?>"/>
             </td>
         </tr>
         <tr>
@@ -52,7 +53,7 @@ if ($_POST) {
                 <label for="outfile">Output Filename</label>
             </td>
             <td>
-                <input type="text" name="outfile" id="outfile" value="<?= $outfile; ?>"/>
+                <input type="text" name="outfile" id="outfile" value="<?php echo $outfile; ?>"/>
             </td>
         </tr>
         <tr>
@@ -60,7 +61,7 @@ if ($_POST) {
                 <label for="entity">Entity starting number</label>
             </td>
             <td>
-                <input type="number" name="entity" id="entity" value="<?= $entity; ?>"/>
+                <input type="number" name="entity" id="entity" value="<?php echo $entity; ?>"/>
             </td>
         </tr>
         <tr>
@@ -68,7 +69,7 @@ if ($_POST) {
                 <label for="dbhost">DB Host</label>
             </td>
             <td>
-                <input type="text" name="dbhost" id="dbhost" value="<?= $dbhost; ?>"/>
+                <input type="text" name="dbhost" id="dbhost" value="<?php echo $dbhost; ?>"/>
             </td>
         </tr>
         <tr>
@@ -76,7 +77,7 @@ if ($_POST) {
                 <label for="dbport">DB Port</label>
             </td>
             <td>
-                <input type="number" name="dbport" id="dbport" value="<?= $dbport; ?>"/>
+                <input type="number" name="dbport" id="dbport" value="<?php echo $dbport; ?>"/>
             </td>
         </tr>
         <tr>
@@ -84,7 +85,7 @@ if ($_POST) {
                 <label for="dbuser">DB User</label>
             </td>
             <td>
-                <input type="text" name="dbuser" id="dbuser" value="<?= $dbuser; ?>"/>
+                <input type="text" name="dbuser" id="dbuser" value="<?php echo $dbuser; ?>"/>
             </td>
         </tr>
         <tr>
@@ -92,7 +93,7 @@ if ($_POST) {
                 <label for="dbpass">DB Password</label>
             </td>
             <td>
-                <input type="password" name="dbpass" id="dbpass" value="<?= $dbpass; ?>"/>
+                <input type="password" name="dbpass" id="dbpass" value="<?php echo $dbpass; ?>"/>
             </td>
         </tr>
         <tr>
@@ -100,7 +101,7 @@ if ($_POST) {
                 <label for="dbname">DB Name</label>
             </td>
             <td>
-                <input type="text" name="dbname" id="dbname" value="<?= $dbname; ?>"/>
+                <input type="text" name="dbname" id="dbname" value="<?php echo $dbname; ?>"/>
             </td>
         </tr>
         <tr>
@@ -109,9 +110,9 @@ if ($_POST) {
             </td>
             <td>
                 <select name="type" id="type">
-                    <option value="proveedor" <?= $type == 'proveedor' ? 'selected' : ''; ?>>Proveedor</option>
-                    <option value="cliente" <?= $type == 'cliente' ? 'selected' : ''; ?>>Cliente</option>
-                    <option value="contacto" <?= $type == 'contacto' ? 'selected' : ''; ?>>Contacto</option>
+                    <option value="proveedor" <?php echo $type == 'proveedor' ? 'selected' : ''; ?>>Proveedor</option>
+                    <option value="cliente" <?php echo $type == 'cliente' ? 'selected' : ''; ?>>Cliente</option>
+                    <option value="contacto" <?php echo $type == 'contacto' ? 'selected' : ''; ?>>Contacto</option>
                 </select>
             </td>
         </tr>
@@ -120,18 +121,18 @@ if ($_POST) {
                 <label for="taxonomy">Taxonomy Machine Name</label>
             </td>
             <td>
-                <input type="text" name="taxonomy" id="taxonomy" value="<?= $taxonomy; ?>"/>
+                <input type="text" name="taxonomy" id="taxonomy" value="<?php echo $taxonomy; ?>"/>
             </td>
         </tr>
         <tr>
             <td>
                 <input type="checkbox" value="true" name="dbexec"
-                       id="dbexec" <?= $dbexec == 'true' ? 'checked' : ''; ?>/>
+                       id="dbexec" <?php echo $dbexec == 'true' ? 'checked' : ''; ?>/>
                 <label for="dbexec">Execute SQL query?</label>
             </td>
             <td>
                 <input type="checkbox" value="true" name="showout"
-                       id="showout" <?= $showout == 'true' ? 'checked' : ''; ?>/>
+                       id="showout" <?php echo $showout == 'true' ? 'checked' : ''; ?> />
                 <label for="showout">Show SQL output?</label>
             </td>
         </tr>

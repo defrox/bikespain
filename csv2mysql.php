@@ -23,17 +23,18 @@ class CSV2mySQL
     protected $role = '';
     protected $sql = '';
     protected $entity = 0;
-    protected $entity_uid = 4000;
+    protected $entity_uid = 250000;
     protected $taxonomy = "profile_type";
     protected $dbhost = "localhost";
     protected $dbuser = "root";
     protected $dbpass = "design";
     protected $dbname = "bikespain";
     protected $dbport = "3306";
-    protected $dbexec = FALSE;
+    protected $dbexec = false;
     protected $dbconn;
     protected $errors = array();
     protected $inserts = 0;
+    protected $compact = true;
 
     /**
      * @param $file
@@ -130,6 +131,22 @@ class CSV2mySQL
     }
 
     /**
+     * @return boolean
+     */
+    public function isCompact()
+    {
+        return $this->compact;
+    }
+
+    /**
+     * @param boolean $compact
+     */
+    public function setCompact($compact)
+    {
+        $this->compact = $compact;
+    }
+
+    /**
      * @param string $sql_string
      * @return string
      * @throws \Exception
@@ -151,9 +168,10 @@ class CSV2mySQL
      */
     private function parseCSV()
     {
+        mb_internal_encoding("UTF-8");
         $csv = array_map('str_getcsv', file($this->file));
-        array_walk($csv, function (&$a) use ($csv) {
-            $a = array_combine($csv[0], $a);
+        array_walk($csv, function (&$a) use (&$csv) {
+            $a = array_combine(array_values($csv[0]), $a);
         });
         array_shift($csv);
         return $csv;
@@ -177,13 +195,15 @@ class CSV2mySQL
     private function generateSQL()
     {
         $sql_string = '';
-        $tbl_customer_address = $tbl_customer_profile = $tbl_customer_profile_revision = $tbl_razon_social = $tbl_cif_nif = $tbl_type = $tbl_telefono = $tbl_telefono2 = $tbl_email_ = $tbl_notas = $tbl_contact = array();
+        $tbl_users = $tbl_users_roles = $tbl_customer_address = $tbl_customer_profile = $tbl_customer_profile_revision = $tbl_razon_social = $tbl_cif_nif = $tbl_type = $tbl_telefono = $tbl_telefono2 = $tbl_email = $tbl_notas = $tbl_contact = array();
         $entity = $this->entity;
-        $entity_uid = $this->entity_uid;
+        $entity_uid = $this->entity_uid + $entity;
+        $max_entities = $entity + 400;
         $role = $this->role;
         $now = time();
         $pass = '$S$DAn5wWLWqPBHYi4N1jDq5MBUB62ju6mDBIrFXFTYozUefUYlMv';
         $roles = array( 'cliente' => 5, 'proveedor' => 6, 'contacto' => 7 );
+        $compact = $this->isCompact();
 
         foreach ($this->csv as $row) {
 
@@ -203,10 +223,11 @@ class CSV2mySQL
 
             //$row_bundle = "billing";
             $row_bundle = $row_rid;
-            $entity_uid += $entity;
 
             if ( (!array_key_exists('field_first_name', $row) || $row['field_first_name'] == '') && $row['field_organisation'] != '') $row['field_name_line'] = $row['field_organisation'];
             else $row['field_name_line'] = $row['field_first_name'] . " " . $row['field_last_name'];
+            $row['field_name_line'] = trim($row['field_name_line']);
+            $row['field_razon_social'] = trim($row['field_razon_social']);
             $uemail = preg_split('/; ?| \/ /', $row['field_email']);
 
             // users
@@ -377,76 +398,165 @@ class CSV2mySQL
             $tbl_contact[] = $row_contact;
 
             $entity++;
-            if ($entity > 15) break;
+            $entity_uid ++;
+            //if ($entity > $max_entities) break;
         }
 
         // users TABLES
         $sql_users = "INSERT INTO users (uid, name, pass, mail, theme, signature, signature_format, created, access, login, status, timezone, language, picture, init, data) VALUES ";
-        $sql_string .= $sql_users . implode(', ' . "\n", $tbl_users) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_users . implode(', ' . "\n", $tbl_users) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_users, $tbl_users);
+        }
 
         // users_roles TABLES
         $sql_users_roles = "INSERT INTO users_roles (uid, rid) VALUES ";
-        $sql_string .= $sql_users_roles . implode(', ' . "\n", $tbl_users_roles) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_users_roles . implode(', ' . "\n", $tbl_users_roles) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_users_roles, $tbl_users_roles);
+        }
 
         // commerce_customer_address TABLES
         $sql_commerce_customer_address_data = "INSERT INTO field_data_commerce_customer_address (entity_type, bundle, deleted, entity_id, revision_id, language, delta, commerce_customer_address_country, commerce_customer_address_administrative_area, commerce_customer_address_sub_administrative_area, commerce_customer_address_locality, commerce_customer_address_dependent_locality, commerce_customer_address_postal_code, commerce_customer_address_thoroughfare, commerce_customer_address_premise, commerce_customer_address_sub_premise, commerce_customer_address_organisation_name, commerce_customer_address_name_line, commerce_customer_address_first_name, commerce_customer_address_last_name, commerce_customer_address_data) VALUES ";
-        $sql_string .= $sql_commerce_customer_address_data . implode(', ' . "\n", $tbl_customer_address) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_commerce_customer_address_data . implode(', ' . "\n", $tbl_customer_address) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_commerce_customer_address_data, $tbl_customer_address);
+        }
         $sql_commerce_customer_address_revision = "INSERT INTO field_revision_commerce_customer_address (entity_type, bundle, deleted, entity_id, revision_id, language, delta, commerce_customer_address_country, commerce_customer_address_administrative_area, commerce_customer_address_sub_administrative_area, commerce_customer_address_locality, commerce_customer_address_dependent_locality, commerce_customer_address_postal_code, commerce_customer_address_thoroughfare, commerce_customer_address_premise, commerce_customer_address_sub_premise, commerce_customer_address_organisation_name, commerce_customer_address_name_line, commerce_customer_address_first_name, commerce_customer_address_last_name, commerce_customer_address_data) VALUES ";
-        $sql_string .= $sql_commerce_customer_address_revision . implode(', ' . "\n", $tbl_customer_address) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_commerce_customer_address_revision . implode(', ' . "\n", $tbl_customer_address) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_commerce_customer_address_revision, $tbl_customer_address);
+        }
 
         // commerce_customer_profile TABLES
         $sql_commerce_customer_profile_data = "INSERT INTO commerce_customer_profile (profile_id, revision_id, type, uid, status, created, changed, data) VALUES ";
-        $sql_string .= $sql_commerce_customer_profile_data . implode(', ' . "\n", $tbl_customer_profile) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_commerce_customer_profile_data . implode(', ' . "\n", $tbl_customer_profile) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_commerce_customer_profile_data, $tbl_customer_profile);
+        }
         $sql_commerce_customer_profile_revision = "INSERT INTO commerce_customer_profile_revision (profile_id, revision_id, revision_uid, status, log, revision_timestamp, data) VALUES ";
-        $sql_string .= $sql_commerce_customer_profile_revision . implode(', ' . "\n", $tbl_customer_profile_revision) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_commerce_customer_profile_revision . implode(', ' . "\n", $tbl_customer_profile_revision) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_commerce_customer_profile_revision, $tbl_customer_profile_revision);
+        }
 
         // field_razon_social TABLES
         $sql_field_razon_social_data = "INSERT INTO field_data_field_razon_social (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_razon_social_value, field_razon_social_format) VALUES ";
-        $sql_string .= $sql_field_razon_social_data . implode(', ' . "\n", $tbl_razon_social) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_razon_social_data . implode(', ' . "\n", $tbl_razon_social) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_razon_social_data, $tbl_razon_social);
+        }
         $sql_field_razon_social_revision = "INSERT INTO field_revision_field_razon_social (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_razon_social_value, field_razon_social_format) VALUES ";
-        $sql_string .= $sql_field_razon_social_revision . implode(', ' . "\n", $tbl_razon_social) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_razon_social_revision . implode(', ' . "\n", $tbl_razon_social) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_razon_social_revision, $tbl_razon_social);
+        }
 
         // field_cif_nif TABLES
         $sql_field_cif_nif_data = "INSERT INTO field_data_field_cif_nif (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_cif_nif_value, field_cif_nif_format) VALUES ";
-        $sql_string .= $sql_field_cif_nif_data . implode(', ' . "\n", $tbl_cif_nif) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_cif_nif_data . implode(', ' . "\n", $tbl_cif_nif) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_cif_nif_data, $tbl_cif_nif);
+        }
         $sql_field_cif_nif_revision = "INSERT INTO field_revision_field_cif_nif (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_cif_nif_value, field_cif_nif_format) VALUES ";
-        $sql_string .= $sql_field_cif_nif_revision . implode(', ' . "\n", $tbl_cif_nif) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_cif_nif_revision . implode(', ' . "\n", $tbl_cif_nif) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_cif_nif_revision, $tbl_cif_nif);
+        }
 
         // field_type TABLES
         $sql_field_type_data = "INSERT INTO field_data_field_type (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_type_tid) VALUES ";
-        $sql_string .= $sql_field_type_data . implode(', ' . "\n", $tbl_type) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_type_data . implode(', ' . "\n", $tbl_type) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_type_data, $tbl_type);
+        }
         $sql_field_type_revision = "INSERT INTO field_revision_field_type (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_type_tid) VALUES ";
-        $sql_string .= $sql_field_type_revision . implode(', ' . "\n", $tbl_type) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_type_revision . implode(', ' . "\n", $tbl_type) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_type_revision, $tbl_type);
+        }
 
         // field_telefono TABLES
         $sql_field_telefono_data = "INSERT INTO field_data_field_telefono (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_telefono_value, field_telefono_format) VALUES ";
-        $sql_string .= $sql_field_telefono_data . implode(', ' . "\n", $tbl_telefono) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_telefono_data . implode(', ' . "\n", $tbl_telefono) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_telefono_data, $tbl_telefono);
+        }
         $sql_field_telefono_revison = "INSERT INTO field_revision_field_telefono (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_telefono_value, field_telefono_format) VALUES ";
-        $sql_string .= $sql_field_telefono_revison . implode(', ' . "\n", $tbl_telefono) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_telefono_revison . implode(', ' . "\n", $tbl_telefono) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_telefono_revison, $tbl_telefono);
+        }
 
         // field_telefono2 TABLES
         $sql_field_telefono2_data = "INSERT INTO field_data_field_telefono2 (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_telefono2_value, field_telefono2_format) VALUES ";
-        $sql_string .= $sql_field_telefono2_data . implode(', ' . "\n", $tbl_telefono2) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_telefono2_data . implode(', ' . "\n", $tbl_telefono2) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_telefono2_data, $tbl_telefono2);
+        }
         $sql_field_telefono2_revision = "INSERT INTO field_revision_field_telefono2 (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_telefono2_value, field_telefono2_format) VALUES ";
-        $sql_string .= $sql_field_telefono2_revision . implode(', ' . "\n", $tbl_telefono2) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_telefono2_revision . implode(', ' . "\n", $tbl_telefono2) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_telefono2_revision, $tbl_telefono2);
+        }
 
         // field_email TABLES
         $sql_field_email_data = "INSERT INTO field_data_field_email (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_email_value, field_email_format) VALUES ";
-        $sql_string .= $sql_field_email_data . implode(', ' . "\n", $tbl_email) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_email_data . implode(', ' . "\n", $tbl_email) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_email_data, $tbl_email);
+        }
         $sql_field_email_revision = "INSERT INTO field_revision_field_email (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_email_value, field_email_format) VALUES ";
-        $sql_string .= $sql_field_email_revision . implode(', ' . "\n", $tbl_email) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_email_revision . implode(', ' . "\n", $tbl_email) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_email_revision, $tbl_email);
+        }
 
         // field_notas TABLES
         $sql_field_notas_data = "INSERT INTO field_data_field_notas (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_notas_value, field_notas_format) VALUES ";
-        $sql_string .= $sql_field_notas_data . implode(', ' . "\n", $tbl_notas) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_notas_data . implode(', ' . "\n", $tbl_notas) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_notas_data, $tbl_notas);
+        }
         $sql_field_notas_revision = "INSERT INTO field_revision_field_notas (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_notas_value, field_notas_format) VALUES ";
-        $sql_string .= $sql_field_notas_revision . implode(', ' . "\n", $tbl_notas) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_notas_revision . implode(', ' . "\n", $tbl_notas) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_notas_revision, $tbl_notas);
+        }
 
         // field_contact TABLES
         $sql_field_contact_data = "INSERT INTO field_data_field_contact (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_contact_value, field_contact_format) VALUES ";
-        $sql_string .= $sql_field_contact_data . implode(', ' . "\n", $tbl_contact) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_contact_data . implode(', ' . "\n", $tbl_contact) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_contact_data, $tbl_contact);
+        }
         $sql_field_contact_revision = "INSERT INTO field_revision_field_contact (entity_type, bundle, deleted, entity_id, revision_id, language, delta, field_contact_value, field_contact_format) VALUES ";
-        $sql_string .= $sql_field_contact_revision . implode(', ' . "\n", $tbl_contact) . ";" . "\n";
+        if ($compact) {
+            $sql_string .= $sql_field_contact_revision . implode(', ' . "\n", $tbl_contact) . ";" . "\n";
+        } else {
+            $sql_string .= $this->generateInserts($sql_field_contact_revision, $tbl_contact);
+        }
 
         return $sql_string;
     }
@@ -607,6 +717,22 @@ class CSV2mySQL
         );
         $administrative_area = array_key_exists($term, $provincias_array) ? $provincias_array[$term] : '';
         return $administrative_area;
+    }
+
+    /**
+     * @param string $insert_sql
+     * @param array $insert_items
+     * @return string
+     */
+    private function generateInserts($insert_sql, $insert_items = array()) {
+        if ($insert_sql === '' || count($insert_items) == 0) {
+            return '';
+        }
+        $result_string = '';
+        foreach ($insert_items as $record) {
+            $result_string .= $insert_sql . $record . ";" . "\n";
+        }
+        return $result_string;
     }
 
     /**
