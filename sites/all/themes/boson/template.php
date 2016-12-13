@@ -26,7 +26,7 @@ function boson_preprocess_html(&$vars) {
 }
 
 function boson_process_html(&$vars) {
-	global $is_https;
+  global $is_https, $base_url;
   // Add context to main menu links
   $vars['page'] = str_replace('&amp;','&', $vars['page']);
   $vars['page'] = str_replace('&aacute;','á', $vars['page']);
@@ -47,5 +47,5 @@ function boson_process_html(&$vars) {
   $vars['page'] = str_replace('&Ntilde;','Ñ', $vars['page']);
   $vars['page'] = str_replace('&ntilde;','ñ', $vars['page']);
   $vars['page'] = str_replace('&rsquo;',"'", $vars['page']);
-	if ($is_https) $vars['page'] = str_replace('http://','https://', $vars['page']);
+  if ($is_https) $vars['page'] = str_replace('http://'.$base_url,'https://'.$base_url, $vars['page']);
 }

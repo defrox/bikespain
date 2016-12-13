@@ -39,7 +39,7 @@ function bsespana_preprocess_html(&$vars) {
 }
 
 function bsespana_process_html(&$vars) {
-	global $is_https;
+	global $is_https, $base_url;
   // Add context to main menu links
 	//$vars['page'] = str_replace('/experiencias"','/'.variable_get('spain_context','spain').'/experiencias"', $vars['page']);  
 	//$vars['page'] = str_replace('/experiences"','/'.variable_get('spain_context','spain').'/experiences"', $vars['page']);  
@@ -74,7 +74,7 @@ function bsespana_process_html(&$vars) {
 	$vars['page'] = str_replace('&Ntilde;','Ñ', $vars['page']);
 	$vars['page'] = str_replace('&ntilde;','ñ', $vars['page']);
 	$vars['page'] = str_replace('&rsquo;',"'", $vars['page']);
-	if ($is_https) $vars['page'] = str_replace('http://','https://', $vars['page']);
+	if ($is_https) $vars['page'] = str_replace('http://'.$base_url,'https://'.$base_url, $vars['page']);
 }
 
 function bsespana_preprocess_page(&$vars) { 

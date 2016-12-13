@@ -134,9 +134,10 @@ print '</div>';
 }
 if (!empty($node->field_hoteles_p_gina_web)) {
 	print '<div>';
-	print '<center><a target="_blank" href="'.$node->field_hoteles_p_gina_web['und'][0]['value'].'">'.$node->field_hoteles_p_gina_web['und'][0]['value'].'</a></center>';
+	print '<center>' . l($node->field_hoteles_p_gina_web['und'][0]['value'], $node->field_hoteles_p_gina_web['und'][0]['value'], array('external' => TRUE, 'https' => FALSE)) . '</center>';
 	print '</div>';
 }
+
 
 if (!empty($node->field_lugar)) {
 	print '<div class="lined" style="margin-top: 8px;"><b>'.t('Destination: ').'</b>';

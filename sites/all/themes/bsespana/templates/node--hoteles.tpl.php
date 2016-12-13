@@ -132,9 +132,12 @@ if (!empty($node->field_hoteles_imagen)) {
 print '<img src="'.$url_img.'" style="width: 300px"/>';
 print '</div>';
 }
+$patron = '/https:/i';
+$reemplazo = 'http:';
 if (!empty($node->field_hoteles_p_gina_web)) {
+	$enlace = preg_replace($patron, $reemplazo, $node->field_hoteles_p_gina_web['und'][0]['value']);
 	print '<div>';
-	print '<center><a target="_blank" href="'.$node->field_hoteles_p_gina_web['und'][0]['value'].'">'.$node->field_hoteles_p_gina_web['und'][0]['value'].'</a></center>';
+	print '<center><a target="_blank" href="'.$enlace.'">'.$enlace.'</a></center>';
 	print '</div>';
 }
 
