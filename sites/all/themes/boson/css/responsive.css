@@ -1,1049 +1,1199 @@
-	.col-1_1 	{ width: 1010px; }
+.col-1_1 {
+    width: 1010px;
+}
+
+.b-titlebar h1 {
+    white-space: normal;
+}
+
 @media only screen and (max-width: 1119px), only screen and (max-device-width: 1219px) {
-	.main.boxed { width: 960px; }
-	.layout, .navbar .menu { width: 880px !important; }
-	
-	.col-1_1 	{ width: 1010px; }
-	.col-1_2 	{ width: 428px; }
-	.col-1_3 	{ width: 277px; }
-	.col-2_3 	{ width: 578px; }
-	.col-1_4 	{ width: 202px; }
-	.col-3_4 	{ width: 654px; }
+    .main.boxed {
+        width: 960px;
+    }
 
-	.desk .header.fixed {
-		width: 960px;
-	}
+    .layout, .navbar .menu {
+        width: 880px !important;
+    }
 
-	.blog-search-text {
-		width: 145px;
-	}
+    .col-1_1 {
+        width: 1010px;
+    }
 
-	.member-name {
-		font-size: 14px;
-	}
+    .col-1_2 {
+        width: 428px;
+    }
 
-	.member-position {
-		font-size: 10px;
-	}
+    .col-1_3 {
+        width: 277px;
+    }
 
+    .col-2_3 {
+        width: 578px;
+    }
 
-	.b-form.m-contact-form .input-wrap {
-		width: 287px;
-		margin-left: 6px;
-	}
-	
-	.latest-project-item {
-		width: 55px;
-		height: 55px;
-	}
+    .col-1_4 {
+        width: 202px;
+    }
 
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/*Home*/
-	
-	/*Header (Logo)*/
-	.layout, .navbar .menu {
-		width: 100% !important;
-	}
-	.logo-img {
-		height: 50px;
-		padding-top: 0;
-	}
+    .col-3_4 {
+        width: 654px;
+    }
 
-	div:not(.contextual-links-wrapper) div.layout, f.layout {
-		padding: 0 0px !important;
-	}
+    .desk .header.fixed {
+        width: 960px;
+    }
 
-	.mob-layout {
-		width: 100%;
-	}
+    .blog-search-text {
+        width: 145px;
+    }
 
-	/*Texto Slider*/
-	/*.block-md-slider .md-slide-item .md-object {
-		font-size: medium;
-	}*/
+    .member-name {
+        font-size: 14px;
+    }
 
+    .member-position {
+        font-size: 10px;
+    }
 
-	/*Menu Home (España-Europa)*/
-	#block-menu-menu-prehome {
-		width: 100% !important;
-	}
+    .b-form.m-contact-form .input-wrap {
+        width: 287px;
+        margin-left: 6px;
+    }
 
-	.front #block-menu-menu-prehome ul.menu li {
-		margin: 10px !important;
-		width: 240px !important;
-		
-	}
+    .latest-project-item {
+        width: 55px;
+        height: 55px;
+    }
 
-	.front #block-menu-menu-prehome > div {
-		width: 100% !important;
-		margin: -155px auto 0;
-	}
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /*Home*/
+    /*Header (Logo)*/
+    .layout, .navbar .menu {
+        width: 100% !important;
+    }
 
-	/*.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
-		
-	}*/
+    .logo-img {
+        height: 50px;
+        padding-top: 0;
+    }
 
-	/*Mensaje presupuesto*/
-	/*#block-block-12 {
-		font-size: small;
-	}*/
+    div:not(.contextual-links-wrapper) div.layout, f.layout {
+        padding: 0 0px !important;
+    }
 
-	/*Resto de contenido*/
-	.main .content.last-child {
-		text-align: center;
-	}
+    .mob-layout {
+        width: 100%;
+    }
 
-	/*Footer Aliados*/
-	.row-item, .row {
-		/*width: 100% !important;*/
-		margin: 0 auto;
-	}
+    /*Texto Slider*/
+    /*.block-md-slider .md-slide-item .md-object {
+        font-size: medium;
+    }*/
+    /*Menu Home (España-Europa)*/
+    #block-menu-menu-prehome {
+        width: 100% !important;
+    }
 
-	/*-----------------------------------------------------------------------------*/
-	/*Trip Finder*/
-	#opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select  {
-		margin: 0 auto;
-	}
+    .front #block-menu-menu-prehome ul.menu li {
+        margin: 10px !important;
+        width: 240px !important;
 
-	#opinno-bikespain-form-europa{
-		width: 743px;
-	}
+    }
 
-	#opinno-bikespain-form-espana{
-		width: 743px;
-	}
+    .front #block-menu-menu-prehome > div {
+        width: 100% !important;
+        margin: -155px auto 0;
+    }
 
-	#opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select  {
-		margin: 0 auto;
-	}
+    /*.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
 
-	/*Viajes Sencillos*/
-	.views-row {
-		/*width: 100%;*/
-		height: auto;
-		text-align: center;
-	}	
+    }*/
+    /*Mensaje presupuesto*/
+    /*#block-block-12 {
+        font-size: small;
+    }*/
+    /*Resto de contenido*/
+    .main .content.last-child {
+        text-align: center;
+    }
 
-	.views-column {
-		margin: 0 36px;
-		margin-bottom: 0;
-	}
-	.work-image img {
-		width: 100%;
-	}
+    /*Footer Aliados*/
+    .row-item, .row {
+        /*width: 100% !important;*/
+        margin: 0 auto;
+    }
 
-	.search_filters_form {
-		margin-top: -80px;
-		/*margin-left: 124px;*/
-	}
+    /*-----------------------------------------------------------------------------*/
+    /*Trip Finder*/
+    #opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select {
+        margin: 0 auto;
+    }
 
-	.views-responsive-grid {
-		width: 100%;
-	}
+    #opinno-bikespain-form-europa {
+        width: 743px;
+    }
 
-	/*Productos*/
-	#mapRefrescar {
-		width: 100%;
-		overflow: hidden;
-	}
+    #opinno-bikespain-form-espana {
+        width: 743px;
+    }
 
-	.view-experiencias .views-fluidgrid-wrapper.masonry {
-		 width: 900px;
-		 margin: 12px auto 48px auto;
-	}
-	
+    #opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select {
+        margin: 0 auto;
+    }
+
+    /*Viajes Sencillos*/
+    .views-row {
+        /*width: 100%;*/
+        height: auto;
+        text-align: center;
+    }
+
+    .views-column {
+        margin: 0 36px;
+        margin-bottom: 0;
+    }
+
+    .work-image img {
+        width: 100%;
+    }
+
+    .search_filters_form {
+        margin-top: -80px;
+        /*margin-left: 124px;*/
+    }
+
+    .views-responsive-grid {
+        width: 100%;
+    }
+
+    /*Productos*/
+    #mapRefrescar {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .view-experiencias .views-fluidgrid-wrapper.masonry {
+        width: 900px;
+        margin: 12px auto 48px auto;
+    }
+
 }
 
 @media only screen and (max-width: 959px), only screen and (max-device-width: 999px) {
-	
 
+    h1, h2, h3, h4, h5, h6 {
+        white-space: normal;
+    }
 
-	h1, h2, h3, h4, h5, h6 {
-		white-space: normal;
-	}
+    .main.boxed {
+        width: 768px;
+    }
 
-	.main.boxed { width: 768px; }
-	.layout { width: 688px; }
-	.mob-layout {
-		width: 688px;
-		float: none;
-		position: relative;
-		margin: auto;
-	}
+    .layout {
+        width: 688px;
+    }
 
-	.b-top-bar .layout {
-		width: 688px !important;
-		line-height: 40px;
-	}
+    .mob-layout {
+        width: 688px;
+        float: none;
+        position: relative;
+        margin: auto;
+    }
 
-	.top-bar-social,
-	.top-bar-text,
-	.top-bar-nav {
-		display: none !important;
-	}
+    .b-top-bar .layout {
+        width: 688px !important;
+        line-height: 40px;
+    }
 
-	.b-top-bar .wrap-right {
-		float: none;
-		text-align: center;
-	}
+    .top-bar-social,
+    .top-bar-text,
+    .top-bar-nav {
+        display: none !important;
+    }
 
+    .b-top-bar .wrap-right {
+        float: none;
+        text-align: center;
+    }
 
-	.mob-layout.m-center .wrap-center {
-		text-align: left;
-	}
+    .mob-layout.m-center .wrap-center {
+        text-align: left;
+    }
 
-	.b-main-slider .layout {
-		width: 960px;
-		padding: 0;
-	}
+    .b-main-slider .layout {
+        width: 960px;
+        padding: 0;
+    }
 
-	.col-1_1 { width: 768px; }
-	.col-1_2 { width: 332px; }
-	.col-1_3 { width: 213px; }
-	.col-2_3 { width: 450px; }
-	.col-1_4 { width: 154px; }
-	.col-3_4 { width: 510px; }
+    .col-1_1 {
+        width: 768px;
+    }
 
-	.header .layout {
-		width: auto;
-		padding: 1px 0 0;
-		text-align: left;
-	}
+    .col-1_2 {
+        width: 332px;
+    }
 
-	.slogan, .b-search-form {
-		display: none;
-	}
+    .col-1_3 {
+        width: 213px;
+    }
 
-	.logo {
-		display: inline-block;
-		position: static;
-		margin: 0;
+    .col-2_3 {
+        width: 450px;
+    }
 
-		line-height: 79px;
-		text-align: left;
-	}
+    .col-1_4 {
+        width: 154px;
+    }
 
-	.logo img {
-		vertical-align: middle;
-	}
+    .col-3_4 {
+        width: 510px;
+    }
 
-	.header .b-social {
-		display: none;
-	}
+    .header .layout {
+        width: auto;
+        padding: 1px 0 0;
+        text-align: left;
+    }
 
-	.btn-menu {
-		display: block;
-	}
-/*
-	.navbar, .menu {
-		display: none !important;
-	}
-*/
-	.main { padding-top: 0 !important; }
+    .slogan, .b-search-form {
+        display: none;
+    }
 
-	.menu:after { display: none; }
-	.menu li.with-sub:hover:before { display: none; }
-	.menu > li:before, .menu a.active:before { display: none; }
+    .logo {
+        display: inline-block;
+        position: static;
+        margin: 0;
 
-	.submenu {
-		display: none;
-	}
+        line-height: 79px;
+        text-align: left;
+    }
 
-	.submenu li {
-		height: auto;
-		-webkit-transition: none;
-		transition: none;
-	}
+    .logo img {
+        vertical-align: middle;
+    }
 
-	.menu li:hover li {
-		height: auto !important;
-	}
-	
-	.latest-project-item {
-		width: 65px;
-		height: 65px;
-	}
+    .header .b-social {
+        display: none;
+    }
 
-	/* Portfolio
-	---------------------------------------------------------*/
+    .btn-menu {
+        display: block;
+    }
 
-	.row.port .row-item { width: 329px; }
+    /*
+        .navbar, .menu {
+            display: none !important;
+        }
+    */
+    .main {
+        padding-top: 0 !important;
+    }
 
+    .menu:after {
+        display: none;
+    }
 
+    .menu li.with-sub:hover:before {
+        display: none;
+    }
 
-	.carousel-prev { left: 10px; }
-	.carousel-next { right: 10px; }
-	.carousel-pagination { bottom: 20px; }
+    .menu > li:before, .menu a.active:before {
+        display: none;
+    }
 
-	.row.b-description .col-1_4 { width: 209.33333333333334px; }
-	.row.b-description .col-3_4 { width: 438.6666666666667px; }
+    .submenu {
+        display: none;
+    }
 
+    .submenu li {
+        height: auto;
+        -webkit-transition: none;
+        transition: none;
+    }
 
+    .menu li:hover li {
+        height: auto !important;
+    }
 
-	.blog-search-text {
-		width: 97px;
-	}
+    .latest-project-item {
+        width: 65px;
+        height: 65px;
+    }
 
-	.member-photo .image-wrap {
-		line-height: 492px;
-	}
+    /* Portfolio
+    ---------------------------------------------------------*/
+    .row.port .row-item {
+        width: 329px;
+    }
 
-	.m-compact .member-meta {
-		padding-top: 40px;
-	}
+    .carousel-prev {
+        left: 10px;
+    }
 
+    .carousel-next {
+        right: 10px;
+    }
 
-	.b-form.m-contact-form .input-wrap {
-		width: 222px;
-		margin-left: 7px;
-	}
+    .carousel-pagination {
+        bottom: 20px;
+    }
 
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/*Home*/
-	
-	/*Header (Logo)*/
-	.layout, .navbar .menu {
-		width: 100% !important;
-	}
-	.logo-img {
-		height: 50px;
-		padding-top: 0;
-	}
-	.logo-img img {
-		width: 165px;
-	}
+    .row.b-description .col-1_4 {
+        width: 209.33333333333334px;
+    }
 
-	div:not(.contextual-links-wrapper) div.layout, f.layout {
-		padding: 0 0px !important;
-	}
+    .row.b-description .col-3_4 {
+        width: 438.6666666666667px;
+    }
 
-	.mob-layout {
-		width: 100%;
-	}
+    .blog-search-text {
+        width: 97px;
+    }
 
-	/*Texto Slider*/
-	/*.block-md-slider .md-slide-item .md-object {
-		font-size: medium;
-	}*/
+    .member-photo .image-wrap {
+        line-height: 492px;
+    }
 
+    .m-compact .member-meta {
+        padding-top: 40px;
+    }
 
-	/*Menu Home (España-Europa)*/
-	#block-menu-menu-prehome {
-		width: 100% !important;
-	}
+    .b-form.m-contact-form .input-wrap {
+        width: 222px;
+        margin-left: 7px;
+    }
 
-	.front #block-menu-menu-prehome ul.menu li {
-		margin: 10px !important;
-		width: 240px !important;
-		
-	}
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /*Home*/
+    /*Header (Logo)*/
+    .layout, .navbar .menu {
+        width: 100% !important;
+    }
 
-	.front #block-menu-menu-prehome > div {
-		width: 100% !important;
-		margin: -135px auto 0;
-	}
+    .logo-img {
+        height: 50px;
+        padding-top: 0;
+    }
 
-	/*.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
-		
-	}*/
+    .logo-img img {
+        width: 165px;
+    }
 
-	/*Mensaje presupuesto*/
-	/*#block-block-12 {
-		font-size: small;
-	}*/
+    div:not(.contextual-links-wrapper) div.layout, f.layout {
+        padding: 0 0px !important;
+    }
 
-	/*Resto de contenido*/
-	.main .content.last-child {
-		text-align: center;
-	}
+    .mob-layout {
+        width: 100%;
+    }
 
-	/*Footer Aliados*/
-	.row-item, .row {
-		/*width: 100% !important;*/
-		margin: 0 auto;
-	}
+    /*Texto Slider*/
+    /*.block-md-slider .md-slide-item .md-object {
+        font-size: medium;
+    }*/
+    /*Menu Home (España-Europa)*/
+    #block-menu-menu-prehome {
+        width: 100% !important;
+    }
 
-	/*-----------------------------------------------------------------------------*/
-	/*Trip Finder*/
-	#opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		/*width: 135px;*/
-	}
+    .front #block-menu-menu-prehome ul.menu li {
+        margin: 10px !important;
+        width: 240px !important;
 
-	#opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		/*width: 135px;*/
-	}
+    }
 
-	/*#opinno-bikespain-form-europa .form-type-select select {
-		width: 135px;
-		height: 20px;
-		font-size: 8px;
-	}*/
+    .front #block-menu-menu-prehome > div {
+        width: 100% !important;
+        margin: -135px auto 0;
+    }
 
-	/*Viajes Sencillos*/
-	.views-row {
-		/*width: 100%;*/
-		height: auto;
-		text-align: center;
-	}	
+    /*.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
 
-	.views-column {
-		margin: 0 auto;
-		float: inherit;
-	}
-	.work-image img {
-		width: 100%;
-	}
+    }*/
+    /*Mensaje presupuesto*/
+    /*#block-block-12 {
+        font-size: small;
+    }*/
+    /*Resto de contenido*/
+    .main .content.last-child {
+        text-align: center;
+    }
 
-	.search_filters_form {
-		margin-top: -80px;
-		/*margin-left: 22px;*/
-	}
+    /*Footer Aliados*/
+    .row-item, .row {
+        /*width: 100% !important;*/
+        margin: 0 auto;
+    }
 
-	.views-responsive-grid {
-		width: 100%;
-	}
+    /*-----------------------------------------------------------------------------*/
+    /*Trip Finder*/
+    #opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        /*width: 135px;*/
+    }
 
-	/*Productos*/
-	#mapRefrescar {
-		width: 100%;
-		overflow: hidden;
-	}
+    #opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        /*width: 135px;*/
+    }
 
-	.view-experiencias .views-fluidgrid-wrapper.masonry {
- width: 600px;
-margin: 12px auto 48px auto;
-}
-	
+    /*#opinno-bikespain-form-europa .form-type-select select {
+        width: 135px;
+        height: 20px;
+        font-size: 8px;
+    }*/
+    /*Viajes Sencillos*/
+    .views-row {
+        /*width: 100%;*/
+        height: auto;
+        text-align: center;
+    }
+
+    .views-column {
+        margin: 0 auto;
+        float: inherit;
+    }
+
+    .work-image img {
+        width: 100%;
+    }
+
+    .search_filters_form {
+        margin-top: -80px;
+        /*margin-left: 22px;*/
+    }
+
+    .views-responsive-grid {
+        width: 100%;
+    }
+
+    /*Productos*/
+    #mapRefrescar {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .view-experiencias .views-fluidgrid-wrapper.masonry {
+        width: 600px;
+        margin: 12px auto 48px auto;
+    }
 
 }
 
 @media only screen and (max-width: 767px), only screen and (max-device-width: 767px) {
-	.view-rw .row-item.col-1_3 {
-		margin-bottom:  30px;
-
-	}
-
-	
-	.b-titlebar h1 {
-		text-align: center;
-	}
-
-	.main.boxed { width: 480px; }
-	
-	.layout, .mob-layout {
-		width: 420px;
-	}
-
-	.b-top-bar .layout {
-		width: 420px !important;
-	}
-
-	.b-titlebar .layout, .content .layout, .content-featured .layout{
-		padding-left: 30px;
-		padding-right: 30px;
-	}
-
-	.search-text, .search-text:focus {
-		width: 292px;
-	}
-
-
-	.mob-menu div { width: 480px; }
-	.header .mob-menu a { padding: 0 30px; }	
-	.mob-submenu a { padding-left: 50px !important; }	
-	.mob-submenu .mob-submenu a { padding-left: 70px !important; }
-
-	.crumbs { display: none; }
-	.row-item { width: 420px !important; }
-
-	.b-widgets { padding-left: 30px; padding-right: 30px; }
-	.b-copyright {
-		padding: 25px 30px;
-
-		text-align: center;
-		line-height: 20px;
-	}
-
-	.copy {
-		float: none;
-	}
-
-	.b-copyright .b-social {
-		float: none;
-		margin-top: 12px;
-	}
-	
-	.latest-project-item {
-		width: 93px;
-		height: 93px;
-	}
-
-	/* Portfolio
-	---------------------------------------------------------*/
-
-
-	.btn-preview {
-		display: block;
-		text-align: center;
-	}
-
-	.carousel-pagination { display: none; }
-
-	.b-filter-list {
-		display: none;
-	}
-
-	.b-filter-select {
-		display: block;
-	}
-
-	/* Tabs
-	----------------------------------------------------------*/
-
-	.tabs-nav li {
-		display: block;
-		border: 1px solid #dfdfdf;
-		border-top: none;
-		line-height: 33px;
-	}
-
-	.tabs-nav li:first-child {
-		border-top: 1px solid #dfdfdf;
-	}
-
-	.tabs-nav li.active {
-		border-bottom: 1px solid #dfdfdf;
-	}
-
-	.tabs-nav li.active span:before {
-		width: auto;
-	 	left: -1px;
-	 	right: -1px;
-	}
-
-	.b-tabs.m-nav-left:after, .b-tabs.m-nav-left:before {
-		display: none;
-	}
-
-	.b-tabs.m-nav-left {
-		border-top: none;
-	}
-
-	.b-tabs.m-nav-left .tabs-nav {
-		float: none;
-		display: block;
-		top: 0;
-	}
-
-	.b-tabs.m-nav-left .tabs-nav li {
-		width: auto;
-		display: block;
-		text-align: center;
-
-		margin: 0;
-	}
-
-	.m-nav-left .tabs-nav li.active span:before {
-		width: auto;
-
-		position: absolute;
-		top: -2px;	left: -21px;
-					right: -21px;
-
-		border-bottom: none;
-		cursor: default;
-
-		border-top: 2px solid #ed4534;
-		border-left: 0;
-	}
-
-
-	/* Promo
-	----------------------------------------------------------*/
-
-	.b-promo {
-		padding-bottom: 87px;
-	}
-
-	.b-promo .btn.big {
-		position: absolute;
-		left: 30px;		right: 30px;
-		bottom: 30px;
-
-		margin: 0;
-
-		text-align: center;
-	}
-
-	/* Blog
-	----------------------------------------------------------*/
-
-	.sidebar {
-		margin-top: 20px;
-	}
-
-	.blog-search-text {
-		width: 368px;
-	}
-
-	.preview-medium .post-image, .preview-medium .b-carousel {
-		width: auto;
-		float: none;
-	}
-
-	.preview-medium .post-image + div,
-	.preview-medium .b-carousel + div {
-		margin-left: 0;
-	}
-
-	.related-post-head, .related-post {
-		display: none;
-	}
-
-	.member-photo .image-wrap {
-		line-height: 670px;
-	}
-
-	.m-compact .member-meta {
-		padding-top: 180px;
-	}
-
-	.member-name {
-		font-size: 16px;
-	}
-
-	.member-position {
-		font-size: 11px;
-	}
-
-	.preview-medium .post-image-wrap,
-	.b-recent-post.m-medium .post-image-wrap {
-		float: none;
-		width: auto;
-	}
-
-	.preview-medium .post-image-wrap + div,
-	.b-recent-post.m-medium .post-image-wrap + div {
-		margin-left: 0;
-		margin-top: 26px;
-	}
-
-
-	.b-form.m-contact-form .input-wrap {
-		width: 100%;
-		margin-left: 0;
-
-		float: none !important;
-	}
-
-.f-a{
-float: none;
-}
-	/*blockquote*/
-
-	.blockquote.m-left, .blockquote.m-right {
-		width: auto;
-		float: none;
-		margin: 0 0 20px;
-	}
-
-
-/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/*Home*/
-	
-	/*Header (Logo)*/
-	.layout, .navbar .menu {
-		width: 100% !important;
-	}
-	.logo-img {
-		height: 50px;
-		padding-top: 0;
-	}
-	.logo-img img {
-		width: 165px;
-	}
-
-	.header {
-		height: 53px;
-	}
-
-	#superfish-1-select, #superfish-3-select {
-		display: block;
-		margin: 15px 0 0 170px;
-		padding: 0 0;
-		position: absolute;
-	}
-
-	div:not(.contextual-links-wrapper) div.layout, f.layout {
-		padding: 0 0px !important;
-	}
-
-	.mob-layout {
-		width: 100%;
-	}
-
-	/*Texto Slider*/
-	.block-md-slider .md-slide-item .md-object {
-		font-size: medium;
-	}
-
-
-	/*Menu Home (España-Europa)*/
-	#block-menu-menu-prehome {
-		width: 100% !important;
-	}
-
-	.front #block-menu-menu-prehome ul.menu li {
-		margin: 10px !important;
-		width: 120px !important;
-		height: 40px;
-	}
-
-	.front #block-menu-menu-prehome > div {
-		width: 100% !important;
-		margin: -80px auto 0;
-	}
-
-	.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
-		font-size: medium !important;
-		line-height: 40px;
-	}
-
-	/*Mensaje presupuesto*/
-	#block-block-12 {
-		font-size: small;
-	}
-
-	/*Resto de contenido*/
-	.main .content.last-child {
-		text-align: center;
-	}
-
-	/*Footer Aliados*/
-	.row-item, .row {
-		/*width: 100% !important;*/
-		margin: 0 auto;
-		text-align: center;
-	}
-
-	/*-----------------------------------------------------------------------------*/
-	/*Trip Finder*/
-	#opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		width: 135px;
-	}
-
-	#opinno-bikespain-form-espana .form-type-select select {
-		width: 135px;
-		height: 20px;
-		font-size: 8px;
-	}
-
-	#opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		width: 135px;
-	}
-
-	#opinno-bikespain-form-europa .form-type-select select {
-		width: 135px;
-		height: 20px;
-		font-size: 8px;
-	}
-
-	/*Viajes Sencillos*/
-	.views-row {
-		/*width: 100%;*/
-		height: auto;
-		text-align: center;
-	}	
-
-	.views-column {
-		margin: 0 auto;
-		float: inherit;
-	}
-	.work-image img {
-		width: 100%;
-	}
-
-	.search_filters_form {
-		margin-top: -130px;
-	}
-
-	.views-responsive-grid {
-		width: 100%;
-	}
-
-	/*Productos*/
-	#mapRefrescar {
-		width: 100%;
-		overflow: hidden;
-	}
-
-	/*Formulario Contacto*/
-	#webform-client-form-287 iframe, #webform-client-form-296 iframe {
-		display: none;
-	}
-
-	.view-experiencias .views-fluidgrid-wrapper.masonry {
- width: 600px;
-margin: 12px auto 48px auto;
-}
+    .view-rw .row-item.col-1_3 {
+        margin-bottom: 30px;
+
+    }
+
+    .b-titlebar h1 {
+        text-align: center;
+    }
+
+    .main.boxed {
+        width: 480px;
+    }
+
+    .layout, .mob-layout {
+        width: 420px;
+    }
+
+    .b-top-bar .layout {
+        width: 420px !important;
+    }
+
+    .b-titlebar .layout, .content .layout, .content-featured .layout {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .search-text, .search-text:focus {
+        width: 292px;
+    }
+
+    .mob-menu div {
+        width: 480px;
+    }
+
+    .header .mob-menu a {
+        padding: 0 30px;
+    }
+
+    .mob-submenu a {
+        padding-left: 50px !important;
+    }
+
+    .mob-submenu .mob-submenu a {
+        padding-left: 70px !important;
+    }
+
+    .crumbs {
+        display: none;
+    }
+
+    .row-item {
+        width: 420px !important;
+    }
+
+    .b-widgets {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .b-copyright {
+        padding: 25px 30px;
+
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .copy {
+        float: none;
+    }
+
+    .b-copyright .b-social {
+        float: none;
+        margin-top: 12px;
+    }
+
+    .latest-project-item {
+        width: 93px;
+        height: 93px;
+    }
+
+    /* Portfolio
+    ---------------------------------------------------------*/
+    .btn-preview {
+        display: block;
+        text-align: center;
+    }
+
+    .carousel-pagination {
+        display: none;
+    }
+
+    .b-filter-list {
+        display: none;
+    }
+
+    .b-filter-select {
+        display: block;
+    }
+
+    /* Tabs
+    ----------------------------------------------------------*/
+    .tabs-nav li {
+        display: block;
+        border: 1px solid #dfdfdf;
+        border-top: none;
+        line-height: 33px;
+    }
+
+    .tabs-nav li:first-child {
+        border-top: 1px solid #dfdfdf;
+    }
+
+    .tabs-nav li.active {
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+    .tabs-nav li.active span:before {
+        width: auto;
+        left: -1px;
+        right: -1px;
+    }
+
+    .b-tabs.m-nav-left:after, .b-tabs.m-nav-left:before {
+        display: none;
+    }
+
+    .b-tabs.m-nav-left {
+        border-top: none;
+    }
+
+    .b-tabs.m-nav-left .tabs-nav {
+        float: none;
+        display: block;
+        top: 0;
+    }
+
+    .b-tabs.m-nav-left .tabs-nav li {
+        width: auto;
+        display: block;
+        text-align: center;
+
+        margin: 0;
+    }
+
+    .m-nav-left .tabs-nav li.active span:before {
+        width: auto;
+
+        position: absolute;
+        top: -2px;
+        left: -21px;
+        right: -21px;
+
+        border-bottom: none;
+        cursor: default;
+
+        border-top: 2px solid #ed4534;
+        border-left: 0;
+    }
+
+    /* Promo
+    ----------------------------------------------------------*/
+    .b-promo {
+        padding-bottom: 87px;
+    }
+
+    .b-promo .btn.big {
+        position: absolute;
+        left: 30px;
+        right: 30px;
+        bottom: 30px;
+
+        margin: 0;
+
+        text-align: center;
+    }
+
+    /* Blog
+    ----------------------------------------------------------*/
+    .sidebar {
+        margin-top: 20px;
+    }
+
+    .blog-search-text {
+        width: 368px;
+    }
+
+    .preview-medium .post-image, .preview-medium .b-carousel {
+        width: auto;
+        float: none;
+    }
+
+    .preview-medium .post-image + div,
+    .preview-medium .b-carousel + div {
+        margin-left: 0;
+    }
+
+    .related-post-head, .related-post {
+        display: none;
+    }
+
+    .member-photo .image-wrap {
+        line-height: 670px;
+    }
+
+    .m-compact .member-meta {
+        padding-top: 180px;
+    }
+
+    .member-name {
+        font-size: 16px;
+    }
+
+    .member-position {
+        font-size: 11px;
+    }
+
+    .preview-medium .post-image-wrap,
+    .b-recent-post.m-medium .post-image-wrap {
+        float: none;
+        width: auto;
+    }
+
+    .preview-medium .post-image-wrap + div,
+    .b-recent-post.m-medium .post-image-wrap + div {
+        margin-left: 0;
+        margin-top: 26px;
+    }
+
+    .b-form.m-contact-form .input-wrap {
+        width: 100%;
+        margin-left: 0;
+
+        float: none !important;
+    }
+
+    .f-a {
+        float: none;
+    }
+
+    /*blockquote*/
+    .blockquote.m-left, .blockquote.m-right {
+        width: auto;
+        float: none;
+        margin: 0 0 20px;
+    }
+
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /*Home*/
+    /*Header (Logo)*/
+    .layout, .navbar .menu {
+        width: 100% !important;
+    }
+
+    .logo-img {
+        height: 50px;
+        padding-top: 0;
+    }
+
+    .logo-img img {
+        width: 165px;
+    }
+
+    .header {
+        height: 53px;
+    }
+
+    #superfish-1-select, #superfish-3-select {
+        display: block;
+        margin: 15px 0 0 170px;
+        padding: 0 0;
+        position: absolute;
+    }
+
+    div:not(.contextual-links-wrapper) div.layout, f.layout {
+        padding: 0 0px !important;
+    }
+
+    .mob-layout {
+        width: 100%;
+    }
+
+    /*Texto Slider*/
+    .block-md-slider .md-slide-item .md-object {
+        font-size: medium;
+    }
+
+    /*Menu Home (España-Europa)*/
+    #block-menu-menu-prehome {
+        width: 100% !important;
+    }
+
+    .front #block-menu-menu-prehome ul.menu li {
+        margin: 10px !important;
+        width: 120px !important;
+        height: 40px;
+    }
+
+    .front #block-menu-menu-prehome > div {
+        width: 100% !important;
+        margin: -80px auto 0;
+    }
+
+    .front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
+        font-size: medium !important;
+        line-height: 40px;
+    }
+
+    /*Mensaje presupuesto*/
+    #block-block-12 {
+        font-size: small;
+    }
+
+    /*Resto de contenido*/
+    .main .content.last-child {
+        text-align: center;
+    }
+
+    /*Footer Aliados*/
+    .row-item, .row {
+        /*width: 100% !important;*/
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    /*-----------------------------------------------------------------------------*/
+    /*Trip Finder*/
+    #opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        width: 135px;
+    }
+
+    #opinno-bikespain-form-espana .form-type-select select {
+        width: 135px;
+        height: 20px;
+        font-size: 8px;
+    }
+
+    #opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        width: 135px;
+    }
+
+    #opinno-bikespain-form-europa .form-type-select select {
+        width: 135px;
+        height: 20px;
+        font-size: 8px;
+    }
+
+    /*Viajes Sencillos*/
+    .views-row {
+        /*width: 100%;*/
+        height: auto;
+        text-align: center;
+    }
+
+    .views-column {
+        margin: 0 auto;
+        float: inherit;
+    }
+
+    .work-image img {
+        width: 100%;
+    }
+
+    .search_filters_form {
+        margin-top: -130px;
+    }
+
+    .views-responsive-grid {
+        width: 100%;
+    }
+
+    /*Productos*/
+    #mapRefrescar {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    /*Formulario Contacto*/
+    #webform-client-form-287 iframe, #webform-client-form-296 iframe {
+        display: none;
+    }
+
+    .view-experiencias .views-fluidgrid-wrapper.masonry {
+        width: 600px;
+        margin: 12px auto 48px auto;
+    }
+
+    .sidebar .five-rate {
+        float: none;
+    }
+
+    .views-field-field-n-mero-de-d-as,
+    .views-field-field-n-mero-de-noches {
+        text-align: center;
+        margin: 15px auto 0 auto;
+        display: table;
+    }
+
+    ul.links.inline {
+        text-align: center;
+        margin: 0 auto 20px auto;
+        display: table;
+    }
+
+    .print_html, .print_mail, .print_pdf {
+        margin-left: 0em;
+    }
 
 }
 
 @media only screen and (max-width: 490px), only screen and (max-device-width: 490px) {
     #superfish-1-select, #superfish-3-select {
-		display:block;
-		}
-	.main.boxed { width: 320px; }
-	.layout, .mob-layout { width: 260px;}
-	.layout { padding: 0 30px; }
+        display: block;
+    }
 
-	.b-top-bar .layout {
-		width: 260px !important;
-	}
+    .main.boxed {
+        width: 320px;
+    }
 
-	.row-item { width: 260px !important; }
+    .layout, .mob-layout {
+        width: 260px;
+    }
 
-	.b-search {
-		text-align: left;
-	}
+    .layout {
+        padding: 0 30px;
+    }
 
-	.b-search {
-		width: 320px;
-		margin-left: -160px;
-	}
+    .b-top-bar .layout {
+        width: 260px !important;
+    }
 
-	.search-text, .search-text:focus {
-		width: 120px;
-	}
+    .row-item {
+        width: 260px !important;
+    }
 
-	.mob-menu div { width: 320px; }
-	
-	.latest-project-item {
-		width: 53px;
-		height: 53px;
-	}
-	
-	h2.error-404 {
-	font: 140px/140px 'OpenSansLightRegular';
-	}
+    .b-search {
+        text-align: left;
+    }
 
-	/* Portfolio
-	---------------------------------------------------------*/
+    .b-search {
+        width: 320px;
+        margin-left: -160px;
+    }
 
-	.blog-search-text {
-		width: 208px;
-	}
+    .search-text, .search-text:focus {
+        width: 120px;
+    }
 
-	.member-photo .image-wrap {
-		line-height: 565px;
-	}
+    .mob-menu div {
+        width: 320px;
+    }
 
-	.m-compact .member-meta {
-		padding-top: 100px;
-	}
+    .latest-project-item {
+        width: 53px;
+        height: 53px;
+    }
 
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/* 	-------------------------------------------------------------------------------------------*/
-	/*Home*/
-	
-	/*Header (Logo)*/
-	.layout, .navbar .menu {
-		width: 100% !important;
-	}
-	.logo-img {
-		height: 50px;
-		padding-top: 0;
-	}
-	.logo-img img {
-		width: 165px;
-	}
+    h2.error-404 {
+        font: 140px/140px 'OpenSansLightRegular';
+    }
 
-	.header {
-		height: 53px;
-	}
+    /* Portfolio
+    ---------------------------------------------------------*/
+    .blog-search-text {
+        width: 208px;
+    }
 
-	#superfish-1-select, #superfish-3-select {
-		display: block;
-		margin: 15px 0 0 170px;
-		padding: 0 0;
-		font-size: 11px;
-		position: absolute;
-	}
+    .member-photo .image-wrap {
+        line-height: 565px;
+    }
 
-	div:not(.contextual-links-wrapper) div.layout, f.layout {
-		padding: 0 0px !important;
-	}
+    .m-compact .member-meta {
+        padding-top: 100px;
+    }
 
-	.mob-layout {
-		width: 100%;
-	}
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /* 	-------------------------------------------------------------------------------------------*/
+    /*Home*/
+    /*Header (Logo)*/
+    .layout, .navbar .menu {
+        width: 100% !important;
+    }
 
-	/*Texto Slider*/
-	.block-md-slider .md-slide-item .md-object {
-		font-size: medium;
-	}
+    .logo-img {
+        height: 50px;
+        padding-top: 0;
+    }
 
+    .logo-img img {
+        width: 165px;
+    }
 
-	/*Menu Home (España-Europa)*/
-	#block-menu-menu-prehome {
-		width: 100% !important;
-	}
+    .header {
+        height: 53px;
+    }
 
-	.front #block-menu-menu-prehome ul.menu li {
-		margin: 10px !important;
-		width: 80px !important;
-		height: 20px;
-	}
+    #superfish-1-select, #superfish-3-select {
+        display: block;
+        margin: 15px 0 0 170px;
+        padding: 0 0;
+        font-size: 11px;
+        position: absolute;
+    }
 
-	.front #block-menu-menu-prehome > div {
-		width: 100% !important;
-		margin: -55px auto 0;
-	}
+    div:not(.contextual-links-wrapper) div.layout, f.layout {
+        padding: 0 0px !important;
+    }
 
-	.front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
-		font-size: small !important;
-		line-height: 20px;
-	}
+    .mob-layout {
+        width: 100%;
+    }
 
-	/*Mensaje presupuesto*/
-	#block-block-12 {
-		font-size: small;
-	}
+    /*Texto Slider*/
+    .block-md-slider .md-slide-item .md-object {
+        font-size: medium;
+    }
 
-	/*Resto de contenido*/
-	.main .content.last-child {
-		text-align: center;
-	}
+    /*Menu Home (España-Europa)*/
+    #block-menu-menu-prehome {
+        width: 100% !important;
+    }
 
-	/*Footer Aliados*/
-	.row-item, .row {
-		/*width: 100% !important;*/
-		margin: 0 auto;
-	}
+    .front #block-menu-menu-prehome ul.menu li {
+        margin: 10px !important;
+        width: 80px !important;
+        height: 20px;
+    }
 
-	.block-title {
-		text-align: center;
-	}
+    .front #block-menu-menu-prehome > div {
+        width: 100% !important;
+        margin: -55px auto 0;
+    }
 
-	/*-----------------------------------------------------------------------------*/
-	/*Trip Finder*/
-	#opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		width: 135px;
-	}
+    .front #block-menu-menu-prehome ul.menu li.leaf, .front #block-menu-menu-prehome ul.menu li.leaf a {
+        font-size: small !important;
+        line-height: 20px;
+    }
 
-	#opinno-bikespain-form-espana .form-type-select select {
-		width: 135px;
-		height: 20px;
-		font-size: 8px;
-	}
+    /*Mensaje presupuesto*/
+    #block-block-12 {
+        font-size: small;
+    }
 
+    /*Resto de contenido*/
+    .main .content.last-child {
+        text-align: center;
+    }
 
-	#opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select  {
-		margin-left: 0px;
-		margin: 0 auto;
-		width: 135px;
-	}
+    /*Footer Aliados*/
+    .row-item, .row {
+        /*width: 100% !important;*/
+        margin: 0 auto;
+    }
 
-	#opinno-bikespain-form-europa .form-type-select select {
-		width: 135px;
-		height: 20px;
-		font-size: 8px;
-	}
+    .block-title {
+        text-align: center;
+    }
 
-	.search_filters_form {
-		margin-top: -100px;
-		/*margin-left: 22px;*/
-	}
+    /*-----------------------------------------------------------------------------*/
+    /*Trip Finder*/
+    #opinno-bikespain-form-espana, #opinno-bikespain-form-espana .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        width: 135px;
+    }
 
-	.views-responsive-grid {
-		width: 100%;
-	}
+    #opinno-bikespain-form-espana .form-type-select select {
+        width: 135px;
+        height: 20px;
+        font-size: 8px;
+    }
 
+    #opinno-bikespain-form-europa, #opinno-bikespain-form-europa .form-type-select {
+        margin-left: 0px;
+        margin: 0 auto;
+        width: 135px;
+    }
 
-	
+    #opinno-bikespain-form-europa .form-type-select select {
+        width: 135px;
+        height: 20px;
+        font-size: 8px;
+    }
 
-	/*Viajes Sencillos*/
-	.views-row {
-		/*width: 100%;*/
-		height: auto;
-	}	
+    .search_filters_form {
+        margin-top: -100px;
+        /*margin-left: 22px;*/
+    }
 
-	.views-column {
-		margin: 0 auto;
-		float: inherit;
-	}
-	.block-title {
-		text-align: center;
-	}
+    .views-responsive-grid {
+        width: 100%;
+    }
 
-	.work-image img {
-		width: 100%;
-	}
+    /*Viajes Sencillos*/
+    .views-row {
+        /*width: 100%;*/
+        height: auto;
+    }
 
-	/*Contacto*/
-	#webform-client-form-287 iframe, #webform-client-form-296 iframe {
-		display: none;
-	}
+    .views-column {
+        margin: 0 auto;
+        float: inherit;
+    }
 
-	.form-textarea-wrapper {
-		width: 100%;
-	}
+    .block-title {
+        text-align: center;
+    }
 
-	/*Productos*/
-	#mapRefrescar {
-		width: 100%;
-		overflow: hidden;
-	}
+    .work-image img {
+        width: 100%;
+    }
 
-	.view-experiencias .views-fluidgrid-wrapper.masonry {
-		width: 300px;
-		margin: 12px auto 48px auto;
-	}
+    /*Contacto*/
+    #webform-client-form-287 iframe, #webform-client-form-296 iframe {
+        display: none;
+    }
 
-	
-}
+    .form-textarea-wrapper {
+        width: 100%;
+    }
+
+    /*Productos*/
+    #mapRefrescar {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .view-experiencias .views-fluidgrid-wrapper.masonry {
+        width: 300px;
+        margin: 12px auto 48px auto;
+    }
 
 }
 
 @media screen and (min-width: 400px) and (max-width: 500px) {
-	.view-experiencias .views-fluidgrid-wrapper.masonry {
-		width: 300px;
-		margin: 12px auto 48px auto;
-	}
-	}
+    .view-experiencias .views-fluidgrid-wrapper.masonry {
+        width: 300px;
+        margin: 12px auto 48px auto;
+    }
+}
 
-@media only screen and (max-width: 959px)), only screen and (max-device-width: 959px) {
+@media only screen and (max-width: 959px), only screen and (max-device-width: 959px) {
 
+    #superfish-1-select, #superfish-3-select {
+        display: block;
+    }
 
-#superfish-1-select, #superfish-3-select {
-		display:block;
-		}
+}
 
+@media only screen and (max-width: 400px), only screen and (max-device-width: 400px) {
 
+    .region-postscript-second,
+    .region-postscript-third {
+        width: 100%;
+    }
+    .region-postscript-second .view-lista-prehome-destinos .views-row-odd,
+    .region-postscript-third .view-lista-prehome-destinos .views-row-odd,
+    .region-postscript-second .view-lista-prehome-destinos .views-row-even,
+    .region-postscript-third .view-lista-prehome-destinos .views-row-even {
+        float: none;
+        clear: none;
+        text-align: center;
+    }
+    .region-postscript-second #block-block-2,
+    .region-postscript-third #block-block-3,
+    #sliding-popup {
+        height: auto !important;
+    }
 
+    .region-main-menu #superfish-1-select,
+    .region-main-menu #superfish-3-select {
+        max-width: 135px;
+    }
+
+    input {
+        max-width: 90%;
+    }
+
+    .views-responsive-grid .views-column {
+        max-width: 95%;
+    }
+}
+
+@media only screen and (max-width: 767px), only screen and (max-device-width: 767px) {
+    .b-titlebar h1 {
+        border-bottom: 0 none;
+    }
+
+    .b-titlebar {
+        border-bottom: 2px solid #E34735;
+    }
+
+    .layout, .mob-layout, .b-top-bar .layout, .content .row-item, .b-titlebar h1 {
+        width: 95% !important;
+    }
 }
