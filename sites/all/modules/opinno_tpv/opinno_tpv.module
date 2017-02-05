@@ -263,7 +263,7 @@ function opinno_tpv_user_form($form, &$form_state)
     );
 
     $form['notes'] = array(
-        '#markup' => '<br><br>' . t('NOTES:') . '<ul><li>' . t('The initial booking deposit amounts to EURO 250.- per person.') . '</li><li>' . t('The remaining amount of the final tour price is due one month before the trip departure.') . '</li><li>' . t('Payment can be made with VISA or MasterCard credit cards.') . '</li></ul>',
+        '#markup' => '<br><br>' . t('NOTES:') . '<ul><li>' . t('The initial booking deposit amounts to EURO 250.- per person.') . '</li><li>' . t('The remaining amount of the final tour price is due one month before the trip departure.') . '</li><li>' . t('Payment can be made with VISA or MasterCard credit cards.') . '</li><li>' . t('If you experience problems with the online payment you can make bank a transfer to:') . '<br/>BIKE SPAIN TOURS, SLU<br/><br/><strong>CAIXABANK</strong><br/>Swift: CAIXAESBBXXX<br/>IBAN ES55 2100 5846 0102 0000 7000<br/><br/><strong>BANCO SABADELL</strong><br/>Swift: BSABESBB<br/>IBAN ES54 0081 5246 8900 0141 9046</li></ul>',
         '#weight' => 11,
     );
 

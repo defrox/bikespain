@@ -233,6 +233,7 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
     $rows = array();
 
     $header = array(
+        array('data' => t('UID'), 'field' => 'uid'),
         array('data' => t('Nombre'), 'field' => 'name'),
         array('data' => t('Apellidos'), 'field' => 'last_name'),
         array('data' => t('Email'), 'field' => 'mail'),
@@ -249,6 +250,7 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
     );
 
     $fields = array(
+        'uid' => 'UID',
         'name' => 'Nombre',
         'last_name' => 'Apellidos',
         'mail' => 'Email',
@@ -277,6 +279,9 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
         else
             $sort = 'DESC';
         switch ($_GET['order']) {
+            case 'UID':
+                $order = 'uid';
+                break;
             case 'Name':
                 $order = 'name';
                 break;
@@ -315,11 +320,11 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
                 $order = 'concepto';
                 break;
             default:
-                $order = 'fecha';
+                $order = 'uid';
         }
     } else {
         $sort = 'DESC';
-        $order = 'fecha';
+        $order = 'uid';
     }
     $query = db_select('ordenes_de_pago', 'odp')
         ->fields('odp', array('uid', 'name', 'last_name', 'mail', 'ref_viaje', 'fecha', 'factura_proforma', 'estado', 'respuesta_tpv', 'editable', 'plantilla_email', 'email_enviado', 'fecha_email_enviado', 'cantidad', 'concepto'))
@@ -349,6 +354,7 @@ function opinno_tpv_ordenes_de_pago($form, $form_state)
         $fecha_email = ($row->email_enviado) ? date("d-m-Y", $row->fecha_email_enviado) : '';
 
         $rows[] = array(
+            $row->uid,
             $row->name,
             $row->last_name,
             $row->mail,
@@ -524,6 +530,7 @@ function opinno_tpv_ordenes_de_pago_exportar()
 
     $rows = array();
     $rows[] = array(
+        'UID',
         'Nombre',
         'Apellidos',
         'Email',
@@ -546,10 +553,10 @@ function opinno_tpv_ordenes_de_pago_exportar()
         if ($_GET['order'] != '')
             $order = $_GET['order'];
         else
-            $order = 'fecha';
+            $order = 'uid';
     } else {
         $sort = 'DESC';
-        $order = 'fecha';
+        $order = 'uid';
     }
 
     $query = db_select('ordenes_de_pago', 'odp')
@@ -580,6 +587,7 @@ function opinno_tpv_ordenes_de_pago_exportar()
         $fecha_email = ($row->email_enviado) ? date("d-m-Y", $row->fecha_email_enviado) : '';
 
         $rows[] = array(
+            $row->uid,
             $row->name,
             $row->last_name,
             $row->mail,
